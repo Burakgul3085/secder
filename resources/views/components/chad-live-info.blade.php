@@ -12,6 +12,14 @@
         'prayerNames' => __('app.chad_live.prayers'),
         'hijriMonths' => __('app.chad_live.hijri_months'),
         'donateUrl' => route('donations'),
+        // Şehir bilgisi config/live_info.php dosyasından yönetilir.
+        'location' => [
+            'latitude' => (float) config('live_info.latitude'),
+            'longitude' => (float) config('live_info.longitude'),
+            'timezone' => config('live_info.timezone'),
+            'prayerMethod' => (int) config('live_info.prayer_method'),
+            'cachePrefix' => config('live_info.cache_prefix'),
+        ],
     ];
 @endphp
 
@@ -28,10 +36,11 @@
         <div class="border-b border-slate-100 bg-gradient-to-r from-cyan-50/80 via-white to-white px-6 py-6 md:px-8 md:py-7">
             <div class="flex flex-col items-center gap-3 text-center md:flex-row md:items-start md:gap-4 md:text-start">
                 <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" aria-hidden="true">
-                    <svg class="h-full w-full" viewBox="0 0 36 24" role="img" aria-label="Çad">
-                        <rect width="12" height="24" fill="#002664"/>
-                        <rect x="12" width="12" height="24" fill="#FECB00"/>
-                        <rect x="24" width="12" height="24" fill="#C8102E"/>
+                    <svg class="h-full w-full" viewBox="0 0 36 24" role="img" aria-label="{{ __('app.chad_live.badge') }}">
+                        <rect width="36" height="24" fill="#E30A17"/>
+                        <circle cx="13.6" cy="12" r="5" fill="#ffffff"/>
+                        <circle cx="15.3" cy="12" r="4" fill="#E30A17"/>
+                        <polygon fill="#ffffff" points="21.6,9.6 22.16,11.23 23.88,11.26 22.5,12.29 23.01,13.94 21.6,12.95 20.19,13.94 20.7,12.29 19.32,11.26 21.04,11.23"/>
                     </svg>
                 </span>
                 <div class="min-w-0">

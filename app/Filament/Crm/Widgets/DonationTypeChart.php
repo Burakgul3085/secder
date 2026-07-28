@@ -4,6 +4,7 @@ namespace App\Filament\Crm\Widgets;
 
 use App\Filament\Crm\Widgets\Concerns\InteractsWithCrmDashboardFilters;
 use App\Models\DonationType;
+use App\Support\BrandPalette;
 use Filament\Widgets\ChartWidget;
 
 class DonationTypeChart extends ChartWidget
@@ -41,15 +42,7 @@ class DonationTypeChart extends ChartWidget
 
         $labels = [];
         $data = [];
-        $colors = [
-            '#0891b2',
-            '#06b6d4',
-            '#22d3ee',
-            '#67e8f9',
-            '#0e7490',
-            '#155e75',
-            '#164e63',
-        ];
+        $colors = BrandPalette::chartSeries();
 
         foreach ($types as $type) {
             $amount = (float) $this->filteredDonationsQuery()

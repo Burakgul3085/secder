@@ -1,12 +1,21 @@
-import { getCachedValue, isExpired, setCache } from './cache';
+import { configureCachePrefix, getCachedValue, isExpired, setCache } from './cache';
 import { fetchAladhanData, localizeHijri, localizePrayer } from './prayer';
-import { formatLocalTime } from './time';
+import { configureTimezone, formatLocalTime } from './time';
 import { fetchWeather } from './weather';
 
 const TTL = {
     weather: 30 * 60 * 1000,
     hijri: 24 * 60 * 60 * 1000,
     prayer: 12 * 60 * 60 * 1000,
+};
+
+// config/live_info.php gelmezse kullanılacak yedek şehir bilgisi.
+const DEFAULT_LOCATION = {
+    latitude: 37.0662,
+    longitude: 37.3833,
+    timezone: 'Europe/Istanbul',
+    prayerMethod: 13,
+    cachePrefix: 'bkd_live_gaziantep_',
 };
 
 document.addEventListener('alpine:init', () => {
@@ -18,6 +27,7 @@ document.addEventListener('alpine:init', () => {
         prayerNames: config.prayerNames ?? {},
         hijriMonths: config.hijriMonths ?? {},
         donateUrl: config.donateUrl ?? '/bagis-yap',
+        location: { ...DEFAULT_LOCATION, ...(config.location ?? {}) },
         weather: null,
         weatherError: false,
         localTime: '--',
@@ -28,6 +38,10 @@ document.addEventListener('alpine:init', () => {
         _refreshTimer: null,
 
         init() {
+            // Önbellek ve saat dilimi, veri okumadan önce şehre göre ayarlanır.
+            configureCachePrefix(this.location.cachePrefix);
+            configureTimezone(this.location.timezone);
+
             this.bootstrap();
             this._clockTimer = window.setInterval(() => this.tickClock(), 60_000);
             this._refreshTimer = window.setInterval(() => this.refreshStaleData(), 60_000);
@@ -109,7 +123,7 @@ document.addEventListener('alpine:init', () => {
             }
 
             try {
-                const data = await fetchWeather();
+                const data = await fetchWeather(this.location);
                 setCache('weather', data);
                 this.weather = `${data.temperature}°C`;
                 this.weatherError = false;
@@ -136,7 +150,7 @@ document.addEventListener('alpine:init', () => {
             }
 
             try {
-                const data = await fetchAladhanData();
+                const data = await fetchAladhanData(this.location);
 
                 if (!hijriFresh || !getCachedValue('hijri')) {
                     setCache('hijri', data.hijri);

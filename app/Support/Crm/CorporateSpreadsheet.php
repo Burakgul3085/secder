@@ -16,12 +16,12 @@ use OpenSpout\Common\Entity\Style\Style;
  */
 abstract class CorporateSpreadsheet
 {
-    /** Kurumsal renk paleti */
-    protected const BRAND_DARK = '0F766E';
+    /** Kurumsal renk paleti (bkz. App\Support\BrandPalette) */
+    protected const BRAND_DARK = '333C55';
 
-    protected const BRAND = '0D9488';
+    protected const BRAND = '4D5C83';
 
-    protected const BAND_LIGHT = 'CCFBF1';
+    protected const BAND_LIGHT = 'E8EDF6';
 
     protected const ZEBRA = 'F1F5F9';
 

@@ -5,7 +5,9 @@ namespace App\Filament\Resources\ContactMessages\Tables;
 use App\Models\Setting;
 use App\Support\Mailer;
 use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -48,6 +50,8 @@ class ContactMessagesTable
                     ->label('Görüntüle')
                     ->icon('heroicon-o-eye')
                     ->color('gray')
+                    ->iconButton()
+                    ->tooltip('Mesajı görüntüle')
                     ->modalHeading(fn ($record) => $record->first_name . ' ' . $record->last_name . ' — Mesaj Detayı')
                     ->modalWidth('2xl')
                     ->form([
@@ -86,6 +90,8 @@ class ContactMessagesTable
                     ->label('Cevap Ver')
                     ->icon('heroicon-o-paper-airplane')
                     ->color('primary')
+                    ->iconButton()
+                    ->tooltip('Mesaja cevap ver')
                     ->modalHeading('Mesaja Cevap Ver')
                     ->form([
                         TextInput::make('subject')
@@ -139,7 +145,19 @@ class ContactMessagesTable
                         }
                     }),
                 DeleteAction::make()
-                    ->label('Sil'),
+                    ->label('Sil')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->modalHeading('Mesajı sil')
+                    ->modalDescription('Bu iletişim mesajı kalıcı olarak silinecek. Devam etmek istiyor musunuz?')
+                    ->modalSubmitActionLabel('Evet, sil'),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->label('Seçilenleri sil')
+                        ->modalHeading('Seçili mesajları sil'),
+                ]),
             ]);
     }
 }

@@ -267,13 +267,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Çad'dan Anlık Bilgiler (ana sayfa)
+    | Gaziantep'ten Anlık Bilgiler (ana sayfa)
     |--------------------------------------------------------------------------
     */
     'chad_live' => [
-        'badge'         => 'Çad',
-        'title'         => 'Çad\'dan Anlık Bilgiler',
-        'subtitle'      => 'Birlikte Kardeşlik Derneği, Çad\'da insani yardım faaliyetlerini kesintisiz sürdürmektedir.',
+        'badge'         => 'Gaziantep',
+        'title'         => 'Gaziantep\'ten Anlık Bilgiler',
+        'subtitle'      => 'Derneğimiz, Gaziantep merkezli olarak yardım ve dayanışma faaliyetlerini kesintisiz sürdürmektedir.',
         'weather'       => 'Hava Durumu',
         'local_time'    => 'Yerel Saat',
         'hijri'         => 'Hicri Tarih',

@@ -1,8 +1,15 @@
-const PREFIX = 'bkd_chad_';
+// Önek config/live_info.php üzerinden gelir; şehir değişince eski veri okunmaz.
+let prefix = 'bkd_live_';
+
+export function configureCachePrefix(value) {
+    if (typeof value === 'string' && value.trim() !== '') {
+        prefix = value;
+    }
+}
 
 export function getCacheEntry(key) {
     try {
-        const raw = localStorage.getItem(PREFIX + key);
+        const raw = localStorage.getItem(prefix + key);
         if (!raw) {
             return null;
         }
@@ -19,7 +26,7 @@ export function getCachedValue(key) {
 
 export function setCache(key, value) {
     try {
-        localStorage.setItem(PREFIX + key, JSON.stringify({
+        localStorage.setItem(prefix + key, JSON.stringify({
             value,
             fetchedAt: Date.now(),
         }));

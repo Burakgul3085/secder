@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ActivitySectionSettings\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -20,7 +21,10 @@ class ActivitySectionSettingsTable
                 IconColumn::make('is_active')->boolean()->label('Aktif'),
                 TextColumn::make('updated_at')->dateTime('d.m.Y H:i')->label('Güncellendi'),
             ])
-            ->recordActions([EditAction::make()])
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

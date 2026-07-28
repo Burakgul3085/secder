@@ -3,11 +3,19 @@
 namespace App\Filament\Resources\ZakatSettings\Pages;
 
 use App\Filament\Resources\ZakatSettings\ZakatSettingResource;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditZakatSetting extends EditRecord
 {
     protected static string $resource = ZakatSettingResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make()->label('Sil'),
+        ];
+    }
 
     protected function mutateFormDataBeforeFill(array $data): array
     {

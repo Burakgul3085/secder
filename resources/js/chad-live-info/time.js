@@ -1,11 +1,18 @@
-const TIMEZONE = 'Africa/Ndjamena';
+// Saat dilimi config/live_info.php üzerinden gelir; varsayılan Gaziantep.
+let timezone = 'Europe/Istanbul';
 
 const localeMap = {
     tr: 'tr-TR',
     en: 'en-GB',
-    ar: 'ar-TD',
+    ar: 'ar',
     ru: 'ru-RU',
 };
+
+export function configureTimezone(value) {
+    if (typeof value === 'string' && value.trim() !== '') {
+        timezone = value;
+    }
+}
 
 export function resolveLocale(locale) {
     return localeMap[locale] ?? 'tr-TR';
@@ -13,16 +20,16 @@ export function resolveLocale(locale) {
 
 export function formatLocalTime(locale = 'tr') {
     return new Intl.DateTimeFormat(resolveLocale(locale), {
-        timeZone: TIMEZONE,
+        timeZone: timezone,
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,
     }).format(new Date());
 }
 
-export function getChadMinutesSinceMidnight() {
+export function getMinutesSinceMidnight() {
     const parts = new Intl.DateTimeFormat('en-GB', {
-        timeZone: TIMEZONE,
+        timeZone: timezone,
         hour: '2-digit',
         minute: '2-digit',
         hour12: false,

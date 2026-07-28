@@ -4,6 +4,7 @@ namespace App\Filament\Crm\Widgets;
 
 use App\Filament\Crm\Widgets\Concerns\InteractsWithCrmDashboardFilters;
 use App\Models\Donation;
+use App\Support\BrandPalette;
 use App\Support\Crm\DonationDateFilter;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Contracts\View\View;
@@ -105,7 +106,7 @@ class YearlyComparisonChart extends ChartWidget
                 [
                     'label' => (string) $currentYear,
                     'data' => $thisYear,
-                    'backgroundColor' => '#0891b2',
+                    'backgroundColor' => BrandPalette::PRIMARY,
                 ],
                 [
                     'label' => (string) $previousYear,

@@ -212,7 +212,7 @@
                                         href="{{ $settings->$field }}"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:scale-105 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white hover:shadow-[0_10px_18px_rgba(6,182,212,0.35)]"
+                                        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:scale-105 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white hover:shadow-[0_10px_18px_rgba(77,92,131,0.32)]"
                                         title="{{ $socialAria[$platform] ?? $platform }}"
                                         aria-label="{{ $socialAria[$platform] ?? $platform }}"
                                     >
@@ -830,7 +830,7 @@
                             <a
                                 href="{{ $fileUrl }}"
                                 download
-                                class="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-500 hover:bg-cyan-500 hover:text-white hover:shadow-[0_10px_20px_rgba(6,182,212,0.35)]"
+                                class="group inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-cyan-500 hover:bg-cyan-500 hover:text-white hover:shadow-[0_10px_20px_rgba(77,92,131,0.32)]"
                             >
                                 {{ __('app.page.press_download') }}
                                 <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

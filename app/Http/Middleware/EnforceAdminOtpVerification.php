@@ -16,6 +16,11 @@ class EnforceAdminOtpVerification
 {
     public function handle(Request $request, Closure $next): Response
     {
+        // Local geliştirme ortamında OTP e-posta bağımlılığını devre dışı bırak.
+        if (! filter_var((string) env('ADMIN_OTP_ENABLED', true), FILTER_VALIDATE_BOOL)) {
+            return $next($request);
+        }
+
         $user = Auth::user();
 
         if (! $user instanceof User) {

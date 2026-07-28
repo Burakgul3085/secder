@@ -86,18 +86,21 @@ class DemoContentSeeder extends Seeder
         $projects = [
             [
                 'title' => 'Ramazan Gida Destegi',
+                'slug' => 'ramazan-gida-destegi',
                 'description' => 'Ihtiyac sahibi ailelere duzenli gida paketi destegi.',
                 'status' => 'devam-ediyor',
                 'sort_order' => 1,
             ],
             [
                 'title' => 'Kislik Giyim Kampanyasi',
+                'slug' => 'kislik-giyim-kampanyasi',
                 'description' => 'Cocuklar icin mont, bot ve kislik kiyafet yardimi.',
                 'status' => 'tamamlandi',
                 'sort_order' => 2,
             ],
             [
                 'title' => 'Ogrenci Egitim Destegi',
+                'slug' => 'ogrenci-egitim-destegi',
                 'description' => 'Kirtasiye ve egitim bursu ile ogrencilerin yanindayiz.',
                 'status' => 'devam-ediyor',
                 'sort_order' => 3,

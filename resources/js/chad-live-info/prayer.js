@@ -1,11 +1,22 @@
-import { getChadMinutesSinceMidnight, parsePrayerTime } from './time';
+import { getMinutesSinceMidnight, parsePrayerTime } from './time';
 
-const ALADHAN_URL = 'https://api.aladhan.com/v1/timings?latitude=12.1067&longitude=15.0444&method=4';
+const ALADHAN_ENDPOINT = 'https://api.aladhan.com/v1/timings';
 
 const PRAYER_KEYS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
-export async function fetchAladhanData() {
-    const response = await fetch(ALADHAN_URL, {
+/**
+ * Seçili şehir için hicri tarih ve sıradaki namaz vaktini getirir.
+ *
+ * @param {{latitude: number, longitude: number, prayerMethod: number}} location
+ */
+export async function fetchAladhanData(location) {
+    const params = new URLSearchParams({
+        latitude: String(location.latitude),
+        longitude: String(location.longitude),
+        method: String(location.prayerMethod),
+    });
+
+    const response = await fetch(`${ALADHAN_ENDPOINT}?${params.toString()}`, {
         method: 'GET',
         headers: { Accept: 'application/json' },
     });
@@ -52,7 +63,7 @@ export function localizeHijri(hijriRaw, hijriMonths = {}) {
 }
 
 function resolveNextPrayer(timings) {
-    const now = getChadMinutesSinceMidnight();
+    const now = getMinutesSinceMidnight();
 
     for (const key of PRAYER_KEYS) {
         const time = timings[key];

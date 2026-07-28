@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\News\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
@@ -22,7 +23,10 @@ class NewsTable
                 TextColumn::make('published_at')->dateTime('d.m.Y H:i')->label('Yayın Tarihi'),
                 IconColumn::make('is_active')->boolean()->label('Aktif'),
             ])
-            ->recordActions([EditAction::make()])
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

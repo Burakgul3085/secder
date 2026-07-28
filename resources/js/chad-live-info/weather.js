@@ -1,7 +1,19 @@
-const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast?latitude=12.1067&longitude=15.0444&current=temperature_2m&timezone=Africa%2FNdjamena';
+const OPEN_METEO_ENDPOINT = 'https://api.open-meteo.com/v1/forecast';
 
-export async function fetchWeather() {
-    const response = await fetch(OPEN_METEO_URL, {
+/**
+ * Seçili şehir için anlık sıcaklığı getirir.
+ *
+ * @param {{latitude: number, longitude: number, timezone: string}} location
+ */
+export async function fetchWeather(location) {
+    const params = new URLSearchParams({
+        latitude: String(location.latitude),
+        longitude: String(location.longitude),
+        current: 'temperature_2m',
+        timezone: location.timezone,
+    });
+
+    const response = await fetch(`${OPEN_METEO_ENDPOINT}?${params.toString()}`, {
         method: 'GET',
         headers: { Accept: 'application/json' },
     });

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\MenuItems\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -21,7 +22,10 @@ class MenuItemsTable
                 TextColumn::make('sort_order')->label('Sıra'),
                 IconColumn::make('is_active')->boolean()->label('Aktif'),
             ])
-            ->recordActions([EditAction::make()])
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

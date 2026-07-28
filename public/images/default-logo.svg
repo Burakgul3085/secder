@@ -1,7 +1,8 @@
 <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="240" height="240" rx="32" fill="#F3F9FA"/>
-  <circle cx="120" cy="86" r="42" fill="#5BAFC1"/>
-  <path d="M50 150C72 119 95 127 110 151C95 179 72 187 50 150Z" fill="#2F8EA3"/>
-  <path d="M190 150C168 119 145 127 130 151C145 179 168 187 190 150Z" fill="#2F8EA3"/>
-  <text x="120" y="214" text-anchor="middle" fill="#2F8EA3" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600">BKD</text>
+  <!-- Kurumsal yedek logo: panelden logo yüklenmediğinde kullanılır -->
+  <rect width="240" height="240" rx="32" fill="#F5F7FB"/>
+  <circle cx="120" cy="120" r="86" stroke="#D1DBEC" stroke-width="8"/>
+  <circle cx="120" cy="98" r="34" fill="#5F6F9B"/>
+  <path d="M62 162C82 132 102 139 116 162C102 188 82 194 62 162Z" fill="#3F4C6B"/>
+  <path d="M178 162C158 132 138 139 124 162C138 188 158 194 178 162Z" fill="#3F4C6B"/>
 </svg>

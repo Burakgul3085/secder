@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Pages\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -17,7 +18,10 @@ class PagesTable
             TextColumn::make('title')->searchable()->label('Başlık'),
             TextColumn::make('slug')->label('Slug'),
             IconColumn::make('is_active')->boolean()->label('Aktif'),
-        ])->recordActions([EditAction::make()])
+        ])->recordActions([
+            EditAction::make(),
+            DeleteAction::make(),
+        ])
           ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

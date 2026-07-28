@@ -4,7 +4,7 @@
     {{-- ═══════════════════════════════════════════════════════
          HERO ALANI
     ═══════════════════════════════════════════════════════ --}}
-    <div style="background: linear-gradient(135deg, #0e4f6b 0%, #0891b2 55%, #0d9488 100%); position:relative; overflow:hidden;">
+    <div style="background: linear-gradient(135deg, #2b3245 0%, #3f4c6b 55%, #5f6f9b 100%); position:relative; overflow:hidden;">
         {{-- Dekoratif daireler --}}
         <div style="position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.05);pointer-events:none;"></div>
         <div style="position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,0.04);pointer-events:none;"></div>
@@ -66,12 +66,12 @@
                 <div style="display:flex;flex-wrap:wrap;gap:8px;">
                     <a href="{{ route('gallery') }}"
                        style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;
-                              {{ $activeSlug === '' ? 'background:#0891b2;color:#fff;box-shadow:0 2px 8px rgba(8,145,178,0.35);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
+                              {{ $activeSlug === '' ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
                     >{{ __('app.gallery.filter_all') }}</a>
                     @foreach($allProjects as $proj)
                     <a href="{{ route('gallery', ['activity' => $proj->slug]) }}"
                        style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;
-                              {{ $activeSlug === $proj->slug ? 'background:#0891b2;color:#fff;box-shadow:0 2px 8px rgba(8,145,178,0.35);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
+                              {{ $activeSlug === $proj->slug ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
                     >{{ $proj->getLocalized('title', $proj->title) }}</a>
                     @endforeach
                 </div>
@@ -81,15 +81,15 @@
             {{-- Medya yok --}}
             @if($projects->isEmpty())
             <div style="text-align:center;padding:80px 24px;">
-                <div style="width:72px;height:72px;border-radius:50%;background:#e0f2fe;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-                    <svg style="width:34px;height:34px;color:#0891b2;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <div style="width:72px;height:72px;border-radius:50%;background:#e8edf6;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                    <svg style="width:34px;height:34px;color:#4d5c83;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
                     </svg>
                 </div>
                 <p style="font-size:1.1rem;font-weight:700;color:#334155;margin:0 0 8px;">{{ __('app.gallery.empty_title') }}</p>
                 <p style="font-size:14px;color:#94a3b8;margin:0 0 20px;">{{ __('app.gallery.empty_desc') }}</p>
-                <a href="{{ route('gallery') }}" style="display:inline-block;background:#0891b2;color:#fff;font-size:14px;font-weight:700;padding:10px 24px;border-radius:999px;text-decoration:none;">{{ __('app.gallery.empty_btn') }}</a>
+                <a href="{{ route('gallery') }}" style="display:inline-block;background:#4d5c83;color:#fff;font-size:14px;font-weight:700;padding:10px 24px;border-radius:999px;text-decoration:none;">{{ __('app.gallery.empty_btn') }}</a>
             </div>
 
             @else
@@ -106,7 +106,7 @@
 
                         {{-- Bölüm başlığı --}}
                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #f1f5f9;">
-                            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#0891b2,#0d9488);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4d5c83,#5f6f9b);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <svg style="width:20px;height:20px;color:#fff;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
@@ -116,13 +116,13 @@
                                 <h2 style="font-size:1.15rem;font-weight:800;color:#0f172a;margin:0;line-height:1.3;">{{ $projectTitle }}</h2>
                                 <div style="display:flex;gap:12px;margin-top:4px;">
                                     @if(count($images) > 0)
-                                    <span style="font-size:12px;color:#0891b2;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+                                    <span style="font-size:12px;color:#4d5c83;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
                                         <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
                                         {{ count($images) }} {{ __('app.gallery.photo_count') }}
                                     </span>
                                     @endif
                                     @if(count($videos) > 0)
-                                    <span style="font-size:12px;color:#0d9488;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+                                    <span style="font-size:12px;color:#5f6f9b;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
                                         <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" /></svg>
                                         {{ count($videos) }} {{ __('app.gallery.video_count') }}
                                     </span>
@@ -130,8 +130,8 @@
                                 </div>
                             </div>
                             <a href="{{ route('activities.show', $project->slug) }}"
-                               style="flex-shrink:0;font-size:12px;font-weight:600;color:#0891b2;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #bae6fd;border-radius:999px;transition:all .2s;"
-                               onmouseover="this.style.background='#e0f2fe'" onmouseout="this.style.background='transparent'"
+                               style="flex-shrink:0;font-size:12px;font-weight:600;color:#4d5c83;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #d1dbec;border-radius:999px;transition:all .2s;"
+                               onmouseover="this.style.background='#f5f7fb'" onmouseout="this.style.background='transparent'"
                             >
                                 {{ __('app.gallery.activity_page') }}
                                 <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
@@ -190,7 +190,7 @@
                                         {{-- Oynat butonu overlay --}}
                                         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);transition:background .2s;">
                                             <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:transform .2s;">
-                                                <svg style="width:22px;height:22px;color:#0891b2;margin-left:3px;" fill="currentColor" viewBox="0 0 24 24">
+                                                <svg style="width:22px;height:22px;color:#4d5c83;margin-left:3px;" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M8 5.14v14l11-7-11-7z"/>
                                                 </svg>
                                             </div>
@@ -199,7 +199,7 @@
                                     </div>
                                     <div style="padding:10px 14px;background:#1e293b;">
                                         <p style="font-size:12px;font-weight:600;color:#cbd5e1;margin:0;display:flex;align-items:center;gap:6px;">
-                                            <svg style="width:12px;height:12px;color:#38bdf8;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" /></svg>
+                                            <svg style="width:12px;height:12px;color:#8397bd;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" /></svg>
                                             {{ $videoLabel }}
                                         </p>
                                     </div>

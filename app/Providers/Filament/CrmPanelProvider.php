@@ -5,8 +5,10 @@ namespace App\Providers\Filament;
 use App\Filament\Crm\Auth\Login;
 use App\Filament\Crm\Pages\CrmDashboard;
 use App\Models\Setting;
+use App\Support\BrandPalette;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -27,8 +29,16 @@ class CrmPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $canDelete = fn (): bool => auth('crm')->check()
-            && (auth('crm')->user()?->canDeleteRecords() ?? false);
+        // Bu kısıt yalnızca CRM paneli için geçerlidir; diğer panellerde
+        // silme yetkisi ilgili kaynağın kendi kurallarına bırakılır.
+        $canDelete = function (): bool {
+            if (Filament::getCurrentPanel()?->getId() !== 'crm') {
+                return true;
+            }
+
+            return auth('crm')->check()
+                && (auth('crm')->user()?->canDeleteRecords() ?? false);
+        };
 
         DeleteAction::configureUsing(
             fn (DeleteAction $action): DeleteAction => $action->visible($canDelete),
@@ -51,7 +61,7 @@ class CrmPanelProvider extends PanelProvider
                 ? asset('storage/' . Setting::current()->favicon)
                 : asset('images/default-logo.svg'))
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => BrandPalette::shades(),
                 'gray' => Color::Slate,
                 'success' => Color::Emerald,
                 'warning' => Color::Amber,

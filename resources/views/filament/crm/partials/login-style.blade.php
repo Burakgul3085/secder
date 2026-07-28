@@ -2,7 +2,7 @@
 
 <style>
     .fi-simple-layout .bkd-login-hero {
-        background: linear-gradient(130deg, #0d9488, #14b8a6);
+        background: linear-gradient(130deg, #333c55, #5f6f9b);
     }
 
     /* Dashboard filtreleri */
@@ -109,8 +109,8 @@
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem;
         padding: 1rem 1.1rem;
-        background: linear-gradient(135deg, #f0fdfa, #ecfeff);
-        border: 1px solid #99f6e4;
+        background: linear-gradient(135deg, #f5f7fb, #e8edf6);
+        border: 1px solid #d1dbec;
         border-radius: 14px;
     }
 
@@ -145,7 +145,7 @@
     .crm-activity-report__stat-value {
         font-size: 1.35rem;
         font-weight: 700;
-        color: #0f766e;
+        color: #3f4c6b;
         line-height: 1.2;
     }
 
@@ -185,7 +185,7 @@
     }
 
     .crm-activity-report__table th {
-        background: #0f766e;
+        background: #3f4c6b;
         color: #fff;
         font-weight: 600;
         position: sticky;
@@ -198,7 +198,7 @@
     }
 
     .crm-activity-report__table tbody tr:hover {
-        background: #f0fdfa;
+        background: #f5f7fb;
     }
 
     .crm-activity-report__table td.is-amount,
@@ -208,9 +208,9 @@
     }
 
     .crm-activity-report__table tfoot td {
-        background: #e2e8f0;
+        background: #e8edf6;
         font-weight: 700;
-        color: #0f766e;
+        color: #3f4c6b;
         border-bottom: none;
     }
 

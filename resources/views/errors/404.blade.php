@@ -21,8 +21,8 @@
             min-height: 100vh;
             font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
             background:
-                radial-gradient(1200px 500px at 20% -10%, rgba(6, 182, 212, 0.16), transparent 60%),
-                radial-gradient(900px 400px at 100% 0%, rgba(14, 116, 144, 0.13), transparent 55%),
+                radial-gradient(1200px 500px at 20% -10%, rgba(95, 111, 155, 0.16), transparent 60%),
+                radial-gradient(900px 400px at 100% 0%, rgba(51, 60, 85, 0.12), transparent 55%),
                 #f8fafc;
             color: #0f172a;
             display: grid;
@@ -45,7 +45,7 @@
             font-size: clamp(3rem, 10vw, 5.5rem);
             font-weight: 800;
             letter-spacing: -0.04em;
-            color: #0891b2;
+            color: #4d5c83;
             line-height: 1;
         }
 
@@ -76,24 +76,24 @@
             gap: 0.5rem;
             border: 0;
             border-radius: 999px;
-            background: linear-gradient(135deg, #0891b2, #06b6d4);
+            background: linear-gradient(135deg, #3f4c6b, #5f6f9b);
             color: #ffffff;
             text-decoration: none;
             font-weight: 700;
             font-size: 0.95rem;
             padding: 0.8rem 1.2rem;
             transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
-            box-shadow: 0 12px 26px rgba(6, 182, 212, 0.34);
+            box-shadow: 0 12px 26px rgba(77, 92, 131, 0.32);
         }
 
         .btn:hover {
             transform: translateY(-1px);
             filter: brightness(1.03);
-            box-shadow: 0 16px 32px rgba(6, 182, 212, 0.4);
+            box-shadow: 0 16px 32px rgba(77, 92, 131, 0.38);
         }
 
         .btn:focus-visible {
-            outline: 3px solid rgba(8, 145, 178, 0.34);
+            outline: 3px solid rgba(77, 92, 131, 0.34);
             outline-offset: 3px;
         }
     </style>

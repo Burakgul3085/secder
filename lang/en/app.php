@@ -231,13 +231,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Live Updates from Chad (homepage)
+    | Live Updates from Gaziantep (homepage)
     |--------------------------------------------------------------------------
     */
     'chad_live' => [
-        'badge'         => 'Chad',
-        'title'         => 'Live Updates from Chad',
-        'subtitle'      => 'Birlikte Kardeşlik Association continues its humanitarian aid activities in Chad without interruption.',
+        'badge'         => 'Gaziantep',
+        'title'         => 'Live Updates from Gaziantep',
+        'subtitle'      => 'Our association carries out its aid and solidarity activities from Gaziantep without interruption.',
         'weather'       => 'Weather',
         'local_time'    => 'Local Time',
         'hijri'         => 'Hijri Date',

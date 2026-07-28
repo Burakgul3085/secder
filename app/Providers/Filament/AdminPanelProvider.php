@@ -9,8 +9,7 @@ use App\Filament\Widgets\SuspiciousActivityAlert;
 use App\Http\Middleware\EnforceAdminOtpVerification;
 use App\Http\Middleware\LogAdminNavigation;
 use App\Models\Setting;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
+use App\Support\BrandPalette;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -31,16 +30,6 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $canDelete = fn (): bool => auth()->check() && (auth()->user()?->canManageContent() ?? false);
-
-        DeleteAction::configureUsing(
-            fn (DeleteAction $action): DeleteAction => $action->visible($canDelete),
-        );
-
-        DeleteBulkAction::configureUsing(
-            fn (DeleteBulkAction $action): DeleteBulkAction => $action->visible($canDelete),
-        );
-
         return $panel
             ->default()
             ->id('admin')
@@ -54,7 +43,7 @@ class AdminPanelProvider extends PanelProvider
                 ? asset('storage/' . Setting::current()->favicon)
                 : asset('images/default-logo.svg'))
             ->colors([
-                'primary' => Color::Cyan,
+                'primary' => BrandPalette::shades(),
                 'gray' => Color::Slate,
                 'success' => Color::Emerald,
                 'warning' => Color::Amber,

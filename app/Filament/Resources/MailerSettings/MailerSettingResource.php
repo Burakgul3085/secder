@@ -44,7 +44,7 @@ class MailerSettingResource extends Resource
 
     public static function canDelete($record): bool
     {
-        return false;
+        return auth()->check() && auth()->user()?->canManageAppearance();
     }
 
     public static function form(Schema $schema): Schema

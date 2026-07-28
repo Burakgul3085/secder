@@ -26,10 +26,15 @@ class SettingForm
                                 ->label('Site Başlığı')
                                 ->helperText('Menü ve footer gibi ana alanlarda görünür.')
                                 ->required(),
+                            TextInput::make('header_tagline')
+                                ->label('Header Sloganı')
+                                ->maxLength(80)
+                                ->placeholder('Örn: Secde Eden Bir Nesil İçin')
+                                ->helperText('Üst menüde logo ve dernek adının altında küçük büyük harflerle görünür. Boş bırakılırsa slogan satırı gizlenir. En fazla 80 karakter, tek satır önerilir.'),
                             Textarea::make('site_description')
                                 ->label('Kısa Açıklama')
                                 ->rows(3)
-                                ->helperText('Footer ve meta açıklama alanlarında kullanılır.'),
+                                ->helperText('Footer ve meta açıklama (SEO) alanlarında kullanılır.'),
                             FileUpload::make('logo')
                                 ->image()
                                 ->disk('public')

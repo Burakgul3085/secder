@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\BankAccounts\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -23,7 +24,10 @@ class BankAccountsTable
                 TextColumn::make('currency')->badge()->label('Döviz'),
                 IconColumn::make('is_active')->boolean()->label('Aktif'),
             ])
-            ->recordActions([EditAction::make()])
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

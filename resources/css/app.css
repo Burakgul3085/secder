@@ -10,11 +10,13 @@
     html,
     body {
         max-width: 100%;
-        overflow-x: hidden;
+        /* clip: yatay taşmayı engeller, ancak "hidden" gibi kaydırma kapsayıcısı
+           oluşturmadığı için sticky header düzgün çalışmaya devam eder. */
+        overflow-x: clip;
     }
 
     body {
-        @apply overflow-x-hidden bg-slate-50 text-slate-700 antialiased;
+        @apply bg-slate-50 text-slate-700 antialiased;
     }
 
     img,
@@ -69,8 +71,8 @@
         @apply pointer-events-none absolute left-1/2 top-0 z-0 h-full w-px -translate-x-1/2 border-0;
         background-image: repeating-linear-gradient(
             to bottom,
-            rgb(8 145 178 / 0.75) 0px,
-            rgb(8 145 178 / 0.75) 9px,
+            rgb(77 92 131 / 0.7) 0px,
+            rgb(77 92 131 / 0.7) 9px,
             transparent 9px,
             transparent 16px
         );
@@ -78,7 +80,7 @@
 
     .story-dot {
         @apply inline-flex h-4 w-4 shrink-0 rounded-full border-2 border-white bg-cyan-500 shadow ring-4 ring-cyan-500/25;
-        box-shadow: 0 0 0 1px rgba(8, 145, 178, 0.15), 0 8px 18px rgba(8, 145, 178, 0.24);
+        box-shadow: 0 0 0 1px rgba(77, 92, 131, 0.15), 0 8px 18px rgba(77, 92, 131, 0.22);
     }
 
     .story-link-line-left,
@@ -183,8 +185,8 @@
     width: 1.1rem;
     height: 1.1rem;
     border-radius: 9999px;
-    background: linear-gradient(135deg, #1ecad3, #07b7cb);
-    box-shadow: 0 8px 22px rgba(6, 182, 212, 0.35);
+    background: linear-gradient(135deg, #5f6f9b, #4d5c83);
+    box-shadow: 0 8px 22px rgba(77, 92, 131, 0.32);
     animation: page-transition-bounce 0.9s ease-in-out infinite;
 }
 
@@ -201,7 +203,7 @@
 }
 
 .chad-live-card {
-    border-top: 3px solid #0891b2;
+    border-top: 3px solid #4d5c83;
 }
 
 .chad-live-enter {

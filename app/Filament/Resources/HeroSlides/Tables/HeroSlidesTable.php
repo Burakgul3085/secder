@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\HeroSlides\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -19,7 +20,10 @@ class HeroSlidesTable
                 ImageColumn::make('image_path')->label('Görsel')->disk('public')->square(),
                 TextColumn::make('sort_order')->label('Sıra'),
                 IconColumn::make('is_active')->boolean()->label('Aktif'),
-            ])->recordActions([EditAction::make()])
+            ])->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
             ->toolbarActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 }

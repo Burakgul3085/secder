@@ -18,20 +18,72 @@
         'ru' => 'https://flagcdn.com/w40/ru.png',
     ];
     $currentFlag = $flagMap[$currentLocale] ?? $flagMap['tr'];
+
+    /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir.
+       Alan boşsa slogan satırı hiç basılmaz; tek satırda kalması için uzunluk sınırlanır. */
+    $brandTagline = trim((string) ($siteSettings->header_tagline ?? ''));
+    if (mb_strlen($brandTagline) > 42) {
+        $brandTagline = mb_substr($brandTagline, 0, 42) . '…';
+    }
+
+    /* Menüde bulunduğumuz sayfayı işaretlemek için yol karşılaştırması */
+    $currentPath = '/' . trim(request()->path(), '/');
+    $navIsActive = function (?string $url) use ($currentPath): bool {
+        if (blank($url)) {
+            return false;
+        }
+
+        $path = '/' . trim((string) parse_url($url, PHP_URL_PATH), '/');
+
+        if ($path === '/') {
+            return $currentPath === '/';
+        }
+
+        return $currentPath === $path || str_starts_with($currentPath, $path . '/');
+    };
+
+    /* Masaüstü menü bağlantıları için ortak sınıflar */
+    $navLinkBase = 'whitespace-nowrap rounded-lg px-2.5 py-2 text-[14px] font-semibold transition lg:px-3 lg:text-[15px]';
+    $navLinkIdle = 'text-slate-800 hover:bg-slate-100 hover:text-cyan-700';
+    $navLinkActive = 'bg-cyan-50 text-cyan-800';
 @endphp
 
 <header
     x-data="{
         contactOpen: false,
+        scrolled: false,
+        ticking: false,
+        /* Histerezis: açılma ve kapanma eşikleri farklı olduğu için
+           sınır noktasında ileri geri titreme oluşmaz. */
+        syncScroll() {
+            if (this.ticking) return;
+            this.ticking = true;
+            requestAnimationFrame(() => {
+                const y = window.scrollY;
+                if (! this.scrolled && y > 140) {
+                    this.scrolled = true;
+                } else if (this.scrolled && y < 70) {
+                    this.scrolled = false;
+                }
+                this.ticking = false;
+            });
+        },
         init() {
+            this.scrolled = window.scrollY > 140;
             this.$watch('contactOpen', (v) => {
                 document.documentElement.classList.toggle('overflow-hidden', v);
             });
         }
     }"
-    class="sticky top-0 z-40 border-b border-slate-100 bg-white/95 shadow-sm backdrop-blur"
+    {{-- Sayfa kaydırıldığında header incelir ve gölgesi belirginleşir --}}
+    @scroll.window.passive="syncScroll()"
+    class="sticky top-0 z-40 border-b border-slate-100 bg-white/95 backdrop-blur transition-shadow duration-300"
+    :class="scrolled ? 'shadow-lg shadow-slate-900/5' : 'shadow-sm'"
 >
-    <div class="border-b border-cyan-800/60 bg-cyan-900 text-cyan-50">
+    <div
+        class="overflow-hidden border-b border-cyan-800/60 bg-cyan-900 text-cyan-50 transition-all duration-300"
+        :class="scrolled ? 'md:max-h-0 md:border-b-0 md:opacity-0' : 'md:max-h-24 md:opacity-100'"
+    >
         @php
             $topBarSocialMap = [
                 'instagram_url' => 'instagram',
@@ -137,10 +189,36 @@
         </div>
     </div>
 
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 sm:px-4 md:gap-3 md:px-6 md:py-2.5">
-        <a href="{{ route('home') }}" class="flex min-w-0 items-center gap-2 sm:gap-2.5">
-            <img src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}" alt="Logo" class="h-9 w-9 shrink-0 rounded-full object-cover shadow-sm ring-1 ring-slate-200 sm:h-10 sm:w-10 md:h-11 md:w-11">
-            <span class="max-w-[120px] truncate text-sm font-semibold tracking-tight text-slate-900 sm:max-w-[150px] md:max-w-none md:text-[1.05rem]">{{ $siteSettings->site_title }}</span>
+    <div
+        class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
+        :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
+    >
+        {{-- Marka kilidi: logo + dernek adı + slogan --}}
+        <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <span class="relative shrink-0">
+                <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
+                <img
+                    src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}"
+                    alt="{{ $siteSettings->site_title }}"
+                    class="relative h-10 w-10 rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300 sm:h-11 sm:w-11"
+                    :class="scrolled ? 'md:h-10 md:w-10' : 'md:h-12 md:w-12'"
+                >
+            </span>
+
+            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
+
+            <span class="min-w-0 leading-tight">
+                <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
+                @if($brandTagline !== '')
+                    {{-- Slogan yalnızca menüye yer bırakan geniş ekranlarda görünür;
+                         taşmayı önlemek için tek satır ve sınırlı genişliktedir.
+                         Sayfa kaydırılınca header'ı daha da inceltmek için gizlenir. --}}
+                    <span
+                        class="mt-1 hidden max-w-[260px] truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-700/90 min-[1340px]:block"
+                        :class="scrolled ? 'min-[1340px]:hidden' : 'min-[1340px]:block'"
+                    >{{ $brandTagline }}</span>
+                @endif
+            </span>
         </a>
 
         <div class="flex shrink-0 items-center gap-1 sm:gap-1.5 md:hidden">
@@ -185,7 +263,12 @@
                     <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
                 </span>
             </button>
-            <a href="{{ route('donations') }}" class="inline-flex h-9 items-center rounded-full bg-cyan-600 px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-cyan-700 sm:px-3 sm:text-[11px]">{{ __('app.nav.donate_short') }}</a>
+            <a href="{{ route('donations') }}" class="inline-flex h-9 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:px-3 sm:text-[11px]">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                    <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
+                </svg>
+                {{ __('app.nav.donate_short') }}
+            </a>
             <a href="{{ route('volunteer') }}" class="hidden h-9 items-center rounded-full border border-cyan-200 bg-white px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 sm:inline-flex sm:px-3 sm:text-[11px]">{{ __('app.nav.volunteer_short') }}</a>
             <a href="{{ route('zakat.index') }}" class="inline-flex h-9 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 sm:px-3 sm:text-[11px]" title="{{ __('app.nav.zakat_calculate') }}">{{ __('app.nav.zakat_short') }}</a>
         </div>
@@ -204,19 +287,21 @@
                 ->groupBy('parent_id');
         @endphp
         <nav class="hidden items-center gap-0.5 md:flex lg:gap-1">
-            <a href="{{ route('home') }}" class="rounded-lg px-3 py-2 text-[15px] font-semibold text-slate-800 transition hover:bg-slate-100 hover:text-cyan-700 lg:px-4">{{ __('app.nav.home') }}</a>
+            <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
                 @php
                     $children = $headerChildren->get($item->id, collect());
                     $hasChildren = $children->isNotEmpty();
                     $itemLabel = navMenuLabel($item->label);
+                    $isActiveItem = $navIsActive($item->url)
+                        || $children->contains(fn ($child) => $navIsActive($child->url));
                 @endphp
                 @if ($hasChildren)
                     <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                         <button
                             type="button"
-                            class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-[15px] font-semibold text-slate-800 transition hover:bg-slate-100 hover:text-cyan-700 lg:px-4"
+                            class="inline-flex items-center gap-1 {{ $navLinkBase }} {{ $isActiveItem ? $navLinkActive : $navLinkIdle }}"
                             :aria-expanded="open"
                         >
                             <span>{{ $itemLabel }}</span>
@@ -235,7 +320,7 @@
                                     <a
                                         href="{{ $child->url }}"
                                         target="{{ $child->open_in_new_tab ? '_blank' : '_self' }}"
-                                        class="block border-b border-slate-100 px-4 py-2.5 text-[15px] font-medium text-slate-700 transition last:border-b-0 hover:bg-slate-50 hover:text-cyan-700"
+                                        class="block border-b border-slate-100 px-4 py-2.5 text-[15px] font-medium transition last:border-b-0 hover:bg-slate-50 hover:text-cyan-700 {{ $navIsActive($child->url) ? 'bg-cyan-50/70 text-cyan-800' : 'text-slate-700' }}"
                                     >{{ navMenuLabel($child->label) }}</a>
                                 @endforeach
                             </div>
@@ -245,16 +330,16 @@
                     <a
                         href="{{ $item->url }}"
                         target="{{ $item->open_in_new_tab ? '_blank' : '_self' }}"
-                        class="rounded-lg px-3 py-2 text-[15px] font-semibold text-slate-800 transition hover:bg-slate-100 hover:text-cyan-700 lg:px-4"
+                        class="{{ $navLinkBase }} {{ $isActiveItem ? $navLinkActive : $navLinkIdle }}"
                     >{{ $itemLabel }}</a>
                 @endif
             @empty
                 <span class="rounded-xl bg-slate-100 px-4 py-2 text-sm text-slate-500">{{ __('app.nav.menu_empty') }}</span>
             @endforelse
 
-            <a href="{{ route('news.index') }}" class="rounded-lg px-3 py-2 text-[15px] font-semibold text-slate-800 transition hover:bg-slate-100 hover:text-cyan-700 lg:px-4">{{ __('app.nav.news') }}</a>
+            <a href="{{ route('news.index') }}" class="{{ $navLinkBase }} {{ request()->routeIs('news.*') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.news') }}</a>
 
-            <a href="{{ route('contact') }}" class="rounded-lg px-3 py-2 text-[15px] font-semibold text-slate-800 transition hover:bg-slate-100 hover:text-cyan-700 lg:px-4">{{ __('app.nav.contact') }}</a>
+            <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
 
             <div class="ml-1 flex shrink-0 items-center gap-1 pl-1 lg:gap-1.5">
                 {{-- Galeri / Kamera ikonu --}}
@@ -283,10 +368,16 @@
                         <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
                     </span>
                 </button>
+                {{-- Ana çağrı butonu: kurumsal gradyan + kalp ikonu --}}
                 <a
                     href="{{ route('donations') }}"
-                    class="inline-flex h-9 items-center rounded-full bg-cyan-600 px-3 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-cyan-700 lg:h-10 lg:px-4 lg:text-xs"
-                >{{ __('app.nav.donate') }}</a>
+                    class="group/donate inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-3 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:shadow-md hover:shadow-cyan-900/20 hover:brightness-110 lg:h-10 lg:px-4 lg:text-xs"
+                >
+                    <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 transition-transform duration-300 group-hover/donate:scale-110" aria-hidden="true">
+                        <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
+                    </svg>
+                    {{ __('app.nav.donate') }}
+                </a>
 
                 {{-- Dil Seçici --}}
                 <div
@@ -338,8 +429,8 @@
                     class="inline-flex h-9 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-100 lg:h-10 lg:px-3.5 lg:text-xs"
                     title="{{ __('app.nav.zakat_calculate') }}"
                 >
-                    <span class="lg:hidden">{{ __('app.nav.zakat_short') }}</span>
-                    <span class="hidden lg:inline">{{ __('app.nav.zakat_calculate') }}</span>
+                    {{-- Kısa etiket: marka alanındaki slogana yer bırakır, tam adı title'da --}}
+                    {{ __('app.nav.zakat_short') }}
                 </a>
             </div>
         </nav>

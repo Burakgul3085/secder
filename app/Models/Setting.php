@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class Setting extends Model
 {
     protected $fillable = [
         'site_title',
         'site_description',
+        'header_tagline',
         'logo',
         'favicon',
         'phone',
@@ -61,8 +63,33 @@ class Setting extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'mailer_password' => 'encrypted',
     ];
+
+    public function getMailerPasswordAttribute($value): ?string
+    {
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        try {
+            return Crypt::decryptString($value);
+        } catch (\Throwable) {
+            // Local ortamlarda farkli APP_KEY ile gelen veriler cozulemeyebilir.
+            return null;
+        }
+    }
+
+    public function setMailerPasswordAttribute($value): void
+    {
+        $value = is_string($value) ? trim($value) : $value;
+
+        if ($value === null || $value === '') {
+            $this->attributes['mailer_password'] = null;
+            return;
+        }
+
+        $this->attributes['mailer_password'] = Crypt::encryptString((string) $value);
+    }
 
     public static function current(): self
     {

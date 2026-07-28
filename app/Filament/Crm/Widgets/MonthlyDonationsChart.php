@@ -3,6 +3,7 @@
 namespace App\Filament\Crm\Widgets;
 
 use App\Filament\Crm\Widgets\Concerns\InteractsWithCrmDashboardFilters;
+use App\Support\BrandPalette;
 use App\Support\Crm\DonationDateFilter;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -136,8 +137,8 @@ class MonthlyDonationsChart extends ChartWidget
                     'data' => $data,
                     'fill' => true,
                     'tension' => 0.3,
-                    'borderColor' => '#0891b2',
-                    'backgroundColor' => 'rgba(8, 145, 178, 0.12)',
+                    'borderColor' => BrandPalette::PRIMARY,
+                    'backgroundColor' => 'rgba(77, 92, 131, 0.12)',
                 ],
             ],
             'labels' => $labels,

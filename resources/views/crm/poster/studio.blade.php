@@ -31,7 +31,7 @@
             word-break: break-word;
         }
         .studio-bar a {
-            color: #93c5fd;
+            color: #aebfda;
             text-decoration: none;
             font-weight: 600;
             font-size: 13px;

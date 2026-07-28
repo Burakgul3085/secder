@@ -23,7 +23,7 @@
 <body style="margin:0; padding:24px; background:#f1f5f9; font-family:Arial,Helvetica,sans-serif; color:#0f172a;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px; margin:0 auto; background:#ffffff; border:1px solid #e2e8f0; border-radius:16px; overflow:hidden;">
         <tr>
-            <td style="padding:20px 24px; background:linear-gradient(135deg, #0e7490, #06b6d4);">
+            <td style="padding:20px 24px; background:linear-gradient(135deg, #333c55, #5f6f9b);">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td style="vertical-align:middle;">
@@ -31,7 +31,7 @@
                         </td>
                         <td style="padding-left:12px; vertical-align:middle;">
                             <div style="font-size:16px; font-weight:700; color:#ffffff;">{{ $siteTitle }}</div>
-                            <div style="font-size:12px; color:#cffafe;">Kurumsal Bilgilendirme</div>
+                            <div style="font-size:12px; color:#d1dbec;">Kurumsal Bilgilendirme</div>
                         </td>
                     </tr>
                 </table>
@@ -59,7 +59,7 @@
 
                 @if(!empty($websiteUrl))
                     <div style="margin-top:18px;">
-                        <a href="{{ $websiteUrl }}" target="_blank" style="display:inline-block; background:#0891b2; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; padding:10px 16px; border-radius:10px;">
+                        <a href="{{ $websiteUrl }}" target="_blank" style="display:inline-block; background:#4d5c83; color:#ffffff; text-decoration:none; font-size:13px; font-weight:700; padding:10px 16px; border-radius:10px;">
                             Web Sitemizi Ziyaret Edin
                         </a>
                     </div>
@@ -76,21 +76,21 @@
                     <strong>{{ $siteTitle }}</strong><br>
                     Telefon:
                     @if($sitePhone !== '-')
-                        <a href="tel:{{ preg_replace('/\s+/', '', $sitePhone) }}" style="color:#0e7490; text-decoration:none;">{{ $sitePhone }}</a>
+                        <a href="tel:{{ preg_replace('/\s+/', '', $sitePhone) }}" style="color:#3f4c6b; text-decoration:none;">{{ $sitePhone }}</a>
                     @else
                         {{ $sitePhone }}
                     @endif
                     <br>
                     E-posta:
                     @if($siteEmail !== '-')
-                        <a href="mailto:{{ $siteEmail }}" style="color:#0e7490; text-decoration:none;">{{ $siteEmail }}</a>
+                        <a href="mailto:{{ $siteEmail }}" style="color:#3f4c6b; text-decoration:none;">{{ $siteEmail }}</a>
                     @else
                         {{ $siteEmail }}
                     @endif
                     <br>
                     Web Site:
                     @if(!empty($websiteUrl))
-                        <a href="{{ $websiteUrl }}" target="_blank" style="color:#0e7490; text-decoration:none;">{{ $websiteUrl }}</a>
+                        <a href="{{ $websiteUrl }}" target="_blank" style="color:#3f4c6b; text-decoration:none;">{{ $websiteUrl }}</a>
                     @else
                         -
                     @endif
@@ -98,7 +98,7 @@
                 <div style="margin-top:10px; font-size:12px; color:#475569;">
                     @foreach($socialLinks as $label => $url)
                         @if(!empty($url))
-                            <a href="{{ $url }}" target="_blank" style="color:#0e7490; text-decoration:none; margin-right:10px;">{{ $label }}</a>
+                            <a href="{{ $url }}" target="_blank" style="color:#3f4c6b; text-decoration:none; margin-right:10px;">{{ $label }}</a>
                         @endif
                     @endforeach
                 </div>

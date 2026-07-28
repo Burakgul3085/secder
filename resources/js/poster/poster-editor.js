@@ -425,7 +425,7 @@ class PosterCanvas {
         const text = new fabric.Textbox(rawContent, {
             fontSize: desiredSize,
             fontFamily: layer.fontFamily ?? 'Inter',
-            fill: layer.fill ?? '#1d4ed8',
+            fill: layer.fill ?? '#3f4c6b',
             fontWeight: layer.fontWeight ?? 'normal',
             fontStyle: layer.fontStyle ?? 'normal',
             underline: layer.underline ?? false,
@@ -460,7 +460,7 @@ class PosterCanvas {
             width: bw,
             height: bh,
             fill: 'rgba(0,0,0,0)',
-            stroke: isGen ? 'rgba(0,0,0,0)' : '#3b82f6',
+            stroke: isGen ? 'rgba(0,0,0,0)' : '#5f6f9b',
             strokeDashArray: isGen ? null : [6, 4],
             strokeWidth: isGen ? 0 : 1,
             strokeUniform: true,
@@ -705,8 +705,8 @@ function el(tag, attrs = {}, children = []) {
 }
 
 const BTN = 'display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);';
-const BTN_ACTIVE = BTN + 'background:#e0f2fe;border-color:#38bdf8;color:#0369a1;';
-const BTN_PRIMARY = 'display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;border:1px solid #0d9488;background:#0d9488;color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);';
+const BTN_ACTIVE = BTN + 'background:#e8edf6;border-color:#8397bd;color:#3f4c6b;';
+const BTN_PRIMARY = 'display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;border:1px solid #4d5c83;background:#4d5c83;color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);';
 const FIELD = 'width:100%;padding:7px 9px;border-radius:8px;border:1px solid #cbd5e1;font-size:13px;background:#fff;color:#0f172a;';
 const LABEL = 'display:block;font-size:12px;font-weight:600;color:#475569;margin:10px 0 4px;';
 const HINT = 'font-size:11px;color:#64748b;margin-top:4px;line-height:1.4;';
@@ -793,7 +793,7 @@ function buildToolbar(toolbar, pc, config) {
             height: Math.round(pc.naturalH * 0.12),
             fontSize: 44,
             fontFamily: 'Inter',
-            fill: '#1d4ed8',
+            fill: '#3f4c6b',
             textAlign: 'center',
             valign: 'middle',
         });
@@ -907,7 +907,7 @@ function buildPropsPanel(panel, pc, config) {
     wrap.appendChild(sizeInput);
     wrap.appendChild(el('div', { style: HINT }, 'Yazı yalnızca kelime sınırlarında alt satıra geçer; kutuya sığmazsa punto otomatik küçülür.'));
 
-    const fittedHint = el('div', { style: HINT + 'color:#0369a1;' }, '');
+    const fittedHint = el('div', { style: HINT + 'color:#3f4c6b;' }, '');
     wrap.appendChild(fittedHint);
 
     const colorInput = el('input', { type: 'color', style: 'width:100%;height:38px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;cursor:pointer;' });
@@ -987,7 +987,7 @@ function buildPropsPanel(panel, pc, config) {
             fittedHint.textContent = 'Metin kutuya sığmıyor — kutu yüksekliğini artırın veya istenen puntoyu küçültün.';
             fittedHint.style.color = '#b45309';
         } else {
-            fittedHint.style.color = '#0369a1';
+            fittedHint.style.color = '#3f4c6b';
             fittedHint.textContent = fitted < desired
                 ? `Kutuya sığan gerçek boyut: ${Math.round(fitted)} px`
                 : '';
@@ -1073,7 +1073,7 @@ function buildPropsPanel(panel, pc, config) {
 }
 
 function toHex(fill) {
-    if (typeof fill !== 'string') return '#1d4ed8';
+    if (typeof fill !== 'string') return '#3f4c6b';
     if (fill.startsWith('#')) {
         if (fill.length === 4) {
             return '#' + fill.slice(1).split('').map((c) => c + c).join('');
@@ -1084,7 +1084,7 @@ function toHex(fill) {
     if (m) {
         return '#' + [m[1], m[2], m[3]].map((n) => parseInt(n, 10).toString(16).padStart(2, '0')).join('');
     }
-    return '#1d4ed8';
+    return '#3f4c6b';
 }
 
 /* ---------------------------------------------------------------------------

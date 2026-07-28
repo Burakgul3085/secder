@@ -5,17 +5,17 @@
     <style>
         @page { margin: 28px 32px; }
         body { font-family: DejaVu Sans, sans-serif; color: #0f172a; font-size: 12px; line-height: 1.5; }
-        .header { border-bottom: 3px solid #0d9488; padding-bottom: 14px; margin-bottom: 20px; }
+        .header { border-bottom: 3px solid #4d5c83; padding-bottom: 14px; margin-bottom: 20px; }
         .brand { display: table; width: 100%; }
         .brand-logo { width: 58px; height: 58px; border-radius: 50%; }
-        .title { font-size: 20px; font-weight: bold; color: #0d9488; margin: 0; }
+        .title { font-size: 20px; font-weight: bold; color: #3f4c6b; margin: 0; }
         .subtitle { color: #64748b; margin-top: 4px; }
-        .badge { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; }
+        .badge { display: inline-block; background: #e8edf6; color: #3f4c6b; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; }
         .grid { width: 100%; border-collapse: collapse; margin: 16px 0; }
         .grid td { padding: 8px 10px; border: 1px solid #e2e8f0; vertical-align: top; }
         .grid td.label { width: 32%; background: #f8fafc; font-weight: bold; color: #334155; }
-        .amount-box { background: linear-gradient(135deg, #f0fdfa, #ecfeff); border: 1px solid #99f6e4; border-radius: 12px; padding: 16px; text-align: center; margin: 18px 0; }
-        .amount { font-size: 26px; font-weight: bold; color: #0d9488; }
+        .amount-box { background: linear-gradient(135deg, #f5f7fb, #e8edf6); border: 1px solid #d1dbec; border-radius: 12px; padding: 16px; text-align: center; margin: 18px 0; }
+        .amount { font-size: 26px; font-weight: bold; color: #3f4c6b; }
         .footer { margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 14px; }
         .qr-wrap { text-align: right; }
         .qr { width: 92px; height: 92px; }
