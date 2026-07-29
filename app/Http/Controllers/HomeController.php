@@ -18,7 +18,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use PHPMailer\PHPMailer\Exception;
 
@@ -33,18 +32,14 @@ class HomeController extends Controller
         $defaultImage = asset('images/default-logo.svg');
 
         return $heroSlides->map(function (HeroSlide $slide) use ($defaultImage) {
-            $desktopImage = $slide->image_path ? Storage::url($slide->image_path) : $defaultImage;
-            $tabletImage = $slide->image_path_tablet
-                ? Storage::url($slide->image_path_tablet)
-                : $desktopImage;
-            $mobileImage = $slide->image_path_mobile
-                ? Storage::url($slide->image_path_mobile)
-                : $tabletImage;
+            // Cihaz bandlarına oturtulmuş varyantlar; yoksa yüklenen orijinale düşer.
+            $set = $slide->imageSet();
 
             return [
-                'image' => $desktopImage,
-                'image_tablet' => $tabletImage,
-                'image_mobile' => $mobileImage,
+                'image' => $set['image'] ?? $defaultImage,
+                'image_mobile' => $set['mobile'] ?? '',
+                'image_tablet' => $set['tablet'] ?? '',
+                'desktop_srcset' => $set['desktop_srcset'] ?? '',
             ];
         })->values()->all();
     }

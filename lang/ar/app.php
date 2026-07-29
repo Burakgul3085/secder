@@ -331,6 +331,8 @@ return [
         'testimonials_next' => 'التعليق التالي',
         'testimonials_go_to' => 'الانتقال إلى التعليق',
         'testimonials_share_cta' => 'شارك تجربتك',
+        'testimonials_share_title' => 'شارك قصتك أيضاً',
+        'testimonials_share_desc' => 'تجربتك في التبرع أو التطوع قد تلهم الآخرين. ملاحظة قصيرة تكفي؛ تُنشر بعد المراجعة.',
         'testimonials_empty_title' => 'كن أول من يشارك تجربته.',
         'testimonials_empty_desc' => 'شارك تجربتك في التبرع أو التطوع وادعم رحلتنا الإنسانية.',
         'testimonials_success' => 'تم استلام تجربتك وسيتم نشرها بعد المراجعة.',

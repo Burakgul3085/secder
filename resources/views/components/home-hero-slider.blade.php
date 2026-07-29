@@ -10,16 +10,22 @@
 @if($firstImage)
 <div
     id="hero-static-fallback"
-    class="relative w-full overflow-hidden bg-slate-100"
-    style="height:clamp(260px,58svh,600px)"
+    class="relative w-full max-h-[760px] overflow-hidden bg-slate-100 aspect-[1/1] md:aspect-[2/1] lg:aspect-[4/1]"
 >
     <picture>
-        <source media="(max-width: 767px)" srcset="{{ $slides[0]['image_mobile'] ?? $firstImage }}">
-        <source media="(max-width: 1023px)" srcset="{{ $slides[0]['image_tablet'] ?? $firstImage }}">
+        @if(filled($slides[0]['image_mobile'] ?? null))
+            <source media="(max-width: 767px)" type="image/webp" srcset="{{ $slides[0]['image_mobile'] }}">
+        @endif
+        @if(filled($slides[0]['image_tablet'] ?? null))
+            <source media="(max-width: 1023px)" type="image/webp" srcset="{{ $slides[0]['image_tablet'] }}">
+        @endif
+        @if(filled($slides[0]['desktop_srcset'] ?? null))
+            <source type="image/webp" srcset="{{ $slides[0]['desktop_srcset'] }}" sizes="100vw">
+        @endif
         <img
             src="{{ $firstImage }}"
             alt="Hero"
-            class="h-full w-full object-contain object-center"
+            class="absolute inset-0 h-full w-full object-cover object-center"
             loading="eager"
         >
     </picture>
@@ -48,24 +54,22 @@
         role="region"
         aria-roledescription="carousel"
     >
-        <div
-            class="relative w-full h-[min(58svh,600px)] min-h-[260px] sm:h-[min(62svh,640px)] sm:min-h-[300px] md:h-[min(68svh,720px)] md:min-h-[360px] lg:h-[min(70vh,800px)]"
-        >
-            <div class="absolute inset-0 z-0">
-                <picture>
-                    <source media="(max-width: 767px)" :srcset="current.image_mobile || current.image_tablet || current.image">
-                    <source media="(max-width: 1023px)" :srcset="current.image_tablet || current.image">
-                    <img
-                        :src="current.image"
-                        :alt="'Hero slayt ' + (idx + 1)"
-                        class="h-full w-full object-contain object-center"
-                        sizes="100vw"
-                        loading="eager"
-                        decoding="async"
-                        fetchpriority="high"
-                    />
-                </picture>
-            </div>
+        {{-- Sabit oranlı geniş banner: telefon 1:1, tablet 2:1, masaüstü 4:1.
+             Yönetim panelinde üretilen varyantlar bu oranlara birebir oturur. --}}
+        <div class="relative w-full max-h-[760px] overflow-hidden aspect-[1/1] md:aspect-[2/1] lg:aspect-[4/1]">
+            <picture>
+                <source media="(max-width: 767px)" type="image/webp" :srcset="current.image_mobile">
+                <source media="(max-width: 1023px)" type="image/webp" :srcset="current.image_tablet">
+                <source type="image/webp" :srcset="current.desktop_srcset" sizes="100vw">
+                <img
+                    :src="current.image"
+                    :alt="'Hero slayt ' + (idx + 1)"
+                    class="absolute inset-0 h-full w-full object-cover object-center"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority="high"
+                />
+            </picture>
 
             {{-- Oklar (tam genişlik kenarları) --}}
             <template x-if="total > 1">
@@ -95,8 +99,9 @@
                 </div>
             </template>
 
+            {{-- Noktalar görselin alt kenarında yüzer; altta beyaz şerit oluşmaz --}}
             <div
-                class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2 md:bottom-5"
+                class="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-slate-900/35 px-3 py-2 backdrop-blur-sm md:bottom-5"
                 x-show="total > 1"
                 role="tablist"
                 aria-label="Slayt seçimi"
@@ -104,8 +109,8 @@
                 <template x-for="(slide, i) in slides" :key="'hero-dot-' + i">
                     <button
                         type="button"
-                        class="h-2.5 w-2.5 rounded-full transition focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                        :class="idx === i ? 'scale-125 bg-blue-800 shadow-sm' : 'bg-blue-200/90 hover:bg-blue-300'"
+                        class="h-2 rounded-full transition focus:outline-none focus:ring-2 focus:ring-white/70"
+                        :class="idx === i ? 'w-6 bg-white' : 'w-2 bg-white/55 hover:bg-white/80'"
                         @click="go(i)"
                         :aria-label="'Slayt ' + (i + 1)"
                         :aria-current="idx === i ? 'true' : 'false'"

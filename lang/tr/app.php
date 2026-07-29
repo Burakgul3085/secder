@@ -368,6 +368,8 @@ return [
         'testimonials_next' => 'Sonraki yorum',
         'testimonials_go_to' => 'Yoruma git',
         'testimonials_share_cta' => 'Deneyiminizi Paylaşın',
+        'testimonials_share_title' => 'Siz de deneyiminizi anlatın',
+        'testimonials_share_desc' => 'Bağış veya gönüllülük yolculuğunuz, başka destekçilere ilham olur. Kısa bir yorum bırakmanız yeterli; onay sonrası yayınlanır.',
         'testimonials_empty_title' => 'İlk deneyiminizi paylaşan kişi siz olun.',
         'testimonials_empty_desc' => 'Bağış veya gönüllülük deneyiminizi paylaşarak iyilik yolculuğumuza katkı sağlayabilirsiniz.',
         'testimonials_success' => 'Deneyiminiz alındı. İncelendikten sonra yayınlanacaktır.',

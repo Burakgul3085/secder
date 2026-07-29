@@ -331,6 +331,8 @@ return [
         'testimonials_next' => 'Next review',
         'testimonials_go_to' => 'Go to review',
         'testimonials_share_cta' => 'Share Your Experience',
+        'testimonials_share_title' => 'Share your story too',
+        'testimonials_share_desc' => 'Your donation or volunteering journey can inspire others. A short note is enough; it is published after review.',
         'testimonials_empty_title' => 'Be the first to share your experience.',
         'testimonials_empty_desc' => 'Share your donation or volunteer experience and support our humanitarian journey.',
         'testimonials_success' => 'Your experience has been received and will be published after review.',
