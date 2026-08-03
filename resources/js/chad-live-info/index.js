@@ -34,8 +34,10 @@ document.addEventListener('alpine:init', () => {
         hijri: '--',
         prayerName: '--',
         prayerTime: '--',
+        timeTick: false,
         _clockTimer: null,
         _refreshTimer: null,
+        _tickTimer: null,
 
         init() {
             // Önbellek ve saat dilimi, veri okumadan önce şehre göre ayarlanır.
@@ -43,7 +45,7 @@ document.addEventListener('alpine:init', () => {
             configureTimezone(this.location.timezone);
 
             this.bootstrap();
-            this._clockTimer = window.setInterval(() => this.tickClock(), 60_000);
+            this._clockTimer = window.setInterval(() => this.tickClock(), 1000);
             this._refreshTimer = window.setInterval(() => this.refreshStaleData(), 60_000);
         },
 
@@ -53,6 +55,9 @@ document.addEventListener('alpine:init', () => {
             }
             if (this._refreshTimer) {
                 window.clearInterval(this._refreshTimer);
+            }
+            if (this._tickTimer) {
+                window.clearTimeout(this._tickTimer);
             }
         },
 
@@ -89,7 +94,21 @@ document.addEventListener('alpine:init', () => {
         },
 
         tickClock() {
-            this.localTime = formatLocalTime(this.locale);
+            const next = formatLocalTime(this.locale);
+            if (next === this.localTime) {
+                return;
+            }
+
+            this.localTime = next;
+            this.timeTick = true;
+
+            if (this._tickTimer) {
+                window.clearTimeout(this._tickTimer);
+            }
+
+            this._tickTimer = window.setTimeout(() => {
+                this.timeTick = false;
+            }, 280);
         },
 
         applyWeatherFromCache() {

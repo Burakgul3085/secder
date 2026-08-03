@@ -51,7 +51,6 @@
                 : __('app.legal.cookie_content'),
         ],
     ];
-    /* TR dilinde admin paneli içeriği önceliklidir; diğer dillerde lang dosyası kullanılır */
     $legalTextItems = array_values($legalTextItems);
 
     $excludedMainLabels = ['ana sayfa', 'anasayfa', 'iletişim', 'iletisim', 'bağış', 'bagis', 'bağış yap', 'bagis yap', 'bağış hesapları', 'bagis hesaplari', 'medyada biz'];
@@ -59,40 +58,30 @@
         ->whereNull('parent_id')
         ->filter(function ($item) use ($excludedMainLabels) {
             $label = mb_strtolower(trim((string) $item->label));
+
             return ! in_array($label, $excludedMainLabels, true);
         })
         ->values();
     $footerChildren = $menuItems
         ->whereNotNull('parent_id')
         ->groupBy('parent_id');
-    $mapsEmbedUrl = trim((string) ($siteSettings->google_maps_embed_url ?? ''));
-    $normalizedMapsUrl  = null;
-    $mapsDirectUrl      = null;
-    $mapsNeedsExternalOpen = false;
-    if ($mapsEmbedUrl !== '') {
-        $mapsDirectUrl = $mapsEmbedUrl;
-        if (\Illuminate\Support\Str::contains($mapsEmbedUrl, ['maps.app.goo.gl', 'goo.gl/maps'])) {
-            if (filled($siteSettings->address)) {
-                $normalizedMapsUrl = 'https://www.google.com/maps?q=' . urlencode((string) $siteSettings->address) . '&output=embed';
-            } else {
-                $mapsNeedsExternalOpen = true;
-            }
-        } else {
-            $normalizedMapsUrl = \Illuminate\Support\Str::contains($mapsEmbedUrl, ['/maps/embed', 'output=embed'])
-                ? $mapsEmbedUrl
-                : 'https://www.google.com/maps?q=' . urlencode($mapsEmbedUrl) . '&output=embed';
-        }
-    }
 
-    /* Menü etiketini çeviren yardımcı (footer için) */
-    function footerMenuLabel(string $label): string {
-        $key = 'app.menu.' . $label;
-        return __($key) !== $key ? __($key) : $label;
+    $hasContact = filled($siteSettings->email) || filled($siteSettings->phone) || filled($siteSettings->address);
+    $socialLinks = collect($topBarSocialMap)
+        ->filter(fn ($platform, $field): bool => filled($siteSettings->{$field} ?? null));
+
+    if (! function_exists('footerMenuLabel')) {
+        function footerMenuLabel(string $label): string
+        {
+            $key = 'app.menu.' . $label;
+
+            return __($key) !== $key ? __($key) : $label;
+        }
     }
 @endphp
 
 <footer
-    class="mt-auto border-t border-slate-800/80 bg-slate-900 text-slate-200"
+    class="bg-slate-950 text-slate-300"
     x-data='{
         openLegal: false,
         legalTitle: "",
@@ -105,21 +94,33 @@
     }'
     @keydown.escape.window="openLegal = false"
 >
-    <div class="mx-auto max-w-7xl px-4 py-12 md:px-6">
-        <div class="grid gap-10 border-b border-slate-700/80 pb-12 lg:grid-cols-2 lg:gap-12 xl:grid-cols-4">
+    <div class="h-1 w-full bg-cyan-700"></div>
 
-            {{-- Sütun 1: marka + e-bülten --}}
-            <div class="space-y-4">
+    <div class="mx-auto max-w-7xl px-4 py-14 md:px-6">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+
+            {{-- Marka + bülten --}}
+            <div class="space-y-5">
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
-                    <img src="{{ $logoSrc }}" alt="Logo" class="h-12 w-12 rounded-full object-cover ring-1 ring-slate-600">
-                    <span class="text-left text-lg font-bold leading-tight text-white">{{ $siteSettings->site_title }}</span>
+                    <img
+                        src="{{ $logoSrc }}"
+                        alt="{{ $siteSettings->site_title }}"
+                        class="h-14 w-14 rounded-full object-cover ring-2 ring-white/10"
+                    >
+                    <span class="text-left font-serif text-xl font-semibold leading-tight text-white">
+                        {{ $siteSettings->site_title }}
+                    </span>
                 </a>
-                <p class="text-sm leading-relaxed text-slate-400">
+
+                <p class="max-w-sm text-sm leading-relaxed text-slate-400">
                     {{ $siteSettings->site_description ?: 'Birlikte iyiliği büyütüyoruz. E-bültene kayıt olarak duyurulardan haberdar olabilirsiniz.' }}
                 </p>
-                <div>
-                    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300/90">{{ __('app.footer.newsletter') }}</p>
-                    <form action="{{ route('newsletter.subscribe') }}" method="post" class="flex flex-col gap-2 sm:flex-row sm:items-stretch">
+
+                <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                        {{ __('app.footer.newsletter') }}
+                    </p>
+                    <form action="{{ route('newsletter.subscribe') }}" method="post" class="mt-3 flex gap-2">
                         @csrf
                         <label class="sr-only" for="footer-newsletter-email">{{ __('app.footer.email') }}</label>
                         <input
@@ -129,11 +130,11 @@
                             required
                             value="{{ old('email') }}"
                             placeholder="{{ __('app.footer.newsletter_ph') }}"
-                            class="min-h-[2.75rem] flex-1 rounded-2xl border border-slate-600 bg-slate-800/80 px-4 text-sm text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
+                            class="min-h-[2.75rem] flex-1 rounded-xl border border-slate-600 bg-slate-950 px-3.5 text-sm text-white placeholder:text-slate-500 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/30"
                         >
                         <button
                             type="submit"
-                            class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-2xl bg-cyan-500 text-white shadow-sm transition hover:bg-cyan-400"
+                            class="inline-flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-xl bg-cyan-600 text-white transition hover:bg-cyan-500"
                             aria-label="{{ __('app.footer.subscribe') }}"
                         >
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -141,143 +142,158 @@
                             </svg>
                         </button>
                     </form>
-                    <p class="mt-2 text-xs italic text-slate-500">{{ __('app.footer.newsletter_note') }}</p>
+                    <p class="mt-2.5 text-xs leading-relaxed text-slate-500">
+                        {{ __('app.footer.newsletter_note') }}
+                    </p>
                 </div>
             </div>
 
-            {{-- Sütun 2: Hızlı linkler --}}
+            {{-- Hızlı linkler --}}
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider text-white">{{ __('app.footer.quick_links') }}</h3>
-                <ul class="mt-4 space-y-2.5 text-sm">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-white">
+                    {{ __('app.footer.quick_links') }}
+                </h3>
+                <div class="mt-5 space-y-6">
                     @forelse($footerTopItems as $item)
                         @php
                             $children = $footerChildren->get($item->id, collect());
                         @endphp
-                        <li>
-                            <div class="space-y-1.5">
-                                <a
-                                    href="{{ $item->url }}"
-                                    target="{{ $item->open_in_new_tab ? '_blank' : '_self' }}"
-                                    class="group inline-flex items-start gap-2 text-slate-300 transition hover:text-cyan-300"
-                                >
-                                    <span class="mt-0.5 text-cyan-500/80 transition group-hover:text-cyan-300" aria-hidden="true">»</span>
-                                    <span class="font-semibold">{{ footerMenuLabel($item->label) }}</span>
-                                </a>
+                        <div>
+                            <a
+                                href="{{ $item->url }}"
+                                target="{{ $item->open_in_new_tab ? '_blank' : '_self' }}"
+                                class="text-sm font-semibold text-cyan-200 transition hover:text-cyan-100"
+                            >
+                                {{ footerMenuLabel($item->label) }}
+                            </a>
 
-                                @if ($children->isNotEmpty())
-                                    <ul class="space-y-1 pl-5">
-                                        @foreach ($children as $child)
-                                            <li>
-                                                <a
-                                                    href="{{ $child->url }}"
-                                                    target="{{ $child->open_in_new_tab ? '_blank' : '_self' }}"
-                                                    class="group inline-flex items-start gap-2 text-slate-400 transition hover:text-cyan-300"
-                                                >
-                                                    <span class="mt-0.5 text-cyan-600/70 transition group-hover:text-cyan-300" aria-hidden="true">—</span>
-                                                    <span>{{ footerMenuLabel($child->label) }}</span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </div>
-                        </li>
+                            @if ($children->isNotEmpty())
+                                <ul class="mt-3 space-y-2">
+                                    @foreach ($children as $child)
+                                        <li>
+                                            <a
+                                                href="{{ $child->url }}"
+                                                target="{{ $child->open_in_new_tab ? '_blank' : '_self' }}"
+                                                class="inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+                                            >
+                                                <span class="h-px w-3 bg-slate-600" aria-hidden="true"></span>
+                                                <span>{{ footerMenuLabel($child->label) }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div>
                     @empty
-                        <li class="text-slate-500">{{ __('app.footer.menu_auto') }}</li>
+                        <p class="text-sm text-slate-500">{{ __('app.footer.menu_auto') }}</p>
                     @endforelse
-                </ul>
+                </div>
             </div>
 
-            {{-- Sütun 3: Harita --}}
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold uppercase tracking-wider text-white">{{ __('app.footer.our_location') }}</h3>
-                @if (filled($normalizedMapsUrl))
-                    <div class="overflow-hidden rounded-2xl border border-slate-700/70 bg-slate-800/35 shadow-sm backdrop-blur-sm">
-                        <iframe
-                            src="{{ $normalizedMapsUrl }}"
-                            class="h-52 w-full"
-                            style="border:0;"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            allowfullscreen
-                            title="{{ __('app.footer.our_location') }}"
-                        ></iframe>
-                    </div>
-                @elseif ($mapsNeedsExternalOpen && filled($mapsDirectUrl))
-                    <div class="rounded-2xl border border-slate-700/70 bg-slate-800/35 p-4 shadow-sm backdrop-blur-sm">
-                        <p class="text-sm leading-relaxed text-slate-300">
-                            {{ __('app.footer.map_restriction') }}
-                        </p>
-                        <a
-                            href="{{ $mapsDirectUrl }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="mt-3 inline-flex items-center gap-2 rounded-full bg-cyan-600 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-cyan-500"
-                        >
-                            {{ __('app.footer.open_map') }}
-                        </a>
-                    </div>
-                @else
-                    <p class="text-sm leading-relaxed text-slate-400">
-                        {{ __('app.footer.menu_auto') }}
-                    </p>
-                @endif
-            </div>
-
-            {{-- Sütun 4: İletişim + sosyal --}}
-            <div class="space-y-4">
-                <h3 class="text-sm font-bold uppercase tracking-wider text-white">{{ __('app.footer.contact_us') }}</h3>
-                <ul class="space-y-2 text-sm text-slate-300">
-                    @if (filled($siteSettings->email))
-                        <li>
-                            <span class="block text-xs font-medium text-slate-500">{{ __('app.footer.email') }}</span>
-                            <a href="mailto:{{ $siteSettings->email }}" class="text-cyan-300 transition hover:text-cyan-200">{{ $siteSettings->email }}</a>
-                        </li>
-                    @endif
-                    @if (filled($siteSettings->phone))
-                        <li>
-                            <span class="block text-xs font-medium text-slate-500">{{ __('app.footer.phone') }}</span>
-                            <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="text-cyan-300 transition hover:text-cyan-200">{{ $siteSettings->phone }}</a>
-                        </li>
-                    @endif
-                    @if (filled($siteSettings->address))
-                        <li>
-                            <span class="block text-xs font-medium text-slate-500">{{ __('app.footer.address') }}</span>
-                            <span class="text-slate-200">{{ $siteSettings->address }}</span>
-                        </li>
-                    @endif
-                </ul>
+            {{-- İletişim + sosyal --}}
+            <div class="space-y-6 md:col-span-2 lg:col-span-1">
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">{{ __('app.footer.follow_us') }}</p>
-                    <div class="mt-2 flex flex-wrap gap-1.5">
-                        @foreach ($topBarSocialMap as $field => $platform)
-                            @if (! empty($siteSettings->$field))
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-white">
+                        {{ __('app.footer.contact_us') }}
+                    </h3>
+
+                    <ul class="mt-5 space-y-4">
+                        @if (filled($siteSettings->phone))
+                            <li>
+                                <a
+                                    href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}"
+                                    class="group flex items-start gap-3"
+                                >
+                                    <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-cyan-300">
+                                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M2 3.5A1.5 1.5 0 013.5 2h1.76a1.5 1.5 0 011.47 1.2l.5 2.5a1.5 1.5 0 01-.84 1.7l-1.1.5a11.05 11.05 0 005.01 5.01l.5-1.1a1.5 1.5 0 011.7-.84l2.5.5A1.5 1.5 0 0118 14.74V16.5A1.5 1.5 0 0116.5 18C8.94 18 2 11.06 2 3.5z"/></svg>
+                                    </span>
+                                    <span>
+                                        <span class="block text-xs uppercase tracking-wider text-slate-500">{{ __('app.footer.phone') }}</span>
+                                        <span class="text-sm text-slate-200 transition group-hover:text-cyan-200">{{ $siteSettings->phone }}</span>
+                                    </span>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (filled($siteSettings->email))
+                            <li>
+                                <a href="mailto:{{ $siteSettings->email }}" class="group flex items-start gap-3">
+                                    <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-cyan-300">
+                                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M3 4a2 2 0 00-2 2v.28l9 5.4 9-5.4V6a2 2 0 00-2-2H3zm16 4.08l-8.37 5.02a1.25 1.25 0 01-1.26 0L1 8.08V14a2 2 0 002 2h14a2 2 0 002-2V8.08z"/></svg>
+                                    </span>
+                                    <span>
+                                        <span class="block text-xs uppercase tracking-wider text-slate-500">{{ __('app.footer.email') }}</span>
+                                        <span class="break-all text-sm text-slate-200 transition group-hover:text-cyan-200">{{ $siteSettings->email }}</span>
+                                    </span>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (filled($siteSettings->address))
+                            <li class="flex items-start gap-3">
+                                <span class="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-cyan-300">
+                                    <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"/></svg>
+                                </span>
+                                <span>
+                                    <span class="block text-xs uppercase tracking-wider text-slate-500">{{ __('app.footer.address') }}</span>
+                                    <span class="text-sm leading-relaxed text-slate-200">{{ $siteSettings->address }}</span>
+                                </span>
+                            </li>
+                        @endif
+
+                        @unless ($hasContact)
+                            <li>
+                                <a
+                                    href="#site-map-heading"
+                                    class="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-sm text-slate-300 transition hover:border-cyan-500 hover:text-cyan-200"
+                                >
+                                    <svg class="h-3.5 w-3.5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" clip-rule="evenodd"/></svg>
+                                    {{ __('app.footer.location_title') }}
+                                </a>
+                            </li>
+                        @endunless
+                    </ul>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-white">
+                        {{ __('app.footer.follow_us') }}
+                    </p>
+                    @if ($socialLinks->isNotEmpty())
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            @foreach ($socialLinks as $field => $platform)
                                 <a
                                     href="{{ $siteSettings->$field }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-600 bg-slate-800/50 text-cyan-100 transition hover:border-cyan-500/50 hover:bg-slate-700"
+                                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300 transition hover:border-cyan-500 hover:text-white"
                                     title="{{ $topBarAria[$platform] ?? $platform }}"
                                     aria-label="{{ $topBarAria[$platform] ?? $platform }}"
                                 >
                                     <x-social-brand-icon :platform="$platform" icon-class="h-3.5 w-3.5" />
                                 </a>
-                            @endif
-                        @endforeach
-                    </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="mt-3 text-xs leading-relaxed text-slate-500">
+                            {{ __('app.footer.location_subtitle') }}
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <div class="mt-8 flex flex-col items-center justify-between gap-4 pt-8 text-xs text-slate-500 sm:flex-row sm:gap-6">
-            <div class="flex flex-col gap-1 text-center sm:text-left">
+        <div class="mt-12 flex flex-col gap-5 border-t border-slate-800 pt-7 text-xs text-slate-500 lg:flex-row lg:items-center lg:justify-between">
+            <div class="space-y-1 text-center lg:text-left">
                 <p>
-                    © {{ date('Y') }} — {{ __('app.footer.all_rights') }}
+                    © {{ date('Y') }}
+                    <span class="text-slate-400">·</span>
+                    {{ __('app.footer.all_rights') }}
                     <span class="text-slate-400">·</span>
                     <span class="text-slate-300">{{ $siteSettings->site_title }}</span>
                 </p>
-                <p class="flex items-center justify-center gap-1.5 sm:justify-start">
-                    <span class="text-slate-600">{{ __('app.footer.developer') }}:</span>
+                <p class="flex items-center justify-center gap-1.5 lg:justify-start">
+                    <span>{{ __('app.footer.developer') }}:</span>
                     <a
                         href="https://www.linkedin.com/in/burakgul1006/"
                         target="_blank"
@@ -292,12 +308,13 @@
                     </a>
                 </p>
             </div>
-            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-                <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-slate-400" aria-label="Yasal">
+
+            <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-end">
+                <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1" aria-label="Yasal">
                     @foreach ($legalTextItems as $item)
                         <button
                             type="button"
-                            class="cursor-pointer transition hover:text-cyan-300"
+                            class="cursor-pointer text-slate-400 transition hover:text-cyan-300"
                             data-legal-title="{{ e($item['title']) }}"
                             data-legal-content="{{ e(str_replace(["\r\n", "\r"], "\n", $item['content'])) }}"
                             @click="showLegal($el.dataset.legalTitle, $el.dataset.legalContent)"
@@ -308,7 +325,7 @@
                 </nav>
                 <a
                     href="{{ route('filament.crm.auth.login') }}"
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 bg-slate-800/50 text-slate-500 transition hover:border-teal-500/60 hover:text-teal-300"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 text-slate-500 transition hover:border-teal-500 hover:text-teal-300"
                     title="{{ __('app.footer.crm_login') }}"
                     aria-label="{{ __('app.footer.crm_login') }}"
                 >
@@ -318,7 +335,7 @@
                 </a>
                 <a
                     href="{{ route('filament.admin.auth.login') }}"
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 bg-slate-800/50 text-slate-500 transition hover:border-cyan-500/60 hover:text-cyan-300"
+                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 text-slate-500 transition hover:border-cyan-500 hover:text-cyan-300"
                     title="{{ __('app.footer.admin_login') }}"
                     aria-label="{{ __('app.footer.admin_login') }}"
                 >

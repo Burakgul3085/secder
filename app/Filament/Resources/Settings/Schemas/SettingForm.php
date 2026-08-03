@@ -61,7 +61,8 @@ class SettingForm
                             TextInput::make('website_url')->url()->label('Web Site Linki')->columnSpanFull(),
                             TextInput::make('google_maps_embed_url')
                                 ->label('Google Maps Linki')
-                                ->helperText('Footer harita alanında gösterilir. En sağlıklı sonuç için tam Google Maps konum veya embed linki kullanın (kısa maps.app.goo.gl linkleri bazı tarayıcılarda iframe kısıtına takılabilir).')
+                                ->helperText('Footer üstünde Aile ve Nesil tarzı harita gösterir. En iyi sonuç: Google Maps → Paylaş → «Haritayı yerleştir» → HTML içindeki src linkini yapıştırın. Kısa maps.app.goo.gl linki de otomatik dönüştürülür.')
+                                ->placeholder('https://www.google.com/maps/embed?pb=... veya maps.app.goo.gl/...')
                                 ->columnSpanFull(),
                             Textarea::make('volunteer_preferences')
                                 ->label('Gönüllülük Tercihleri')
@@ -107,25 +108,25 @@ class SettingForm
                         ->schema([
                             TextInput::make('home_focus_1_title')
                                 ->label('Kart 1 Başlık')
-                                ->default('Acil Gıda Desteği'),
+                                ->default('İlmi Eğitimler'),
                             Textarea::make('home_focus_1_text')
                                 ->label('Kart 1 Metin')
                                 ->rows(3)
-                                ->default('Afrika’da açlık riski altındaki ailelere temel gıda kolileri ulaştırıyoruz.'),
+                                ->default('Gaziantep\'te ilmi ve fikri eğitim programlarıyla bilinçli bir neslin yetişmesine katkı sunuyoruz.'),
                             TextInput::make('home_focus_2_title')
                                 ->label('Kart 2 Başlık')
-                                ->default('Temiz Su Erişimi'),
+                                ->default('Sosyal Projeler'),
                             Textarea::make('home_focus_2_text')
                                 ->label('Kart 2 Metin')
                                 ->rows(3)
-                                ->default('Susuzlukla mücadele eden bölgelerde temiz suya erişimi destekliyoruz.'),
+                                ->default('Selahaddin Eyyubi Cami Derneği olarak toplumun ihtiyaçlarına yönelik sosyal ve kültürel projeler yürütüyoruz.'),
                             TextInput::make('home_focus_3_title')
                                 ->label('Kart 3 Başlık')
-                                ->default('Beslenme Dayanışması'),
+                                ->default('Cami ve Dayanışma'),
                             Textarea::make('home_focus_3_text')
                                 ->label('Kart 3 Metin')
                                 ->rows(3)
-                                ->default('Yemek ve içme suyu odağında düzenli insani yardım çalışmaları yürütüyoruz.'),
+                                ->default('Cami çevresinde kardeşlik, gönüllülük ve dayanışma ruhunu güçlendiren çalışmalar yapıyoruz.'),
                         ])->columns(2),
 
                     Section::make('Ana Sayfa - Biz Kimiz Alanı')
@@ -136,7 +137,7 @@ class SettingForm
                         ->schema([
                             TextInput::make('home_about_badge')
                                 ->label('Rozet Metni')
-                                ->default('Birlikte Kardeşlik Derneği'),
+                                ->default('SECDER'),
                             TextInput::make('home_about_title')
                                 ->label('Başlık')
                                 ->default('Biz Kimiz!'),

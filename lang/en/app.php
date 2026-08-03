@@ -55,6 +55,9 @@ return [
     'footer' => [
         'quick_links'       => 'Quick Links',
         'our_location'      => 'Our Location',
+        'location_badge'    => 'Visit Us',
+        'location_title'    => 'SECDER Location',
+        'location_subtitle' => 'Selahaddin Eyyubi Mosque — Gaziantep',
         'contact_us'        => 'Contact Us',
         'newsletter'        => 'Newsletter',
         'newsletter_ph'     => 'Your email address',
@@ -66,6 +69,7 @@ return [
         'phone'             => 'Phone',
         'address'           => 'Address',
         'open_map'          => 'Open Map',
+        'back_to_top'       => 'Back to top',
         'map_restriction'   => 'This link may be restricted in embedded maps by Google. You can open the map in a new tab.',
         'menu_auto'         => 'Top menus and sub-menus you add in menu management are automatically listed here.',
         'close'             => 'Close',
@@ -237,7 +241,7 @@ return [
     'chad_live' => [
         'badge'         => 'Gaziantep',
         'title'         => 'Live Updates from Gaziantep',
-        'subtitle'      => 'Our association carries out its aid and solidarity activities from Gaziantep without interruption.',
+        'subtitle'      => 'As Selahaddin Eyyubi Mosque Association, we share live weather, local time, Hijri date and prayer times from Gaziantep.',
         'weather'       => 'Weather',
         'local_time'    => 'Local Time',
         'hijri'         => 'Hijri Date',
@@ -275,14 +279,14 @@ return [
     'home' => [
         /* Who We Are section */
         'about_title'   => 'Who Are We!',
-        'about_intro'   => 'We provide food and clean water support to our brothers and sisters fighting against hunger and drought in Africa.',
-        'about_body'    => 'As Birlikte Kardeşlik Association, we operate exclusively in the areas of nutrition, basic food, and clean water in Africa. We deliver regular food support to families in need and develop sustainable solutions in the field to increase access to safe drinking water. Our goal is to go beyond short-term aid and contribute to lasting, dignified living conditions.',
+        'about_intro'   => 'As Selahaddin Eyyubi Mosque Association, we serve Gaziantep through knowledge, social solidarity and mosque-centred community work.',
+        'about_body'    => 'SECDER is an association shaped around Selahaddin Eyyubi Mosque in Gaziantep. Through educational programmes, social projects and a spirit of brotherhood, we stand with young people, families and neighbours in need. Our aim is to contribute to lasting goodness and the building of a strong generation.',
         'about_button'  => 'About Us',
         'about_items'   => [
-            'Emergency food parcel distributions',
-            'Clean water access and hygiene support',
-            'Hot meal support programmes',
-            'Sustainable nutrition-focused field projects',
+            'Educational and intellectual programmes',
+            'Mosque and social solidarity services',
+            'Youth and family-focused projects',
+            'Local mutual aid and volunteering',
         ],
 
         /* News & Announcements section */
@@ -292,14 +296,14 @@ return [
         'news_view_all'  => 'View All News',
 
         /* 4-step cards */
-        'step_1_title' => 'Grow Hope',
-        'step_1_text'  => 'A small contribution turns into great hope for those in need.',
-        'step_2_title' => 'Deliver Support',
-        'step_2_text'  => 'Your donation is quickly distributed in the field as food, water and hygiene aid.',
-        'step_3_title' => 'Touch Lives',
-        'step_3_text'  => 'Families gain safer access to clean water and basic nutrition.',
+        'step_1_title' => 'Grow Through Knowledge',
+        'step_1_text'  => 'Your support helps expand scholarly and intellectual education efforts in Gaziantep.',
+        'step_2_title' => 'Support Projects',
+        'step_2_text'  => 'Donations are used in SECDER’s educational and community projects at Selahaddin Eyyubi Mosque.',
+        'step_3_title' => 'Nurture Generations',
+        'step_3_text'  => 'Youth and family programs help raise a conscious generation grounded in values.',
         'step_4_title' => 'Strengthen Solidarity',
-        'step_4_text'  => 'Continuous support contributes to lasting recovery in the region.',
+        'step_4_text'  => 'Ongoing support sustains lasting education, service and solidarity around the mosque.',
         'steps_donate' => 'Donate',
 
         /* Activities section */
@@ -312,12 +316,12 @@ return [
         'donate'               => 'Donate',
 
         /* Focus cards */
-        'focus_1_title' => 'Emergency Food Support',
-        'focus_1_text'  => 'We provide emergency food and essential supplies to families in need in the fight against hunger.',
-        'focus_2_title' => 'Clean Water Access',
-        'focus_2_text'  => 'We support access to clean water in regions struggling with drought.',
-        'focus_3_title' => 'Nutrition Solidarity',
-        'focus_3_text'  => 'We carry out regular humanitarian aid activities focused on food and drinking water.',
+        'focus_1_title' => 'Scholarly Education',
+        'focus_1_text'  => 'Through scholarly and intellectual education programs in Gaziantep, we help raise a conscious generation.',
+        'focus_2_title' => 'Community Projects',
+        'focus_2_text'  => 'As Selahaddin Eyyubi Mosque Association, we run social and cultural projects that serve community needs.',
+        'focus_3_title' => 'Mosque & Solidarity',
+        'focus_3_text'  => 'We strengthen fellowship, volunteering and solidarity around the mosque community.',
 
         'testimonials_badge' => 'Supporter Experiences',
         'testimonials_title' => 'Supporter Experiences',

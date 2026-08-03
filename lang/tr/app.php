@@ -55,6 +55,9 @@ return [
     'footer' => [
         'quick_links'       => 'Hızlı Linkler',
         'our_location'      => 'Konumumuz',
+        'location_badge'    => 'Bizi Ziyaret Edin',
+        'location_title'    => 'SECDER Konumu',
+        'location_subtitle' => 'Selahaddin Eyyubi Camii — Gaziantep',
         'contact_us'        => 'İletişime Geçin',
         'newsletter'        => 'E-Bülten',
         'newsletter_ph'     => 'E-posta adresiniz',
@@ -66,6 +69,7 @@ return [
         'phone'             => 'Telefon',
         'address'           => 'Adres',
         'open_map'          => 'Haritayı Aç',
+        'back_to_top'       => 'Yukarı çık',
         'map_restriction'   => 'Bu bağlantı Google tarafından gömülü haritada kısıtlanabilir. Haritayı yeni sekmede açabilirsiniz.',
         'menu_auto'         => 'Menü yönetimine eklediğiniz üst menüler ve alt menüler burada otomatik listelenir.',
         'close'             => 'Kapat',
@@ -273,7 +277,7 @@ return [
     'chad_live' => [
         'badge'         => 'Gaziantep',
         'title'         => 'Gaziantep\'ten Anlık Bilgiler',
-        'subtitle'      => 'Derneğimiz, Gaziantep merkezli olarak yardım ve dayanışma faaliyetlerini kesintisiz sürdürmektedir.',
+        'subtitle'      => 'Selahaddin Eyyubi Cami Derneği olarak Gaziantep\'ten anlık hava, saat, hicri tarih ve namaz bilgisini paylaşıyoruz.',
         'weather'       => 'Hava Durumu',
         'local_time'    => 'Yerel Saat',
         'hijri'         => 'Hicri Tarih',
@@ -311,14 +315,14 @@ return [
     'home' => [
         /* Biz Kimiz bölümü */
         'about_title'   => 'Biz Kimiz!',
-        'about_intro'   => 'Afrika\'da açlık ve susuzlukla mücadele eden kardeşlerimize gıda ve temiz su desteği sağlıyoruz.',
-        'about_body'    => 'Birlikte Kardeşlik Derneği olarak Afrika\'da yalnızca yeme içme, temel gıda ve temiz su alanında faaliyet gösteriyoruz. İhtiyaç sahibi ailelere düzenli gıda desteği ulaştırıyor, güvenli içme suyuna erişimi artırmak için sahada sürdürülebilir çözümler geliştiriyoruz. Amacımız, kısa süreli yardımların ötesine geçip kalıcı ve onurlu yaşam koşullarına katkı sağlamaktır.',
+        'about_intro'   => 'Selahaddin Eyyubi Cami Derneği olarak Gaziantep\'te ilim, sosyal dayanışma ve cami merkezli hizmetlerle toplumumuza katkı sunuyoruz.',
+        'about_body'    => 'SECDER, Gaziantep\'te Selahaddin Eyyubi Camii etrafında şekillenen bir dernektir. İlmi eğitimler, sosyal projeler ve kardeşlik bilinciyle; gençlerin, ailelerin ve ihtiyaç sahibi komşularımızın yanında yer alıyoruz. Amacımız, kalıcı iyilik ve güçlü bir nesil inşasına katkı sağlamaktır.',
         'about_button'  => 'Hakkımızda',
         'about_items'   => [
-            'Acil gıda kolisi dağıtımları',
-            'Temiz su erişimi ve hijyen desteği',
-            'Sıcak yemek destek çalışmaları',
-            'Sürdürülebilir beslenme odaklı saha projeleri',
+            'İlmi ve fikri eğitim çalışmaları',
+            'Cami ve sosyal dayanışma hizmetleri',
+            'Gençlik ve aile odaklı projeler',
+            'Yerel yardımlaşma ve gönüllülük',
         ],
 
         /* Haberler ve Duyurular bölümü */
@@ -328,14 +332,14 @@ return [
         'news_view_all'  => 'Tüm Haberleri Gör',
 
         /* 4'lü adım kartları */
-        'step_1_title' => 'Umudu Büyüt',
-        'step_1_text'  => 'Küçük bir destek, ihtiyaç sahipleri için büyük bir umuda dönüşür.',
-        'step_2_title' => 'Destek Ulaştır',
-        'step_2_text'  => 'Bağışın gıda, su ve hijyen desteği olarak sahada hızlıca dağıtılır.',
-        'step_3_title' => 'Hayata Dokun',
-        'step_3_text'  => 'Aileler temiz suya ve temel beslenme imkanına daha güvenli şekilde erişir.',
+        'step_1_title' => 'İlimle Yeşert',
+        'step_1_text'  => 'Destekleriniz, Gaziantep\'te ilmi ve fikri eğitim çalışmalarının büyümesine katkı sağlar.',
+        'step_2_title' => 'Projeleri Destekle',
+        'step_2_text'  => 'Bağışlarınız, Selahaddin Eyyubi Cami Derneği\'nin eğitim ve sosyal projelerinde değerlendirilir.',
+        'step_3_title' => 'Nesle Dokun',
+        'step_3_text'  => 'Gençlik ve aile programlarıyla bilinçli, değer odaklı bir neslin yetişmesine destek olunur.',
         'step_4_title' => 'Dayanışmayı Güçlendir',
-        'step_4_text'  => 'Sürekli destekle bölgede kalıcı iyileşmeye katkı sağlanır.',
+        'step_4_text'  => 'Sürekli destekle cami çevresinde eğitim, hizmet ve toplumsal dayanışma kalıcı hale gelir.',
         'steps_donate' => 'Bağış Yap',
 
         /* Faaliyetlerimiz bölümü */
@@ -348,12 +352,12 @@ return [
         'donate'               => 'Bağış Yap',
 
         /* Odak kartları */
-        'focus_1_title' => 'Acil Gıda Desteği',
-        'focus_1_text'  => 'Açlıkla mücadelede ihtiyaç sahibi ailelere acil gıda ve temel ihtiyaç desteği sunuyoruz.',
-        'focus_2_title' => 'Temiz Su Erişimi',
-        'focus_2_text'  => 'Susuzlukla mücadele eden bölgelerde temiz suya erişimi destekliyoruz.',
-        'focus_3_title' => 'Beslenme Dayanışması',
-        'focus_3_text'  => 'Yemek ve içme suyu odağında düzenli insani yardım çalışmaları yürütüyoruz.',
+        'focus_1_title' => 'İlmi Eğitimler',
+        'focus_1_text'  => 'Gaziantep\'te ilmi ve fikri eğitim programlarıyla bilinçli bir neslin yetişmesine katkı sunuyoruz.',
+        'focus_2_title' => 'Sosyal Projeler',
+        'focus_2_text'  => 'Selahaddin Eyyubi Cami Derneği olarak toplumun ihtiyaçlarına yönelik sosyal ve kültürel projeler yürütüyoruz.',
+        'focus_3_title' => 'Cami ve Dayanışma',
+        'focus_3_text'  => 'Cami çevresinde kardeşlik, gönüllülük ve dayanışma ruhunu güçlendiren çalışmalar yapıyoruz.',
 
         /* Destekçi Deneyimleri */
         'testimonials_badge' => 'Destekçi Deneyimleri',

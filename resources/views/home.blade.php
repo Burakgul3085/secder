@@ -9,12 +9,12 @@
             [
                 'title' => $isTr ? ($siteSettings->home_focus_1_title ?: __('app.home.focus_1_title')) : __('app.home.focus_1_title'),
                 'text'  => $isTr ? ($siteSettings->home_focus_1_text  ?: __('app.home.focus_1_text'))  : __('app.home.focus_1_text'),
-                'icon'  => 'food',
+                'icon'  => 'education',
             ],
             [
                 'title' => $isTr ? ($siteSettings->home_focus_2_title ?: __('app.home.focus_2_title')) : __('app.home.focus_2_title'),
                 'text'  => $isTr ? ($siteSettings->home_focus_2_text  ?: __('app.home.focus_2_text'))  : __('app.home.focus_2_text'),
-                'icon'  => 'water',
+                'icon'  => 'projects',
             ],
             [
                 'title' => $isTr ? ($siteSettings->home_focus_3_title ?: __('app.home.focus_3_title')) : __('app.home.focus_3_title'),
@@ -41,12 +41,12 @@
             @foreach($focusCards as $card)
                 <article class="group flex items-start gap-4 rounded-2xl border border-slate-100 border-t-4 border-t-cyan-600 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-xl hover:shadow-cyan-900/10">
                     <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-cyan-600 text-white transition duration-300 group-hover:scale-110 group-hover:bg-cyan-700">
-                        @if($card['icon'] === 'food')
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v7a3 3 0 0 1-6 0V3a1 1 0 1 1 2 0v3h1V3a1 1 0 1 1 2 0v3h1V3a1 1 0 0 1 1-1Zm8 0a1 1 0 0 1 1 1v18a1 1 0 1 1-2 0v-7h-2a1 1 0 0 1-.97-1.24l1.5-6A5.5 5.5 0 0 1 18 2h-3Z"/></svg>
-                        @elseif($card['icon'] === 'water')
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2s6 7 6 11a6 6 0 1 1-12 0c0-4 6-11 6-11Zm-2 12a1 1 0 0 0-1 1 3 3 0 0 0 6 0 1 1 0 1 0-2 0 1 1 0 0 1-2 0 1 1 0 0 0-1-1Z"/></svg>
+                        @if($card['icon'] === 'education')
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3 1.5 8.5a1 1 0 0 0 0 1.74L5 12.1V17a1 1 0 0 0 .55.89l6 3a1 1 0 0 0 .9 0l6-3A1 1 0 0 0 19 17v-4.9l1.55-.8V16a1 1 0 1 0 2 0V9.5a1 1 0 0 0-.5-.87L12 3Zm0 2.2 7.2 3.8L12 12.8 4.8 9 12 5.2ZM7 13.05l4.45 2.34a1 1 0 0 0 .9 0L17 13.05V16.5l-4.55 2.27a1 1 0 0 1-.9 0L7 16.5v-3.45Z"/></svg>
+                        @elseif($card['icon'] === 'projects')
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4a2 2 0 0 0-2 2v3h8V4H4Zm10 0v5h8V6a2 2 0 0 0-2-2h-6ZM2 11v7a2 2 0 0 0 2 2h6v-9H2Zm10 0v9h6a2 2 0 0 0 2-2v-7h-8Z"/></svg>
                         @else
-                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3a5 5 0 0 1 5 5v1h1a4 4 0 0 1 4 4v6a2 2 0 0 1-2 2h-4v-5a2 2 0 1 0-4 0v5H8a2 2 0 0 1-2-2v-6a4 4 0 0 1 4-4h1V8a5 5 0 0 1 1-5Zm0 2a3 3 0 0 0-3 3v1h6V8a3 3 0 0 0-3-3Z"/></svg>
+                            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 7a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0ZM4 9.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0Zm11 0a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0ZM2.5 16.2A4.5 4.5 0 0 1 7 13h1.1a5.45 5.45 0 0 0-.1 1c0 .7.13 1.37.37 2H7a2.5 2.5 0 0 0-2.5 2.2V19a1 1 0 1 1-2 0v-.8Zm17 2.8a1 1 0 1 1-2 0v-.8A2.5 2.5 0 0 0 15 16h-1.37c.24-.63.37-1.3.37-2 0-.34-.03-.67-.1-1H17a4.5 4.5 0 0 1 4.5 3.2V19a1 1 0 0 1-2 0v-.8ZM9 14a3 3 0 0 1 6 0v5a1 1 0 1 1-2 0v-5a1 1 0 1 0-2 0v5a1 1 0 1 1-2 0v-5Z"/></svg>
                         @endif
                     </span>
                     <div>
@@ -72,7 +72,7 @@
 
             <div>
                 <span class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
-                    • {{ $siteSettings->home_about_badge ?: 'Birlikte Kardeşlik Derneği' }}
+                    • {{ $siteSettings->home_about_badge ?: 'SECDER' }}
                 </span>
                 <h2 class="mt-3 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
                     {{ $isTr ? ($siteSettings->home_about_title ?: __('app.home.about_title')) : __('app.home.about_title') }}
@@ -239,7 +239,7 @@
                 <article class="group relative rounded-2xl bg-slate-50 p-4 text-center ring-1 ring-transparent transition-all duration-500 ease-out hover:-translate-y-1.5 hover:bg-white hover:shadow-xl hover:shadow-cyan-900/10 hover:ring-cyan-100">
                     <span class="absolute left-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white transition-transform duration-500 group-hover:scale-110">02</span>
                     <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-cyan-600 text-white shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-cyan-700 group-hover:shadow-lg group-hover:shadow-cyan-700/30">
-                        <svg class="h-7 w-7 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11a1 1 0 0 1 1-1h5V5a1 1 0 1 1 2 0v5h5a1 1 0 1 1 0 2h-5v5a1 1 0 1 1-2 0v-5H4a1 1 0 0 1-1-1Z"/></svg>
+                        <svg class="h-7 w-7 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4a2 2 0 0 0-2 2v13.5a.5.5 0 0 0 .8.4L8 17.5l3.2 2.4a.5.5 0 0 0 .6 0L15 17.5l3.2 2.4a.5.5 0 0 0 .8-.4V6a2 2 0 0 0-2-2H6Zm0 2h12v11.26l-2.7-2.02a1 1 0 0 0-1.2 0L12 17.26l-2.1-1.58a1 1 0 0 0-1.2 0L6 17.26V6Z"/></svg>
                     </span>
                     <h3 class="mt-3 text-lg font-bold text-slate-900 transition-colors duration-500 group-hover:text-cyan-700">{{ __('app.home.step_2_title') }}</h3>
                     <p class="mt-1 text-sm leading-relaxed text-slate-600 transition-colors duration-500 group-hover:text-slate-700">{{ __('app.home.step_2_text') }}</p>
@@ -247,7 +247,7 @@
                 <article class="group relative rounded-2xl bg-slate-50 p-4 text-center ring-1 ring-transparent transition-all duration-500 ease-out hover:-translate-y-1.5 hover:bg-white hover:shadow-xl hover:shadow-cyan-900/10 hover:ring-cyan-100">
                     <span class="absolute left-3 top-3 inline-flex h-6 w-6 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white transition-transform duration-500 group-hover:scale-110">03</span>
                     <span class="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-cyan-600 text-white shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:bg-cyan-700 group-hover:shadow-lg group-hover:shadow-cyan-700/30">
-                        <svg class="h-7 w-7 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2s6 7 6 11a6 6 0 1 1-12 0c0-4 6-11 6-11Z"/></svg>
+                        <svg class="h-7 w-7 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3a1 1 0 0 1 .8.4l1.7 2.26A7.5 7.5 0 1 1 4.5 12a1 1 0 1 1 2 0 5.5 5.5 0 1 0 5.2-5.49L10.8 8.6A1 1 0 0 1 9.2 7.4l2-2.66A1 1 0 0 1 12 3Zm-3.5 9a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/></svg>
                     </span>
                     <h3 class="mt-3 text-lg font-bold text-slate-900 transition-colors duration-500 group-hover:text-cyan-700">{{ __('app.home.step_3_title') }}</h3>
                     <p class="mt-1 text-sm leading-relaxed text-slate-600 transition-colors duration-500 group-hover:text-slate-700">{{ __('app.home.step_3_text') }}</p>

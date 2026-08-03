@@ -50,6 +50,8 @@
         </div>
     @endif
     <main class="min-h-[70vh]">{{ $slot }}</main>
-    <x-footer />
+    <x-site-map :site-settings="$siteSettings" />
+    <x-footer :site-settings="$siteSettings" />
+    <x-back-to-top />
 </body>
 </html>

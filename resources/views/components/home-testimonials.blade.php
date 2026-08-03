@@ -35,7 +35,7 @@
 
 <section
     id="destekci-deneyimleri"
-    class="pt-16 pb-20 md:pb-24"
+    class="pt-16 pb-12 md:pb-14"
     aria-labelledby="testimonials-heading"
     x-data="testimonialModal(@js($modalConfig))"
     @keydown.window="handleKeydown($event)"
