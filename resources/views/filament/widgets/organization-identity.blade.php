@@ -1,7 +1,7 @@
 @php
     $settings = \App\Models\Setting::current();
     $logoUrl = $settings->logo ? asset('storage/' . $settings->logo) : asset('images/default-logo.svg');
-    $title = $settings->site_title ?: 'Birlikte Kardeşlik Derneği';
+    $title = $settings->site_title ?: __('app.site.default_title');
 @endphp
 
 <x-filament-widgets::widget>
@@ -10,7 +10,7 @@
             <img src="{{ $logoUrl }}" alt="Logo" style="width:68px; height:68px; border-radius:9999px; object-fit:cover; box-shadow:0 8px 18px rgba(77,92,131,.26); background:#fff; border:2px solid #e8edf6;">
             <div>
                 <div style="font-weight:800; font-size:20px; color:#0f172a; line-height:1.2;">{{ $title }}</div>
-                <div style="margin-top:4px; font-size:13px; color:#3f4c6b; font-weight:600;">Yönetim Paneli</div>
+                <div style="margin-top:4px; font-size:13px; color:#3f4c6b; font-weight:600;">{{ __('app.auth.admin.values_title') }}</div>
             </div>
         </div>
     </x-filament::section>

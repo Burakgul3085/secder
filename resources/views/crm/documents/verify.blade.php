@@ -1,6 +1,6 @@
 @php
     $logoSrc = $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg');
-    $siteTitle = $siteSettings->site_title ?? 'Birlikte Kardeşlik Derneği';
+    $siteTitle = $siteSettings->site_title ?? __('app.site.default_title');
     $description = trim((string) ($donation->description ?? ''));
     $descriptionLong = strlen($description) > 180;
     $receiptNumber = filled($donation->receipt_number) ? $donation->receipt_number : $donation->donation_number;
@@ -31,13 +31,13 @@
 
                         <div class="min-w-0 flex-1">
                             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100/90">{{ $siteTitle }}</p>
-                            <h1 class="mt-2 font-serif text-2xl font-semibold leading-tight text-white md:text-3xl">Makbuz Doğrulandı</h1>
+                            <h1 class="mt-2 font-serif text-2xl font-semibold leading-tight text-white md:text-3xl">{{ __('app.verify.heading') }}</h1>
                             <p class="mt-2 max-w-2xl text-sm leading-relaxed text-cyan-50/95">
-                                Bu bağış makbuzu derneğimiz kayıtlarında geçerlidir. Aşağıdaki bilgiler PDF makbuz ile eşleşmektedir.
+                                {{ __('app.verify.intro') }}
                             </p>
                             <p class="mt-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs text-white/90 backdrop-blur-sm">
                                 <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Doğrulama: {{ now()->format('d.m.Y H:i') }}
+                                {{ __('app.verify.verified_at') }} {{ now()->format('d.m.Y H:i') }}
                             </p>
                         </div>
                     </div>
@@ -46,17 +46,17 @@
                 <div class="space-y-8 p-6 md:p-8 lg:p-10">
                     {{-- Tutar --}}
                     <div class="verify-amount-box">
-                        <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Bağış Tutarı</p>
+                        <p class="text-xs font-bold uppercase tracking-widest text-slate-500">{{ __('app.verify.amount') }}</p>
                         <p class="mt-3 font-serif text-4xl font-bold tabular-nums text-cyan-800 md:text-5xl">
                             {{ number_format((float) $donation->amount, 2, ',', '.') }}
                             <span class="text-2xl font-semibold text-cyan-600 md:text-3xl">{{ $donation->currency }}</span>
                         </p>
                         <div class="mt-4 flex flex-wrap items-center justify-center gap-2 text-sm text-slate-600">
                             <span class="rounded-full bg-white px-3 py-1 shadow-sm ring-1 ring-slate-200">
-                                Bağış tarihi: <strong class="text-slate-800">{{ $donation->donated_at?->format('d.m.Y') ?? '-' }}</strong>
+                                {{ __('app.verify.donation_date') }} <strong class="text-slate-800">{{ $donation->donated_at?->format('d.m.Y') ?? '-' }}</strong>
                             </span>
                             <span class="rounded-full bg-white px-3 py-1 shadow-sm ring-1 ring-slate-200">
-                                Makbuz no: <strong class="text-slate-800">{{ $receiptNumber }}</strong>
+                                {{ __('app.verify.receipt_no_short') }} <strong class="text-slate-800">{{ $receiptNumber }}</strong>
                             </span>
                         </div>
                     </div>
@@ -68,38 +68,38 @@
                                 <span class="verify-section-icon">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </span>
-                                Bağış Bilgileri
+                                {{ __('app.verify.donation_section') }}
                             </h2>
                             <dl class="mt-3 flex-1">
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Bağış No</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.donation_no') }}</dt>
                                     <dd class="verify-info-value">{{ $donation->donation_number }}</dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Makbuz No</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.receipt_no') }}</dt>
                                     <dd class="verify-info-value">{{ $receiptNumber }}</dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Bağışçı</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.donor') }}</dt>
                                     <dd class="verify-info-value">{{ $donation->donor?->full_name ?? '-' }}</dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Bağış Türü</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.donation_type') }}</dt>
                                     <dd class="verify-info-value">{{ $donation->donationType?->name ?? '-' }}</dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Ödeme Türü</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.payment_type') }}</dt>
                                     <dd class="verify-info-value">{{ $donation->paymentMethod?->name ?? '-' }}</dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Proje / Faaliyet</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.project') }}</dt>
                                     <dd class="verify-info-value">{{ $donation->project?->title ?? '-' }}</dd>
                                 </div>
                             </dl>
 
                             @if ($description !== '')
                                 <div class="mt-4 rounded-xl border border-slate-100 bg-slate-50/80 p-4" x-data="{ expanded: false }">
-                                    <p class="verify-section-title !mb-2">Açıklama</p>
+                                    <p class="verify-section-title !mb-2">{{ __('app.verify.description') }}</p>
                                     <p
                                         class="text-sm leading-relaxed text-slate-700 whitespace-pre-line"
                                         :class="expanded ? '' : 'line-clamp-4'"
@@ -109,7 +109,7 @@
                                             type="button"
                                             @click="expanded = !expanded"
                                             class="mt-2 text-sm font-semibold text-cyan-700 hover:text-cyan-800 transition"
-                                            x-text="expanded ? 'Daha az göster' : 'Devamını gör'"
+                                            x-text="expanded ? @js(__('app.verify.show_less')) : @js(__('app.verify.show_more'))"
                                         ></button>
                                     @endif
                                 </div>
@@ -122,30 +122,32 @@
                                 <span class="verify-section-icon">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                 </span>
-                                Belge Bilgileri
+                                {{ __('app.verify.document_section') }}
                             </h2>
                             <dl class="mt-3 flex-1">
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Belge Türü</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.document_type') }}</dt>
                                     <dd class="verify-info-value">{{ $document->type_label }}</dd>
                                 </div>
                                 <div class="verify-info-row !block">
-                                    <dt class="verify-info-label mb-2">Doğrulama Kodu</dt>
+                                    <dt class="verify-info-label mb-2">{{ __('app.verify.verification_code') }}</dt>
                                     <dd>
                                         <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                                             <code class="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-center font-mono text-sm font-bold tracking-wide text-slate-800 sm:text-left">{{ $document->verification_code }}</code>
                                             <button
                                                 type="button"
-                                                onclick="navigator.clipboard.writeText('{{ $document->verification_code }}'); const el = this.querySelector('[data-label]'); el.textContent = 'Kopyalandı'; setTimeout(() => el.textContent = 'Kopyala', 2000)"
+                                                data-copy-label="{{ __('app.verify.copy') }}"
+                                                data-copied-label="{{ __('app.verify.copied') }}"
+                                                onclick="navigator.clipboard.writeText('{{ $document->verification_code }}'); const el = this.querySelector('[data-label]'); const copied = this.dataset.copiedLabel; const copy = this.dataset.copyLabel; el.textContent = copied; setTimeout(() => el.textContent = copy, 2000)"
                                                 class="verify-btn-outline !px-4 !py-2.5 text-xs"
                                             >
-                                                <span data-label>Kopyala</span>
+                                                <span data-label>{{ __('app.verify.copy') }}</span>
                                             </button>
                                         </div>
                                     </dd>
                                 </div>
                                 <div class="verify-info-row">
-                                    <dt class="verify-info-label">Oluşturulma</dt>
+                                    <dt class="verify-info-label">{{ __('app.verify.created_at') }}</dt>
                                     <dd class="verify-info-value">{{ $document->generated_at?->format('d.m.Y H:i') ?? '-' }}</dd>
                                 </div>
                             </dl>
@@ -156,7 +158,7 @@
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                     </span>
                                     <p class="text-xs leading-relaxed text-emerald-900">
-                                        Bu makbuz dijital olarak kayıt altına alınmıştır. Şüpheli bir durumda derneğimizle iletişime geçebilirsiniz.
+                                        {{ __('app.verify.security_note') }}
                                     </p>
                                 </div>
                             </div>
@@ -169,15 +171,15 @@
                     <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
                         <a href="{{ $document->public_download_url }}" class="verify-btn-download">
                             <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            PDF İndir
+                            {{ __('app.verify.download_pdf') }}
                         </a>
                         <a href="{{ route('home') }}" class="verify-btn-outline">
-                            Ana Sayfaya Dön
+                            {{ __('app.verify.back_home') }}
                         </a>
                     </div>
 
                     @if (filled($siteSettings->phone) || filled($siteSettings->email))
-                        <p class="mt-5 text-center text-xs text-slate-500">Bu sayfa yalnızca makbuz doğrulama amacıyla kullanılır.</p>
+                        <p class="mt-5 text-center text-xs text-slate-500">{{ __('app.verify.page_note') }}</p>
                         <div class="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-slate-600">
                             @if (filled($siteSettings->phone))
                                 <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex items-center gap-1.5 text-slate-600 no-underline transition hover:text-cyan-700">

@@ -60,13 +60,16 @@ class PageForm
                         ->imageEditor()
                         ->maxSize(4096),
                     TextInput::make('page_meta.signature_name')
-                        ->label('İmza Ad Soyad')
+                        ->label('Başkan Ad Soyad')
                         ->maxLength(120)
-                        ->placeholder('İmza ad soyad girin'),
+                        ->placeholder('Örn. Ahmet Yılmaz')
+                        ->helperText('Ana sayfada / Başkanın Mesajı sayfasında görünen isim. Boş bırakılırsa isim gösterilmez.'),
                     TextInput::make('page_meta.signature_title')
-                        ->label('İmza Unvan')
+                        ->label('Dernek / Unvan Satırı')
                         ->maxLength(190)
-                        ->placeholder('İmza unvan girin'),
+                        ->default('SECDER - Selahaddin Eyyubi Cami Derneği')
+                        ->placeholder('SECDER - Selahaddin Eyyubi Cami Derneği')
+                        ->helperText('İsim üstünde görünen kurum satırı.'),
                 ])
                 ->columns(2)
                 ->columnSpanFull()

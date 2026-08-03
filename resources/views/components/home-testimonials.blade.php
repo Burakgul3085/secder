@@ -179,7 +179,7 @@
                     {!! json_encode([
                         '@context' => 'https://schema.org',
                         '@type' => 'Organization',
-                        'name' => $siteSettings->site_title ?? 'Birlikte Kardeşlik Derneği',
+                        'name' => $siteSettings->site_title ?? __('app.site.default_title'),
                         'url' => url('/'),
                         'aggregateRating' => [
                             '@type' => 'AggregateRating',

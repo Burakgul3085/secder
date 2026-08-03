@@ -20,10 +20,10 @@ class DatabaseSeeder extends Seeder
         );
 
         User::query()->updateOrCreate(
-            ['email' => 'admin@birliktekardeslik.org'],
+            ['email' => 'admin@secder.org'],
             [
-                'name' => 'Admin',
-                'password' => bcrypt('Birlikte123!'),
+                'name' => 'SECDER Admin',
+                'password' => bcrypt('Secder123!'),
                 'role' => 'super_admin',
                 'is_active' => true,
             ]

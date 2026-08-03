@@ -573,8 +573,8 @@
             $settings = \App\Models\Setting::current();
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
             $presidentImage = ! empty($meta['president_image']) ? \Illuminate\Support\Facades\Storage::url($meta['president_image']) : asset('images/default-logo.svg');
-            $signatureTitle = $meta['signature_title'] ?? 'YKD | Yeryüzü Kalkınma Derneği Başkanı';
-            $signatureName = $meta['signature_name'] ?? 'Yasir FETEN';
+            $signatureTitle = trim((string) ($meta['signature_title'] ?? '')) ?: __('app.page.president_signature_title');
+            $signatureName = trim((string) ($meta['signature_name'] ?? ''));
             $presidentMessageHtml = ($isTr && ! empty($page->content))
                 ? (string) $page->content
                 : nl2br(e(__('app.page.president_message_body')));
@@ -609,13 +609,15 @@
                     </div>
 
                     <div>
-                        <div class="prose max-w-none prose-slate prose-p:leading-8">
-                            {!! $presidentMessageHtml !!}
+                        <div>
+                            <p class="text-sm font-semibold uppercase tracking-wide text-cyan-800 md:text-base">{{ $signatureTitle }}</p>
+                            @if ($signatureName !== '')
+                                <p class="mt-1 text-2xl font-bold tracking-tight text-slate-950 md:text-3xl">{{ $signatureName }}</p>
+                            @endif
                         </div>
 
-                        <div class="mt-8">
-                            <p class="text-lg font-semibold text-slate-900">{{ $signatureTitle }}</p>
-                            <p class="mt-1 text-2xl font-bold text-slate-950">{{ $signatureName }}</p>
+                        <div class="prose mt-6 max-w-none prose-slate prose-p:leading-8">
+                            {!! $presidentMessageHtml !!}
                         </div>
 
                         <div class="mt-6 flex flex-wrap items-center gap-2">
@@ -690,7 +692,7 @@
 
         <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
             <h2 class="mb-8 text-center text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
-                {{ $settings->site_title ?? 'Birlikte Kardeşlik Derneği' }}
+                {{ $settings->site_title ?? __('app.site.default_title') }}
             </h2>
 
             <div class="mx-auto grid max-w-6xl gap-6 md:grid-cols-2">

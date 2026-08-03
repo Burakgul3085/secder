@@ -24,6 +24,8 @@ return [
         'volunteer_short'   => 'Gönüllü',
         'quick_contact'     => 'Hızlı iletişim paneli',
         'menu_empty'        => 'Menü henüz eklenmedi',
+        'lang_selector'     => 'Dil seçici',
+        'website_aria'      => 'Web sitesi',
     ],
 
     /*
@@ -76,6 +78,12 @@ return [
         'subscribe'         => 'E-bültene kayıt ol',
         'admin_login'       => 'Yönetim Girişi',
         'crm_login'         => 'CRM Girişi',
+        'description_fallback' => 'Birlikte iyiliği büyütüyoruz. E-bültene kayıt olarak duyurulardan haberdar olabilirsiniz.',
+        'developer_linkedin_title' => 'LinkedIn Profilim',
+        'legal_nav_aria'    => 'Yasal',
+        'crm_short'         => 'CRM',
+        'admin_short'       => 'Admin',
+        'website_aria'      => 'Web sitesi',
     ],
 
     /*
@@ -156,7 +164,7 @@ return [
         'wa_form_title'     => 'WhatsApp ile Hızlı Mesaj',
         'wa_desc'           => 'Formu doldurup gönder dediğinizde mesajınız düzenli bir formatta WhatsApp üzerinden dernek hattına iletilir.',
         'wa_send'           => 'WhatsApp ile Gönder',
-        'wa_greeting'       => 'Merhaba Birlikte Kardeşlik Derneği,',
+        'wa_greeting'       => 'Merhaba SECDER / Selahaddin Eyyubi Cami Derneği,',
         'wa_name_label'     => 'Ad Soyad',
         'wa_email_label'    => 'E-posta',
         'wa_msg_label'      => 'Mesaj',
@@ -210,7 +218,7 @@ return [
         'activities'    => 'Faaliyetlerimizi Gör',
         'reset'         => 'Formu Temizle',
         'legal_title'   => 'Önemli Uyarı',
-        'legal_text'    => 'Bu hesaplama aracı yalnızca bilgilendirme amaçlıdır. Zekât miktarı, nisap ve varlık sınıflandırması konusunda ilgili dinî otoriteye danışmanız önerilir. Birlikte Kardeşlik Derneği hesaplama sonucuna ilişkin sorumluluk kabul etmez.',
+        'legal_text'    => 'Bu hesaplama aracı yalnızca bilgilendirme amaçlıdır. Zekât miktarı, nisap ve varlık sınıflandırması konusunda ilgili dinî otoriteye danışmanız önerilir. SECDER / Selahaddin Eyyubi Cami Derneği hesaplama sonucuna ilişkin sorumluluk kabul etmez.',
         'coins_section' => 'Adetli Altın',
         'coins_hint'    => 'Canlı birim fiyatlar GenelPara kaynağından alınır.',
         'coin_quarter'  => 'Çeyrek Altın',
@@ -398,6 +406,18 @@ return [
         'testimonials_validation_comment' => 'Lütfen yorumunuzu yazın.',
         'testimonials_validation_comment_min' => 'Yorum en az 20 karakter olmalıdır.',
         'testimonials_validation_kvkk' => 'KVKK metnini onaylamanız gerekir.',
+
+        /* Hero slider */
+        'hero_alt'           => 'Hero',
+        'hero_carousel_aria' => 'Ana tanıtım slider',
+        'hero_empty_title'   => 'Hero alanı hazır',
+        'hero_empty_desc'    => 'Yönetim panelinden «Hero Slider» bölümünden slayt ekleyin. Masaüstü 1920×480, tablet 1536×1024, telefon 1080×1350 ölçülerinde ayrı görseller yükleyin.',
+        'hero_prev'          => 'Önceki slayt',
+        'hero_next'          => 'Sonraki slayt',
+        'hero_dots_aria'     => 'Slayt seçimi',
+        'hero_slide_alt'     => 'Hero slayt',
+        'hero_slide_n'       => 'Slayt',
+        'whatsapp_aria'      => 'WhatsApp ile iletişime geçin',
     ],
 
     /*
@@ -492,6 +512,7 @@ return [
         'role_member'           => 'Üye',
         /* Başkanın mesajı */
         'president_message_title' => 'Başkanın Mesajı',
+        'president_signature_title' => 'SECDER - Selahaddin Eyyubi Cami Derneği',
         'president_message_body'  => "Değerli Kardeşlerimiz,\n\nBirlikte Kardeşlik Derneği olarak, dünyanın dört bir yanında ihtiyaç sahiplerine ulaşmak ve insanlığa hizmet etmek amacıyla yola çıktık. Afrika'nın en uzak köşelerinde bile kardeşlerimizin açlıkla, susuzlukla ve barınma sorunlarıyla mücadele ettiğini yakından görüyor; bu acıya seyirci kalmayı vicdanımıza sığdıramıyoruz.\n\nDerneğimiz; gıda dağıtımı, temel barınma desteği, kurban organizasyonları ve sadaka kurbanlarının ihtiyaç sahiplerine ulaştırılması gibi alanlarda kesintisiz çalışmalarını sürdürmektedir. Her dağıtılan gıda kolisi, her kurulan çatı, her kesilen kurban; yalnızca bir yardım değil, aynı zamanda iki insan kalbi arasında kurulan kardeşlik köprüsüdür.\n\nBu yolculuk, sizlerin desteği ve güveniyle anlam kazanmaktadır. Bağışlarınız, dualarınız ve gönüllülük ruhunuz; bizim en büyük gücümüzdür. Her katkı, uzak coğrafyalarda bir ailenin sofrasını, bir çocuğun gülümsemesini ve bir insanın yarına olan umudunu beslemektedir.\n\nKardeşliğin sınır tanımadığına inanıyoruz. Birlikte daha güçlü, birlikte daha merhametli, birlikte daha insanız.\n\nSaygı ve kardeşlik duygularımla,",
         /* Genel */
         'social_media_us'       => 'Sosyal Medyada Biz',
@@ -569,9 +590,9 @@ return [
         'item_name_desc'    => 'Bağışçı adı soyadı',
         'item_phone'        => 'Telefon Numarası',
         'item_purpose'      => 'Faaliyet / Bağış Amacı',
-        'item_purpose_desc' => 'Kurban Bağışı, Gıda Yardımı, Genel Bağış vb.',
+        'item_purpose_desc' => 'Dernek Bağışı, Talebe Bağışı, Cami Bağışı vb.',
         'example_label'     => 'Örnek Açıklama:',
-        'example_text'      => 'Ali Yılmaz – 0532 123 45 67 – Kurban Bağışı',
+        'example_text'      => 'Ali Yılmaz – 0532 123 45 67 – Dernek Bağışı',
         'account_name'      => 'Hesap Adı:',
         'branch_name'       => 'Şube Adı:',
         'account_no'        => 'Hesap No:',
@@ -584,6 +605,8 @@ return [
         'zakat_preset_title' => 'Zekât bağışı için önerilen bilgiler',
         'zakat_preset_desc'  => 'Havale açıklama alanına aşağıdaki bilgileri ekleyebilirsiniz. Ad soyad ve telefon numaranızı da yazmayı unutmayın.',
         'zakat_preset_example_label' => 'Önerilen açıklama formatı',
+        'branch_suffix'     => ':bank Şubesi',
+        'iban_label'        => 'IBAN:',
     ],
 
     /*
@@ -616,6 +639,93 @@ return [
         'newsletter_unsubscribe' => 'E-bülten aboneliğiniz sonlandırıldı. İlginiz için teşekkür ederiz.',
         'contact_success'        => 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.',
         'volunteer_success'      => 'Gönüllülük başvurunuz başarıyla iletildi. En kısa sürede size dönüş yapacağız.',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site
+    |--------------------------------------------------------------------------
+    */
+    'site' => [
+        'default_title' => 'SECDER',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hata sayfaları
+    |--------------------------------------------------------------------------
+    */
+    'errors' => [
+        '404_title'   => 'Sayfa Bulunamadı',
+        '404_heading' => 'Aradığınız sayfa bulunamadı',
+        '404_desc'    => 'Bağlantı hatalı olabilir veya sayfa taşınmış olabilir. Ana sayfaya dönerek gezinmeye devam edebilirsiniz.',
+        '404_home'    => 'Ana Sayfaya Dön',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Giriş sayfaları (Admin / CRM)
+    |--------------------------------------------------------------------------
+    */
+    'auth' => [
+        'live_clock' => 'Canlı Saat',
+        'admin' => [
+            'back_home'       => 'Ana sayfaya dön',
+            'go_crm'          => 'Bağış paneline git (CRM)',
+            'forgot_password' => 'Şifremi unuttum',
+            'values_title'    => 'SECDER Yönetim',
+            'value_1'         => 'Gaziantep merkezli, cami ve nesil odaklı kurumsal yönetim',
+            'value_2'         => 'Şeffaf, düzenli ve güvenilir içerik yönetimi',
+            'value_3'         => 'İlim, dayanışma ve gönüllülük bilinciyle hizmet',
+            'welcome'         => 'Hoş geldiniz',
+            'welcome_sub'     => 'Selahaddin Eyyubi Cami Derneği yönetim paneli',
+            'logo_alt'        => 'SECDER',
+        ],
+        'crm' => [
+            'back_home'   => 'Ana sayfaya dön',
+            'go_admin'    => 'Yönetim paneline git',
+            'values_title'=> 'SECDER Bağış Paneli',
+            'value_1'     => 'Bağışçı kayıtları ve bağış geçmişi',
+            'value_2'     => 'Gelişmiş filtreleme ve Excel dışa aktarma',
+            'value_3'     => 'Cami ve dernek odaklı şeffaf bağış takibi',
+            'welcome'     => 'Hoş geldiniz',
+            'welcome_sub' => 'Bağışçı ve bağış yönetim paneli',
+            'logo_alt'    => 'SECDER',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Makbuz doğrulama sayfası
+    |--------------------------------------------------------------------------
+    */
+    'verify' => [
+        'heading'            => 'Makbuz Doğrulandı',
+        'intro'              => 'Bu bağış makbuzu derneğimiz kayıtlarında geçerlidir. Aşağıdaki bilgiler PDF makbuz ile eşleşmektedir.',
+        'verified_at'        => 'Doğrulama:',
+        'amount'             => 'Bağış Tutarı',
+        'donation_date'      => 'Bağış tarihi:',
+        'receipt_no_short'   => 'Makbuz no:',
+        'donation_section'   => 'Bağış Bilgileri',
+        'document_section'   => 'Belge Bilgileri',
+        'donation_no'        => 'Bağış No',
+        'receipt_no'         => 'Makbuz No',
+        'donor'              => 'Bağışçı',
+        'donation_type'      => 'Bağış Türü',
+        'payment_type'       => 'Ödeme Türü',
+        'project'            => 'Proje / Faaliyet',
+        'description'        => 'Açıklama',
+        'document_type'      => 'Belge Türü',
+        'verification_code'  => 'Doğrulama Kodu',
+        'created_at'         => 'Oluşturulma',
+        'show_less'          => 'Daha az göster',
+        'show_more'          => 'Devamını gör',
+        'copy'               => 'Kopyala',
+        'copied'             => 'Kopyalandı',
+        'security_note'      => 'Bu makbuz dijital olarak kayıt altına alınmıştır. Şüpheli bir durumda derneğimizle iletişime geçebilirsiniz.',
+        'page_note'          => 'Bu sayfa yalnızca makbuz doğrulama amacıyla kullanılır.',
+        'download_pdf'       => 'PDF İndir',
+        'back_home'          => 'Ana Sayfaya Dön',
     ],
 
 ];

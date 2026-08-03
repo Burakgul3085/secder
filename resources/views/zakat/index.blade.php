@@ -375,7 +375,7 @@
                         {{-- Özet (yazdırma hedefi) --}}
                         <div id="zakat-print-summary" class="rounded-[18px] border border-cyan-100 bg-gradient-to-br from-cyan-50/80 to-white p-6 shadow-sm md:p-8">
                             <div class="mb-6 hidden border-b border-slate-200 pb-4 print:block">
-                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Birlikte Kardeşlik Derneği</p>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('app.site.default_title') }}</p>
                                 <h2 class="mt-1 text-xl font-bold text-slate-900">{{ __('app.zakat.print_title') }}</h2>
                                 <p class="mt-2 text-xs text-slate-500">
                                     {{ __('app.zakat.last_update') }}:

@@ -13,7 +13,7 @@
     ];
     $topBarAria = [
         'instagram' => 'Instagram', 'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'facebook' => 'Facebook',
-        'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => 'Web sitesi',
+        'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.footer.website_aria'),
     ];
     $logoSrc = $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg');
     $isTr = app()->getLocale() === 'tr';
@@ -113,7 +113,7 @@
                 </a>
 
                 <p class="max-w-sm text-sm leading-relaxed text-slate-400">
-                    {{ $siteSettings->site_description ?: 'Birlikte iyiliği büyütüyoruz. E-bültene kayıt olarak duyurulardan haberdar olabilirsiniz.' }}
+                    {{ $siteSettings->site_description ?: __('app.footer.description_fallback') }}
                 </p>
 
                 <div class="rounded-2xl border border-slate-700 bg-slate-900/80 p-4">
@@ -299,7 +299,7 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center gap-1 text-cyan-400 transition hover:text-cyan-300"
-                        title="LinkedIn Profilim"
+                        title="{{ __('app.footer.developer_linkedin_title') }}"
                     >
                         <svg class="h-3 w-3 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -310,7 +310,7 @@
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 lg:justify-end">
-                <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1" aria-label="Yasal">
+                <nav class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1" aria-label="{{ __('app.footer.legal_nav_aria') }}">
                     @foreach ($legalTextItems as $item)
                         <button
                             type="button"
@@ -323,26 +323,32 @@
                         </button>
                     @endforeach
                 </nav>
-                <a
-                    href="{{ route('filament.crm.auth.login') }}"
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 text-slate-500 transition hover:border-teal-500 hover:text-teal-300"
-                    title="{{ __('app.footer.crm_login') }}"
-                    aria-label="{{ __('app.footer.crm_login') }}"
-                >
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path d="M2 4.75A2.75 2.75 0 0 1 4.75 2h10.5A2.75 2.75 0 0 1 18 4.75v2.5A2.75 2.75 0 0 1 15.25 10H4.75A2.75 2.75 0 0 1 2 7.25v-2.5ZM4.75 11.5A2.75 2.75 0 0 0 2 14.25v1.5A2.75 2.75 0 0 0 4.75 18.5h10.5A2.75 2.75 0 0 0 18 15.75v-1.5A2.75 2.75 0 0 0 15.25 11.5H4.75Z" />
-                    </svg>
-                </a>
-                <a
-                    href="{{ route('filament.admin.auth.login') }}"
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-slate-700 text-slate-500 transition hover:border-cyan-500 hover:text-cyan-300"
-                    title="{{ __('app.footer.admin_login') }}"
-                    aria-label="{{ __('app.footer.admin_login') }}"
-                >
-                    <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M10 1.75a4.25 4.25 0 0 0-4.25 4.25v1.11a2.25 2.25 0 0 0-1.75 2.19v6.2a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 16 15.5V9.3a2.25 2.25 0 0 0-1.75-2.19V6A4.25 4.25 0 0 0 10 1.75Zm2.75 5.5V6a2.75 2.75 0 1 0-5.5 0v1.25h5.5Zm-2 4.45a.75.75 0 0 0-1.5 0v1.6a.75.75 0 0 0 1.5 0v-1.6Z" clip-rule="evenodd" />
-                    </svg>
-                </a>
+                <form action="{{ url('/secder-crm/login') }}" method="get" target="_top" class="m-0 inline">
+                    <button
+                        type="submit"
+                        class="inline-flex h-7 items-center gap-1 rounded-full border border-slate-700 px-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400 transition hover:border-teal-500 hover:text-teal-300"
+                        title="{{ __('app.footer.crm_login') }}"
+                        aria-label="{{ __('app.footer.crm_login') }}"
+                    >
+                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M2 4.75A2.75 2.75 0 0 1 4.75 2h10.5A2.75 2.75 0 0 1 18 4.75v2.5A2.75 2.75 0 0 1 15.25 10H4.75A2.75 2.75 0 0 1 2 7.25v-2.5ZM4.75 11.5A2.75 2.75 0 0 0 2 14.25v1.5A2.75 2.75 0 0 0 4.75 18.5h10.5A2.75 2.75 0 0 0 18 15.75v-1.5A2.75 2.75 0 0 0 15.25 11.5H4.75Z" />
+                        </svg>
+                        <span>{{ __('app.footer.crm_short') }}</span>
+                    </button>
+                </form>
+                <form action="{{ url('/secder-panel/login') }}" method="get" target="_top" class="m-0 inline">
+                    <button
+                        type="submit"
+                        class="inline-flex h-7 items-center gap-1 rounded-full border border-slate-700 px-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400 transition hover:border-cyan-500 hover:text-cyan-300"
+                        title="{{ __('app.footer.admin_login') }}"
+                        aria-label="{{ __('app.footer.admin_login') }}"
+                    >
+                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 1.75a4.25 4.25 0 0 0-4.25 4.25v1.11a2.25 2.25 0 0 0-1.75 2.19v6.2a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 16 15.5V9.3a2.25 2.25 0 0 0-1.75-2.19V6A4.25 4.25 0 0 0 10 1.75Zm2.75 5.5V6a2.75 2.75 0 1 0-5.5 0v1.25h5.5Zm-2 4.45a.75.75 0 0 0-1.5 0v1.6a.75.75 0 0 0 1.5 0v-1.6Z" clip-rule="evenodd" />
+                        </svg>
+                        <span>{{ __('app.footer.admin_short') }}</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>

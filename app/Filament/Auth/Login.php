@@ -32,11 +32,11 @@ class Login extends BaseLogin
 
     public function getHeading(): string | Htmlable | null
     {
-        return 'Birlikte Kardeşlik Derneği';
+        return 'SECDER';
     }
 
     public function getSubheading(): string | Htmlable | null
     {
-        return new HtmlString('Yönetim paneline erişmek için bilgilerinizi girin.');
+        return new HtmlString('Selahaddin Eyyubi Cami Derneği yönetim paneli');
     }
 }

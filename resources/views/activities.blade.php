@@ -1,9 +1,9 @@
 <x-layouts.app>
-    <x-page-hero title="Faaliyetlerimiz" />
+    <x-page-hero :title="__('app.home.activities_title')" />
 
     <section class="mx-auto max-w-7xl px-4 py-10 md:px-6">
         <p class="mx-auto mb-8 max-w-4xl text-center text-base leading-relaxed text-slate-600 md:text-lg">
-            Dernek olarak sürdürdüğümüz tüm faaliyetleri burada görebilir, detayları inceleyebilir ve bağış desteği sunabilirsiniz.
+            {{ __('app.page.activities_intro') }}
         </p>
 
         {{-- Filtre Alanı --}}
@@ -19,14 +19,18 @@
                         type="text"
                         name="q"
                         value="{{ $filters['q'] }}"
-                        placeholder="Faaliyet ara..."
+                        placeholder="{{ __('app.page.activities_search') }}"
                         class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
                     >
                 </div>
 
                 {{-- Durum --}}
                 <div class="flex gap-2">
-                    @foreach (['' => 'Tümü', 'devam_ediyor' => 'Devam Ediyor', 'tamamlandi' => 'Tamamlandı'] as $val => $label)
+                    @foreach ([
+                        '' => __('app.page.activities_all'),
+                        'devam_ediyor' => __('app.page.activities_ongoing'),
+                        'tamamlandi' => __('app.page.activities_done'),
+                    ] as $val => $label)
                         <button
                             type="submit"
                             name="status"
@@ -45,9 +49,9 @@
                     onchange="this.form.submit()"
                     class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
                 >
-                    <option value="default"     {{ $filters['sort'] === 'default'     ? 'selected' : '' }}>Varsayılan Sıra</option>
-                    <option value="amount_asc"  {{ $filters['sort'] === 'amount_asc'  ? 'selected' : '' }}>Bağış: Düşükten Yükseğe</option>
-                    <option value="amount_desc" {{ $filters['sort'] === 'amount_desc' ? 'selected' : '' }}>Bağış: Yüksekten Düşüğe</option>
+                    <option value="default"     {{ $filters['sort'] === 'default'     ? 'selected' : '' }}>{{ __('app.page.activities_sort_default') }}</option>
+                    <option value="amount_asc"  {{ $filters['sort'] === 'amount_asc'  ? 'selected' : '' }}>{{ __('app.page.activities_sort_asc') }}</option>
+                    <option value="amount_desc" {{ $filters['sort'] === 'amount_desc' ? 'selected' : '' }}>{{ __('app.page.activities_sort_desc') }}</option>
                 </select>
 
                 {{-- Filtreyi Temizle --}}
@@ -59,14 +63,14 @@
                         <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
-                        Temizle
+                        {{ __('app.page.activities_clear') }}
                     </a>
                 @endif
             </div>
 
             {{-- Sonuç sayısı --}}
             <p class="mt-3 text-sm text-slate-500">
-                <span class="font-semibold text-cyan-700">{{ $activities->count() }}</span> faaliyet listeleniyor
+                <span class="font-semibold text-cyan-700">{{ $activities->count() }}</span> {{ __('app.page.activities_count') }}
             </p>
         </form>
 
@@ -74,7 +78,9 @@
         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             @forelse($activities as $activity)
                 @php
-                    $statusLabel = $activity->status === 'tamamlandi' ? 'Tamamlandı' : 'Devam Ediyor';
+                    $statusLabel = $activity->status === 'tamamlandi'
+                        ? __('app.page.activities_done')
+                        : __('app.page.activities_ongoing');
                     $statusClass = $activity->status === 'tamamlandi'
                         ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                         : 'border-amber-200 bg-amber-50 text-amber-700';
@@ -101,8 +107,8 @@
                             </p>
                         @endif
                         <div class="mt-5 flex items-center gap-3">
-                            <a href="{{ route('donations') }}" class="inline-flex items-center rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700">Bağış Yap</a>
-                            <a href="{{ route('activities.show', ['slug' => $activity->slug]) }}" class="inline-flex items-center text-sm font-semibold text-cyan-700 transition hover:text-cyan-900">Faaliyet Detayı</a>
+                            <a href="{{ route('donations') }}" class="inline-flex items-center rounded-full bg-cyan-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700">{{ __('app.page.donate_btn') }}</a>
+                            <a href="{{ route('activities.show', ['slug' => $activity->slug]) }}" class="inline-flex items-center text-sm font-semibold text-cyan-700 transition hover:text-cyan-900">{{ __('app.page.activity_detail') }}</a>
                         </div>
                     </div>
                 </article>
@@ -111,8 +117,8 @@
                     <svg class="mx-auto mb-4 h-14 w-14 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <p class="text-lg font-semibold text-slate-500">Aradığınız kriterlere uygun faaliyet bulunamadı.</p>
-                    <a href="{{ route('activities.index') }}" class="mt-4 inline-flex items-center rounded-full bg-cyan-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700">Tüm Faaliyetleri Gör</a>
+                    <p class="text-lg font-semibold text-slate-500">{{ __('app.page.activities_empty') }}</p>
+                    <a href="{{ route('activities.index') }}" class="mt-4 inline-flex items-center rounded-full bg-cyan-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cyan-700">{{ __('app.page.activities_view_all') }}</a>
                 </div>
             @endforelse
         </div>

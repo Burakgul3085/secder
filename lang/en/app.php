@@ -24,6 +24,8 @@ return [
         'volunteer_short'   => 'Volunteer',
         'quick_contact'     => 'Quick contact panel',
         'menu_empty'        => 'No menu items added yet',
+        'lang_selector'     => 'Language selector',
+        'website_aria'      => 'Website',
     ],
 
     /*
@@ -76,6 +78,12 @@ return [
         'subscribe'         => 'Subscribe to newsletter',
         'admin_login'       => 'Admin Login',
         'crm_login'         => 'CRM Login',
+        'description_fallback' => 'Together we grow goodness. Subscribe to our newsletter to stay informed about announcements.',
+        'developer_linkedin_title' => 'My LinkedIn Profile',
+        'legal_nav_aria'    => 'Legal',
+        'crm_short'         => 'CRM',
+        'admin_short'       => 'Admin',
+        'website_aria'      => 'Website',
     ],
 
     /*
@@ -156,7 +164,7 @@ return [
         'wa_form_title'     => 'Quick Message via WhatsApp',
         'wa_desc'           => 'When you fill in the form and click send, your message will be forwarded to the association line via WhatsApp in a neat format.',
         'wa_send'           => 'Send via WhatsApp',
-        'wa_greeting'       => 'Hello Birlikte Kardeşlik Association,',
+        'wa_greeting'       => 'Hello SECDER / Selahaddin Eyyubi Mosque Association,',
         'wa_name_label'     => 'Full Name',
         'wa_email_label'    => 'Email',
         'wa_msg_label'      => 'Message',
@@ -205,7 +213,7 @@ return [
         'activities'    => 'See Our Activities',
         'reset'         => 'Clear Form',
         'legal_title'   => 'Important Notice',
-        'legal_text'    => 'This calculator is for information only. Please consult a qualified religious authority regarding zakat, nisap, and asset classification. Birlikte Kardeslik Association accepts no liability for calculation results.',
+        'legal_text'    => 'This calculator is for information only. Please consult a qualified religious authority regarding zakat, nisap, and asset classification. SECDER / Selahaddin Eyyubi Mosque Association accepts no liability for calculation results.',
         'coins_section' => 'Gold Coins (by piece)', 'coins_hint' => 'Live unit prices are from GenelPara.',
         'coin_quarter' => 'Quarter Gold', 'coin_half' => 'Half Gold', 'coin_full' => 'Full Gold',
         'coin_ata' => 'Ata Lira', 'coin_cmr' => 'Republic Gold', 'piece' => 'pcs', 'unit_price' => 'Unit price',
@@ -361,6 +369,18 @@ return [
         'testimonials_validation_comment' => 'Please write your comment.',
         'testimonials_validation_comment_min' => 'Comment must be at least 20 characters.',
         'testimonials_validation_kvkk' => 'You must accept the privacy notice.',
+
+        /* Hero slider */
+        'hero_alt'           => 'Hero',
+        'hero_carousel_aria' => 'Main promotional slider',
+        'hero_empty_title'   => 'Hero section is ready',
+        'hero_empty_desc'    => 'Add slides from the «Hero Slider» section in the admin panel. Upload separate images for desktop 1920×480, tablet 1536×1024, and phone 1080×1350.',
+        'hero_prev'          => 'Previous slide',
+        'hero_next'          => 'Next slide',
+        'hero_dots_aria'     => 'Slide selection',
+        'hero_slide_alt'     => 'Hero slide',
+        'hero_slide_n'       => 'Slide',
+        'whatsapp_aria'      => 'Contact us on WhatsApp',
     ],
 
     /*
@@ -455,6 +475,7 @@ return [
         'role_member'           => 'Member',
         /* President's message */
         'president_message_title' => "President's Message",
+        'president_signature_title' => 'SECDER - Selahaddin Eyyubi Mosque Association',
         'president_message_body'  => "Dear Brothers and Sisters,\n\nAs Birlikte Kardeslik Association, we set out with the aim of reaching those in need all around the world and serving humanity. Even in the farthest corners of Africa, we closely witness our brothers and sisters struggling with hunger, thirst, and shelter problems; we cannot, in good conscience, remain indifferent to this suffering.\n\nOur association continues its uninterrupted work in areas such as food distribution, basic shelter support, qurban organizations, and delivering charity qurban offerings to those in need. Every food parcel distributed, every roof built, every qurban performed is not only an act of aid, but also a bridge of brotherhood built between two human hearts.\n\nThis journey gains meaning through your support and trust. Your donations, prayers, and volunteer spirit are our greatest strength. Every contribution nourishes a family's table in distant geographies, a child's smile, and a person's hope for tomorrow.\n\nWe believe that brotherhood knows no borders. Together we are stronger, together we are more compassionate, together we are more human.\n\nWith respect and feelings of brotherhood,",
         /* General */
         'social_media_us'       => 'Follow Us on Social Media',
@@ -532,9 +553,9 @@ return [
         'item_name_desc'    => 'Donor\'s full name',
         'item_phone'        => 'Phone Number',
         'item_purpose'      => 'Activity / Donation Purpose',
-        'item_purpose_desc' => 'Qurban Donation, Food Aid, General Donation, etc.',
+        'item_purpose_desc' => 'Association Donation, Student Support, Mosque Donation, etc.',
         'example_label'     => 'Example Description:',
-        'example_text'      => 'John Smith – +90 532 123 45 67 – Qurban Donation',
+        'example_text'      => 'John Smith – +90 532 123 45 67 – Association Donation',
         'account_name'      => 'Account Name:',
         'branch_name'       => 'Branch Name:',
         'account_no'        => 'Account No:',
@@ -547,6 +568,8 @@ return [
         'zakat_preset_title' => 'Suggested details for zakat donation',
         'zakat_preset_desc'  => 'You may include the following in your transfer description. Do not forget your name and phone number.',
         'zakat_preset_example_label' => 'Suggested description format',
+        'branch_suffix'     => ':bank Branch',
+        'iban_label'        => 'IBAN:',
     ],
 
     /*
@@ -579,6 +602,93 @@ return [
         'newsletter_unsubscribe' => 'Your newsletter subscription has been cancelled. Thank you for your interest.',
         'contact_success'        => 'Your message has been sent successfully. We will get back to you as soon as possible.',
         'volunteer_success'      => 'Your volunteer application has been successfully submitted. We will get back to you as soon as possible.',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site
+    |--------------------------------------------------------------------------
+    */
+    'site' => [
+        'default_title' => 'SECDER',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Error pages
+    |--------------------------------------------------------------------------
+    */
+    'errors' => [
+        '404_title'   => 'Page Not Found',
+        '404_heading' => 'The page you are looking for was not found',
+        '404_desc'    => 'The link may be incorrect or the page may have been moved. You can return to the homepage to continue browsing.',
+        '404_home'    => 'Back to Homepage',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Login pages (Admin / CRM)
+    |--------------------------------------------------------------------------
+    */
+    'auth' => [
+        'live_clock' => 'Live Clock',
+        'admin' => [
+            'back_home'       => 'Back to homepage',
+            'go_crm'          => 'Go to donation panel (CRM)',
+            'forgot_password' => 'Forgot my password',
+            'values_title'    => 'SECDER Administration',
+            'value_1'         => 'Gaziantep-based, mosque- and generation-focused institutional management',
+            'value_2'         => 'Transparent, organized and reliable content management',
+            'value_3'         => 'Service guided by knowledge, solidarity and volunteer spirit',
+            'welcome'         => 'Welcome',
+            'welcome_sub'     => 'Selahaddin Eyyubi Mosque Association admin panel',
+            'logo_alt'        => 'SECDER',
+        ],
+        'crm' => [
+            'back_home'   => 'Back to homepage',
+            'go_admin'    => 'Go to admin panel',
+            'values_title'=> 'SECDER Donation Panel',
+            'value_1'     => 'Donor records and donation history',
+            'value_2'     => 'Advanced filtering and Excel export',
+            'value_3'     => 'Transparent donation tracking for mosque and association',
+            'welcome'     => 'Welcome',
+            'welcome_sub' => 'Donor and donation management panel',
+            'logo_alt'    => 'SECDER',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Receipt verification page
+    |--------------------------------------------------------------------------
+    */
+    'verify' => [
+        'heading'            => 'Receipt Verified',
+        'intro'              => 'This donation receipt is valid in our association records. The details below match the PDF receipt.',
+        'verified_at'        => 'Verified:',
+        'amount'             => 'Donation Amount',
+        'donation_date'      => 'Donation date:',
+        'receipt_no_short'   => 'Receipt no:',
+        'donation_section'   => 'Donation Details',
+        'document_section'   => 'Document Details',
+        'donation_no'        => 'Donation No',
+        'receipt_no'         => 'Receipt No',
+        'donor'              => 'Donor',
+        'donation_type'      => 'Donation Type',
+        'payment_type'       => 'Payment Type',
+        'project'            => 'Project / Activity',
+        'description'        => 'Description',
+        'document_type'      => 'Document Type',
+        'verification_code'  => 'Verification Code',
+        'created_at'         => 'Created',
+        'show_less'          => 'Show less',
+        'show_more'          => 'Show more',
+        'copy'               => 'Copy',
+        'copied'             => 'Copied',
+        'security_note'      => 'This receipt has been digitally recorded. If anything seems suspicious, please contact our association.',
+        'page_note'          => 'This page is used only for receipt verification.',
+        'download_pdf'       => 'Download PDF',
+        'back_home'          => 'Back to Homepage',
     ],
 
 ];

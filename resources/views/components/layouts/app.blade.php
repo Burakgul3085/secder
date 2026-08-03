@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="tr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $siteSettings->site_title ?? 'Birlikte Kardeşlik Derneği' }}</title>
+    <title>{{ $siteSettings->site_title ?? __('app.site.default_title') }}</title>
     <meta name="description" content="{{ $siteSettings->site_description }}">
     @if($siteSettings->favicon)
         <link rel="icon" href="{{ asset('storage/' . $siteSettings->favicon) }}">

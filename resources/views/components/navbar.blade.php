@@ -98,7 +98,7 @@
             ];
             $topBarAria = [
                 'instagram' => 'Instagram', 'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'facebook' => 'Facebook',
-                'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => 'Web sitesi',
+                'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.nav.website_aria'),
             ];
         @endphp
 
@@ -227,7 +227,7 @@
                     type="button"
                     @click="mobileLangOpen = !mobileLangOpen"
                     class="inline-flex h-10 items-center gap-1 rounded-xl border border-slate-200 bg-white px-2 text-[10px] font-bold uppercase text-slate-700 shadow-sm"
-                    aria-label="Dil seçici"
+                    aria-label="{{ __('app.nav.lang_selector') }}"
                 >
                     <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-4 w-5 rounded object-cover">
                     {{ strtoupper($currentLocale) }}
@@ -389,7 +389,7 @@
                         type="button"
                         @click="langOpen = !langOpen"
                         class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50/90 px-2 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 lg:h-10 lg:rounded-2xl lg:px-2.5"
-                        aria-label="Dil seçici"
+                        aria-label="{{ __('app.nav.lang_selector') }}"
                     >
                         <img
                             src="{{ $currentFlag }}"

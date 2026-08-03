@@ -82,7 +82,7 @@ class PosterController extends Controller
             'saveUrl' => route('crm.posters.update', $poster),
             // Not: Filament panel bağlamı dışında olduğumuz için getUrl() yerine
             // bağış düzenleme yolunu manuel kuruyoruz.
-            'returnUrl' => url('/crm/donations/' . $poster->donation_id . '/edit'),
+            'returnUrl' => url('/secder-crm/donations/' . $poster->donation_id . '/edit'),
         ];
 
         return view('crm.poster.studio', [

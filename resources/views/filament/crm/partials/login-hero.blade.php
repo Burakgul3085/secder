@@ -3,11 +3,14 @@
     $logoUrl = $settings->logo ? asset('storage/' . $settings->logo) : asset('images/default-logo.svg');
 @endphp
 <div class="bkd-login-hero">
-    <div style="display:flex; align-items:center; gap: .7rem;">
-        <img src="{{ $logoUrl }}" alt="BKD Logo" style="width: 42px; height: 42px; border-radius: 9999px; background: #fff; padding: 2px; object-fit: cover;">
-        <div>
-            <div style="font-size: .95rem; font-weight: 700;">Hoş geldiniz</div>
-            <div style="font-size: .82rem; opacity: .95;">Bağışçı ve bağış yönetim paneli</div>
+    <div class="bkd-login-hero__row">
+        <div class="bkd-login-hero__logo-wrap">
+            <img src="{{ $logoUrl }}" alt="{{ __('app.auth.crm.logo_alt') }}" class="bkd-login-hero__logo">
+        </div>
+        <div class="bkd-login-hero__copy">
+            <p class="bkd-login-hero__eyebrow">{{ __('app.auth.crm.logo_alt') }}</p>
+            <p class="bkd-login-hero__title">{{ __('app.auth.crm.welcome') }}</p>
+            <p class="bkd-login-hero__subtitle">{{ __('app.auth.crm.welcome_sub') }}</p>
         </div>
     </div>
 </div>

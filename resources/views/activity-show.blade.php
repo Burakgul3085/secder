@@ -8,7 +8,9 @@
     <x-page-hero :title="$activityTitle" />
 
     @php
-        $statusLabel = $activity->status === 'tamamlandi' ? 'Tamamlandı' : 'Devam Ediyor';
+        $statusLabel = $activity->status === 'tamamlandi'
+            ? __('app.page.activities_done')
+            : __('app.page.activities_ongoing');
         $statusClass = $activity->status === 'tamamlandi'
             ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
             : 'border-amber-200 bg-amber-50 text-amber-700';
@@ -40,7 +42,7 @@
                         href="{{ route('donations') }}"
                         class="inline-flex items-center rounded-full bg-cyan-600 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-cyan-700"
                     >
-                        Bağış Yap
+                        {{ __('app.page.donate_btn') }}
                     </a>
                 </div>
 

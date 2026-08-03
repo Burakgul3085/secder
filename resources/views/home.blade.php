@@ -401,7 +401,7 @@
             href="https://wa.me/905425214040"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="WhatsApp ile iletişime geçin"
+            aria-label="{{ __('app.home.whatsapp_aria') }}"
             class="wa-btn relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform duration-200"
             style="background-color:#25D366;"
         >

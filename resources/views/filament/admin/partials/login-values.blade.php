@@ -1,12 +1,21 @@
-<div class="bkd-login-back">
-    <a href="{{ route('home') }}" class="bkd-login-back__btn">Ana sayfaya dön</a>
-    <a href="{{ route('admin.password.forgot') }}" class="bkd-login-forgot__btn">Şifremi unuttum</a>
+<div class="bkd-login-back" wire:ignore>
+    <form action="{{ url('/') }}" method="get" target="_top">
+        <button type="submit" class="bkd-login-back__btn">{{ __('app.auth.admin.back_home') }}</button>
+    </form>
+
+    <form action="{{ url('/secder-crm/login') }}" method="get" target="_top" style="margin-top:.55rem;">
+        <button type="submit" class="bkd-login-back__btn">{{ __('app.auth.admin.go_crm') }}</button>
+    </form>
+
+    <form action="{{ url('/secder-panel/sifremi-unuttum') }}" method="get" target="_top" style="margin-top:.35rem; text-align:center;">
+        <button type="submit" class="bkd-login-forgot__btn" style="background:none;border:0;cursor:pointer;padding:0;">{{ __('app.auth.admin.forgot_password') }}</button>
+    </form>
 </div>
-<div class="bkd-values">
-    <h4>Değerlerimiz</h4>
+<div class="bkd-values" wire:ignore>
+    <h4>{{ __('app.auth.admin.values_title') }}</h4>
     <ul>
-        <li>Şeffaf, hızlı ve sürdürülebilir yardım yönetimi</li>
-        <li>Gönüllülük ruhuyla toplumsal dayanışma</li>
-        <li>İnsan onurunu merkeze alan destek anlayışı</li>
+        <li>{{ __('app.auth.admin.value_1') }}</li>
+        <li>{{ __('app.auth.admin.value_2') }}</li>
+        <li>{{ __('app.auth.admin.value_3') }}</li>
     </ul>
 </div>

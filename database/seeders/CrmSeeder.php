@@ -13,10 +13,10 @@ class CrmSeeder extends Seeder
     public function run(): void
     {
         CrmUser::query()->updateOrCreate(
-            ['email' => 'crm@birliktekardeslik.org'],
+            ['email' => 'crm@secder.org'],
             [
-                'name' => 'CRM Yöneticisi',
-                'password' => 'CrmBirlikte2026!',
+                'name' => 'SECDER CRM Yöneticisi',
+                'password' => 'CrmSecder2026!',
                 'role' => 'super_admin',
                 'is_active' => true,
             ],

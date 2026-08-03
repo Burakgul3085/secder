@@ -33,12 +33,13 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('bkd-panel')
+            ->path('secder-panel')
             ->login(Login::class)
-            ->brandName('Birlikte Kardeşlik Derneği')
+            ->brandName('SECDER')
             ->brandLogo(fn (): string => Setting::current()->logo
                 ? asset('storage/' . Setting::current()->logo)
                 : asset('images/default-logo.svg'))
+            ->brandLogoHeight('3.25rem')
             ->favicon(fn (): string => Setting::current()->favicon
                 ? asset('storage/' . Setting::current()->favicon)
                 : asset('images/default-logo.svg'))

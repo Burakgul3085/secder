@@ -80,6 +80,12 @@ const enablePageTransition = () => {
     window.addEventListener('pageshow', hideTransition);
 
     document.addEventListener('click', (event) => {
+        // Panel form butonları: sayfa geçiş animasyonu karışmasın
+        const panelBtn = event.target.closest('form[action*="secder-crm"] button, form[action*="secder-panel"] button');
+        if (panelBtn) {
+            return;
+        }
+
         const link = event.target.closest('a');
         if (!link) {
             return;
@@ -100,6 +106,20 @@ const enablePageTransition = () => {
 
         const url = new URL(link.href, window.location.origin);
         if (url.origin !== window.location.origin || (url.pathname === window.location.pathname && url.search === window.location.search)) {
+            return;
+        }
+
+        // Panel girişleri: animasyonsuz ve zorunlu yönlendirme
+        if (
+            url.pathname.startsWith('/secder-crm')
+            || url.pathname.startsWith('/secder-panel')
+            || url.pathname.startsWith('/crm')
+            || url.pathname.startsWith('/bkd-panel')
+            || link.dataset.panelLink
+        ) {
+            event.preventDefault();
+            event.stopPropagation();
+            window.location.assign(url.href);
             return;
         }
 

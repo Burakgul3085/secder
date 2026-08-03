@@ -11,7 +11,7 @@
     backdrop-filter: blur(8px);
     min-width: 170px;
 ">
-    <div style="font-size: 11px; color: #475569; margin-bottom: 3px;">Canlı Saat</div>
+    <div style="font-size: 11px; color: #475569; margin-bottom: 3px;">{{ __('app.auth.live_clock') }}</div>
     <div id="bkd-clock-time" style="font-size: 15px; font-weight: 700; color: #0f172a;">--:--:--</div>
     <div id="bkd-clock-date" style="font-size: 11px; color: #334155; margin-top: 2px;">--/--/----</div>
 </div>

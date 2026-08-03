@@ -95,12 +95,12 @@
                             <p class="text-xl font-semibold text-slate-900">
                                 {{ __('app.donations.branch_name') }}
                                 <span class="font-medium">
-                                    {{ $account->branch_name ?: ($account->bank_name . ' Şubesi') }}
+                                    {{ $account->branch_name ?: __('app.donations.branch_suffix', ['bank' => $account->bank_name]) }}
                                 </span>
                             </p>
 
                             <div class="rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-lg font-semibold text-slate-900">IBAN: <span class="font-mono">{{ $account->iban }}</span></p>
+                                <p class="text-lg font-semibold text-slate-900">{{ __('app.donations.iban_label') }} <span class="font-mono">{{ $account->iban }}</span></p>
                                 <p class="mt-2 text-lg font-semibold text-slate-900">{{ __('app.donations.account_no') }} <span class="font-medium">{{ $account->account_number ?: '-' }}</span></p>
                             </div>
 

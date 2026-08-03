@@ -10,7 +10,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
@@ -50,13 +49,14 @@ class CrmPanelProvider extends PanelProvider
 
         return $panel
             ->id('crm')
-            ->path('crm')
+            ->path('secder-crm')
             ->login(Login::class)
             ->authGuard('crm')
-            ->brandName('BKD Bağış Yönetimi')
+            ->brandName('SECDER Bağış Yönetimi')
             ->brandLogo(fn (): string => Setting::current()->logo
                 ? asset('storage/' . Setting::current()->logo)
                 : asset('images/default-logo.svg'))
+            ->brandLogoHeight('3.25rem')
             ->favicon(fn (): string => Setting::current()->favicon
                 ? asset('storage/' . Setting::current()->favicon)
                 : asset('images/default-logo.svg'))
@@ -111,7 +111,7 @@ class CrmPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
-                AuthenticateSession::class,
+                // AuthenticateSession kaldırıldı: admin (web) oturumu CRM girişini bozabiliyordu
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
@@ -134,7 +134,7 @@ class CrmPanelProvider extends PanelProvider
             return true;
         }
 
-        if (preg_match('#^crm/donations(?:/\d+)?/edit$#', $path) || $path === 'crm/donations/create') {
+        if (preg_match('#^secder-crm/donations(?:/\d+)?/edit$#', $path) || $path === 'secder-crm/donations/create') {
             return true;
         }
 

@@ -31,7 +31,7 @@
         @endif
         <img
             src="{{ $firstImage }}"
-            alt="Hero"
+            alt="{{ __('app.home.hero_alt') }}"
             class="{{ $heroImg }}"
             loading="eager"
         >
@@ -41,7 +41,7 @@
 
 <section
     class="relative z-10 w-full max-w-[100vw] overflow-x-hidden"
-    aria-label="Ana tanıtım slider"
+    aria-label="{{ __('app.home.hero_carousel_aria') }}"
     translate="no"
     x-data="homeHeroSlider({ slides: @js($slides) })"
     x-init="$nextTick(function(){ var f=document.getElementById('hero-static-fallback'); if(f) f.remove(); })"
@@ -51,8 +51,8 @@
     <template x-if="total === 0">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
             <x-empty-state
-                title="Hero alanı hazır"
-                description="Yönetim panelinden «Hero Slider» bölümünden slayt ekleyin. Masaüstü 1920×480, tablet 1536×1024, telefon 1080×1350 ölçülerinde ayrı görseller yükleyin."
+                :title="__('app.home.hero_empty_title')"
+                :description="__('app.home.hero_empty_desc')"
             />
         </div>
     </template>
@@ -71,7 +71,7 @@
                 <source type="image/webp" :srcset="current.desktop_srcset" sizes="100vw">
                 <img
                     :src="current.image"
-                    :alt="'Hero slayt ' + (idx + 1)"
+                    :alt="'{{ __('app.home.hero_slide_alt') }} ' + (idx + 1)"
                     class="{{ $heroImg }}"
                     loading="eager"
                     decoding="async"
@@ -85,7 +85,7 @@
                         type="button"
                         class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
                         @click="prev()"
-                        aria-label="Önceki slayt"
+                        aria-label="{{ __('app.home.hero_prev') }}"
                     >
                         <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -95,7 +95,7 @@
                         type="button"
                         class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
                         @click="next()"
-                        aria-label="Sonraki slayt"
+                        aria-label="{{ __('app.home.hero_next') }}"
                     >
                         <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -108,7 +108,7 @@
                 class="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-4"
                 x-show="total > 1"
                 role="tablist"
-                aria-label="Slayt seçimi"
+                aria-label="{{ __('app.home.hero_dots_aria') }}"
             >
                 <template x-for="(slide, i) in slides" :key="'hero-dot-' + i">
                     <button
@@ -116,7 +116,7 @@
                         class="h-2 rounded-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                         :class="idx === i ? 'w-6 bg-white shadow' : 'w-2 bg-white/60 hover:bg-white/85'"
                         @click="go(i)"
-                        :aria-label="'Slayt ' + (i + 1)"
+                        :aria-label="'{{ __('app.home.hero_slide_n') }} ' + (i + 1)"
                         :aria-current="idx === i ? 'true' : 'false'"
                     ></button>
                 </template>

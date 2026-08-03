@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="tr">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sayfa Bulunamadı</title>
+    <title>{{ __('app.errors.404_title') }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -101,13 +101,13 @@
 <body>
     <main class="card" role="main" aria-labelledby="not-found-title">
         <p class="code">404</p>
-        <h1 id="not-found-title" class="title">Aradığınız sayfa bulunamadı</h1>
+        <h1 id="not-found-title" class="title">{{ __('app.errors.404_heading') }}</h1>
         <p class="desc">
-            Bağlantı hatalı olabilir veya sayfa taşınmış olabilir. Ana sayfaya dönerek gezinmeye devam edebilirsiniz.
+            {{ __('app.errors.404_desc') }}
         </p>
         <div class="actions">
             <a href="{{ route('home') }}" class="btn">
-                Ana Sayfaya Dön
+                {{ __('app.errors.404_home') }}
             </a>
         </div>
     </main>

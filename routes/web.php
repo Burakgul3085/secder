@@ -68,16 +68,29 @@ Route::middleware('auth:crm')->group(function (): void {
     Route::get('/crm/afis/{poster}/indir-pdf', [PosterController::class, 'downloadPdf'])->name('crm.posters.download.pdf');
 });
 
-Route::prefix('bkd-panel')->name('admin.otp.')->group(function (): void {
+Route::prefix('secder-panel')->name('admin.otp.')->group(function (): void {
     Route::get('/dogrulama', [AdminOtpController::class, 'show'])->name('form');
     Route::post('/dogrulama', [AdminOtpController::class, 'verify'])
         ->middleware('throttle:10,1')
         ->name('verify');
 });
 
-Route::prefix('bkd-panel')->name('admin.password.')->group(function (): void {
+Route::prefix('secder-panel')->name('admin.password.')->group(function (): void {
     Route::get('/sifremi-unuttum', [AdminForgotPasswordController::class, 'show'])->name('forgot');
     Route::post('/sifremi-unuttum', [AdminForgotPasswordController::class, 'reset'])
         ->middleware('throttle:10,1')
         ->name('reset');
 });
+
+// Eski panel URL'lerinden yeni SECDER yollarına yönlendirme
+Route::any('/bkd-panel/{path?}', function (?string $path = null) {
+    $target = '/secder-panel' . ($path ? '/' . ltrim($path, '/') : '');
+
+    return redirect($target, 301);
+})->where('path', '.*');
+
+Route::any('/crm/{path?}', function (?string $path = null) {
+    $target = '/secder-crm' . ($path ? '/' . ltrim($path, '/') : '');
+
+    return redirect($target, 301);
+})->where('path', '.*');
