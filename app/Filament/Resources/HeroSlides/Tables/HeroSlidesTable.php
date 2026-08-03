@@ -44,7 +44,7 @@ class HeroSlidesTable
                     ->color('gray')
                     ->requiresConfirmation()
                     ->modalHeading('Görseller yeniden üretilsin mi?')
-                    ->modalDescription('Yüklediğiniz görselden masaüstü, tablet ve telefon bandları tekrar oluşturulur.')
+                    ->modalDescription('Yüklediğiniz masaüstü, tablet ve telefon görsellerinden cihaz bandları tekrar oluşturulur.')
                     ->action(function (HeroSlide $record): void {
                         try {
                             app(HeroImageRenderer::class)->render($record, force: true);

@@ -26,6 +26,7 @@ export default {
     './resources/**/*.blade.php',
     './resources/**/*.js',
     './app/Filament/**/*.php',
+    './app/Support/HeroImageSpec.php',
   ],
   theme: {
     extend: {

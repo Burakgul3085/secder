@@ -44,9 +44,7 @@ class HeroSlide extends Model
     /**
      * Ön yüzde kullanılacak görsel adresleri.
      *
-     * Üretilmiş cihaz varyantları varsa onlar kullanılır; yoksa yüklenen
-     * orijinal dosyaya düşülür. Anahtarlar boş olabilir, çağıran taraf
-     * kendi varsayılanını uygular.
+     * Öncelik: üretilmiş cihaz varyantı → yüklenen cihaz orijinali → masaüstü yedek.
      *
      * @return array{mobile: ?string, tablet: ?string, desktop_srcset: ?string, image: ?string}
      */
@@ -66,13 +64,18 @@ class HeroSlide extends Model
             $desktopSources[] = $url($this->rendered_desktop_2x_path) . ' 2560w';
         }
 
+        $desktopFallback = $url($this->rendered_desktop_fallback_path)
+            ?? $url($this->image_path);
+
         return [
-            'mobile' => $url($this->rendered_mobile_path),
-            'tablet' => $url($this->rendered_tablet_path),
+            'mobile' => $url($this->rendered_mobile_path)
+                ?? $url($this->image_path_mobile)
+                ?? $desktopFallback,
+            'tablet' => $url($this->rendered_tablet_path)
+                ?? $url($this->image_path_tablet)
+                ?? $desktopFallback,
             'desktop_srcset' => $desktopSources === [] ? null : implode(', ', $desktopSources),
-            // <img> etiketi için: WebP desteklemeyen tarayıcılar ve tarayıcı dışı
-            // önizlemeler bu adresi kullanır.
-            'image' => $url($this->rendered_desktop_fallback_path) ?? $url($this->image_path),
+            'image' => $desktopFallback,
         ];
     }
 

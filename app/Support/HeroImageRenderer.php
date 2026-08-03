@@ -10,17 +10,13 @@ use RuntimeException;
 /**
  * Hero slider görsellerini cihaz bandlarına oturtan üretim servisi.
  *
- * Yönetici panele tek bir görsel yükler; bu servis o görselden masaüstü (4:1),
- * tablet (2:1) ve telefon (1:1) bandları için fiziksel dosyalar üretir.
- *
- * Temel kural: kaynak görsel ASLA kırpılmaz ve oranı bozulmaz. Hedef kutuya
- * `contain` mantığıyla sığdırılır, artan alan görselin kendisinden türetilen
- * bir zeminle doldurulur. Böylece bandın hiçbir yerinde beyaz/boş alan kalmaz.
+ * Ölçüler HeroImageSpec'ten gelir. Admin doğru boyutta yüklerse cover ile
+ * kırpma olmaz (oran birebir). Yanlış oranda cover merkezden kırpar ve uyarır.
  */
 class HeroImageRenderer
 {
     /** Algoritma sürümü. Değişirse imzalar geçersizleşir ve tüm görseller yeniden üretilir. */
-    public const VERSION = 2;
+    public const VERSION = 8;
 
     /** Panelde seçilebilen dolgu yöntemleri. */
     public const FILL_MODES = [
@@ -32,9 +28,9 @@ class HeroImageRenderer
 
     /** Görselin banda yerleşme biçimi. */
     public const FIT_MODES = [
-        'smart' => 'Akıllı: masaüstünde alanı doldur, tablet ve telefonda tamamını göster',
-        'contain' => 'Her cihazda görselin tamamı görünsün',
-        'cover' => 'Her cihazda alanı tamamen doldur (kenarlardan kırpar)',
+        'cover' => 'Alanı doldur (önerilen — ölçülere uygun yüklemede kırpma olmaz)',
+        'contain' => 'Görselin tamamı görünsün (oran uymazsa kenarda dolgu kalır)',
+        'smart' => 'Akıllı (eski; cover ile aynı)',
     ];
 
     /**
@@ -104,7 +100,7 @@ class HeroImageRenderer
             'source' => 'tablet',
             'device' => 'tablet',
             'width' => 1536,
-            'height' => 768,
+            'height' => 1024,
             'format' => 'webp',
             'optional' => false,
             'label' => 'Tablet',
@@ -114,7 +110,7 @@ class HeroImageRenderer
             'source' => 'mobile',
             'device' => 'mobile',
             'width' => 1080,
-            'height' => 1080,
+            'height' => 1350,
             'format' => 'webp',
             'optional' => false,
             'label' => 'Telefon',
@@ -184,7 +180,7 @@ class HeroImageRenderer
                     continue;
                 }
 
-                $requestedFit = $this->resolveFit($slide->fit_mode ?: 'smart', $variant['device']);
+                $requestedFit = $this->resolveFit('cover', $variant['device']);
 
                 $composed = $this->compose(
                     $source,
@@ -257,7 +253,7 @@ class HeroImageRenderer
                 'version' => self::VERSION,
                 'rendered_at' => now()->toIso8601String(),
                 'fill_mode' => $slide->fill_mode ?: 'auto',
-                'fit_mode' => $slide->fit_mode ?: 'smart',
+                'fit_mode' => $slide->fit_mode ?: 'cover',
                 'variants' => $variantMeta,
                 'warnings' => array_values(array_unique($warnings)),
             ],
@@ -344,7 +340,7 @@ class HeroImageRenderer
         $parts = [
             'v' . self::VERSION,
             'fill:' . ($slide->fill_mode ?: 'auto'),
-            'fit:' . ($slide->fit_mode ?: 'smart'),
+            'fit:' . ($slide->fit_mode ?: 'cover'),
         ];
 
         foreach ($sources as $key => $path) {
@@ -610,7 +606,8 @@ class HeroImageRenderer
         return match ($fitMode) {
             'cover' => 'cover',
             'contain' => 'contain',
-            default => $device === 'desktop' ? 'cover' : 'contain',
+            // Yeni sistemde ölçüler birebir: cover = doğru yüklemede sıfır kırpma.
+            default => 'cover',
         };
     }
 

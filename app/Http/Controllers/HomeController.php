@@ -37,8 +37,8 @@ class HomeController extends Controller
 
             return [
                 'image' => $set['image'] ?? $defaultImage,
-                'image_mobile' => $set['mobile'] ?? '',
-                'image_tablet' => $set['tablet'] ?? '',
+                'image_mobile' => $set['mobile'] ?? $set['image'] ?? $defaultImage,
+                'image_tablet' => $set['tablet'] ?? $set['image'] ?? $defaultImage,
                 'desktop_srcset' => $set['desktop_srcset'] ?? '',
             ];
         })->values()->all();
