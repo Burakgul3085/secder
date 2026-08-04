@@ -16,7 +16,6 @@ class EnforceAdminOtpVerification
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // Local geliştirme ortamında OTP e-posta bağımlılığını devre dışı bırak.
         if (! filter_var((string) env('ADMIN_OTP_ENABLED', true), FILTER_VALIDATE_BOOL)) {
             return $next($request);
         }
@@ -24,6 +23,20 @@ class EnforceAdminOtpVerification
         $user = Auth::user();
 
         if (! $user instanceof User) {
+            return $next($request);
+        }
+
+        $settings = Setting::current();
+        $smtpReady = filled($settings->mailer_username)
+            && filled($settings->mailer_password)
+            && filled($settings->mailer_notification_email ?: $settings->mailer_from_address ?: $settings->email);
+
+        // SMTP henüz tanımlı değilse panele girişi kilitleme; Mailer Ayarları doldurulabilsin.
+        if (! $smtpReady) {
+            Log::warning('Admin OTP atlandı: Mailer SMTP ayarları eksik.', [
+                'user_id' => $user->id,
+            ]);
+
             return $next($request);
         }
 
@@ -53,22 +66,11 @@ class EnforceAdminOtpVerification
                 'admin_otp_email_hint' => $user->email,
             ]);
 
-            $settings = Setting::current();
             $otpTargetEmail = (string) (
                 $settings->mailer_notification_email
                 ?: $settings->mailer_from_address
                 ?: $settings->email
             );
-
-            if ($otpTargetEmail === '') {
-                Auth::logout();
-
-                return redirect()
-                    ->route('filament.admin.auth.login')
-                    ->withErrors([
-                        'email' => 'OTP için hedef e-posta tanımlı değil. Mailer Ayarları bölümünde "Bildirim Alıcı E-posta" alanını doldurun.',
-                    ]);
-            }
 
             try {
                 $html = view('emails.admin-login-otp', [

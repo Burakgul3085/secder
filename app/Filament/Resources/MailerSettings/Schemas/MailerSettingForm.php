@@ -32,19 +32,19 @@ class MailerSettingForm
                         ->label('SMTP Host (Sabit)')
                         ->default('smtp.gmail.com')
                         ->disabled()
-                        ->dehydrated(false)
+                        ->dehydrated()
                         ->helperText('Bu alan Gmail için sabittir ve değiştirilemez.'),
                     TextInput::make('mailer_port')
                         ->label('SMTP Port (Sabit)')
                         ->default('587')
                         ->disabled()
-                        ->dehydrated(false)
+                        ->dehydrated()
                         ->helperText('Bu alan Gmail için sabittir ve değiştirilemez.'),
                     TextInput::make('mailer_encryption')
                         ->label('Şifreleme (Sabit)')
-                        ->default('TLS')
+                        ->default('tls')
                         ->disabled()
-                        ->dehydrated(false)
+                        ->dehydrated()
                         ->helperText('Bu alan Gmail için sabittir ve değiştirilemez.'),
                     TextInput::make('mailer_username')
                         ->label('SMTP Kullanıcı (E-posta)')

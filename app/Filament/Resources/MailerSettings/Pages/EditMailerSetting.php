@@ -16,4 +16,17 @@ class EditMailerSetting extends BaseEditRecord
             DeleteAction::make()->label('Sil'),
         ];
     }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['mailer_host'] = 'smtp.gmail.com';
+        $data['mailer_port'] = 587;
+        $data['mailer_encryption'] = 'tls';
+
+        return $data;
+    }
 }

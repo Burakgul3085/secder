@@ -5,19 +5,29 @@ namespace App\Support\Crm;
 use App\Models\Donation;
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use OpenSpout\Common\Entity\Cell;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\CellAlignment;
-use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\XLSX\Options;
 use OpenSpout\Writer\XLSX\Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * Bağış listesi için kurumsal, çok sayfalı Excel raporu.
+ *
+ * Sayfa 1 - Özet: KPI kartları + tür / ödeme / para birimi kırılımları
+ * Sayfa 2 - Bağış Listesi: filtrelenmiş tüm kayıtların detay dökümü
+ */
 class DonationSpreadsheetExporter extends CorporateSpreadsheet
 {
-    /** Sütun başlıkları */
-    private const HEADERS = [
+    private const SHEET_SUMMARY = 0;
+
+    private const SHEET_DETAIL = 1;
+
+    /** @var array<int, string> */
+    private const DETAIL_HEADERS = [
         'Sıra',
         'Bağış No',
         'Makbuz No',
@@ -37,14 +47,22 @@ class DonationSpreadsheetExporter extends CorporateSpreadsheet
         'Oluşturulma',
     ];
 
-    /** 1 tabanlı sütun genişlikleri (A=1) */
-    private const COLUMN_WIDTHS = [6, 18, 16, 16, 16, 16, 14, 18, 18, 14, 11, 18, 26, 30, 24, 16, 18];
+    /** @var array<int, float> */
+    private const DETAIL_WIDTHS = [6, 16, 16, 15, 15, 14, 12, 16, 16, 12, 10, 15, 22, 36, 18, 20, 16];
 
-    private const AMOUNT_COLUMN_INDEX = 9; // 0 tabanlı (Tutar)
+    private const DETAIL_AMOUNT_COL = 9;
+
+    /** @var array<int, string> */
+    private const METRIC_HEADERS = ['Sıra', 'Kırılım', 'Bağış Adedi', 'Toplam Tutar', 'Ort. Bağış'];
+
+    /** @var array<int, float> */
+    private const SUMMARY_WIDTHS = [28, 36, 14, 16, 14];
 
     public static function download(Builder $query, ?string $filename = null): StreamedResponse
     {
-        $filename ??= 'bagislar-' . now()->format('Y-m-d_His') . '.xlsx';
+        $org = Setting::current()->site_title ?: 'SECDER';
+        $slug = preg_replace('/[^A-Za-z0-9_-]+/', '_', (string) $org) ?: 'SECDER';
+        $filename ??= $slug . '_Bagis_Raporu_' . now()->format('Y-m-d_His') . '.xlsx';
 
         return response()->streamDownload(function () use ($query): void {
             self::write($query);
@@ -55,140 +73,272 @@ class DonationSpreadsheetExporter extends CorporateSpreadsheet
 
     private static function write(Builder $query): void
     {
-        $lastColumn = count(self::HEADERS) - 1; // 0 tabanlı son sütun
-
-        // Özet veriler (başlık ve toplam satırı için önceden hesaplanır).
-        // reorder(): tablodan gelen ORDER BY temizlenir; aksi halde MySQL
-        // ONLY_FULL_GROUP_BY modunda GROUP BY ile çakışıp hata verir.
-        $recordCount = (int) (clone $query)->reorder()->count();
-        $totalAmount = (float) (clone $query)->reorder()->sum('amount');
-        $totalsByCurrency = (clone $query)
+        $donations = (clone $query)
+            ->with(['donor', 'donationType', 'paymentMethod', 'project', 'creator'])
             ->reorder()
-            ->getQuery()
-            ->select('currency', DB::raw('SUM(amount) as total'))
-            ->groupBy('currency')
-            ->pluck('total', 'currency')
-            ->all();
+            ->orderByDesc('donated_at')
+            ->orderByDesc('id')
+            ->get();
 
-        $metaLine = sprintf(
-            'Rapor Tarihi: %s          Kayıt Sayısı: %d          Toplam Tutar: %s TRY',
-            now()->format('d.m.Y H:i'),
-            $recordCount,
-            number_format($totalAmount, 2, ',', '.'),
-        );
-
-        $bands = self::titleBands(Setting::current(), 'BAĞIŞ RAPORU', $metaLine);
+        $stats = self::buildStats($donations);
 
         $options = new Options();
-        foreach (self::COLUMN_WIDTHS as $i => $width) {
-            $options->setColumnWidth((float) $width, $i + 1);
-        }
-
-        $titleRowCount = count($bands);
-        $headerRow = $titleRowCount + 1;
-        $firstDataRow = $headerRow + 1;
-        $totalsRow = $firstDataRow + max($recordCount, 0);
-
-        for ($r = 1; $r <= $titleRowCount; $r++) {
-            $options->mergeCells(0, $r, $lastColumn, $r);
-        }
-        $options->mergeCells(0, $totalsRow, self::AMOUNT_COLUMN_INDEX - 1, $totalsRow);
-
         $writer = new Writer($options);
         $writer->openToFile('php://output');
 
-        foreach ($bands as [$value, $style]) {
-            $writer->addRow(self::bandRow($value, $lastColumn, $style));
-        }
+        $writer->getCurrentSheet()->setName('Özet');
+        self::applyWidths($writer, self::SUMMARY_WIDTHS);
+        self::writeSummarySheet($writer, $options, $stats);
 
-        self::writeHeaderRow($writer);
-        self::writeDataRows($writer, $query);
-        self::writeTotalsRow($writer, $totalAmount, $totalsByCurrency, $lastColumn);
+        $writer->addNewSheetAndMakeItCurrent();
+        $writer->getCurrentSheet()->setName('Bağış Listesi');
+        self::applyWidths($writer, self::DETAIL_WIDTHS);
+        self::writeDetailSheet($writer, $options, $donations, $stats);
 
         $writer->close();
     }
 
-    private static function writeHeaderRow(Writer $writer): void
+    /**
+     * @param  Collection<int, Donation>  $donations
+     * @return array{
+     *     count: int,
+     *     total: float,
+     *     average: float,
+     *     currencies: array<string, float>,
+     *     byType: array<int, array{label: string, count: int, total: float}>,
+     *     byPayment: array<int, array{label: string, count: int, total: float}>,
+     *     byCurrency: array<int, array{label: string, count: int, total: float}>,
+     *     byMonth: array<int, array{label: string, count: int, total: float}>
+     * }
+     */
+    private static function buildStats(Collection $donations): array
     {
-        $style = self::headerStyle();
-        $cells = [];
+        $count = $donations->count();
+        $total = (float) $donations->sum('amount');
 
-        foreach (self::HEADERS as $header) {
-            $cells[] = Cell::fromValue($header, $style);
+        $currencies = [];
+        foreach ($donations->groupBy(fn (Donation $d) => $d->currency ?: 'TRY') as $currency => $group) {
+            $currencies[(string) $currency] = (float) $group->sum('amount');
         }
 
-        $writer->addRow(new Row($cells));
-    }
-
-    private static function writeDataRows(Writer $writer, Builder $query): void
-    {
-        $textStyles = [self::cellStyle(false), self::cellStyle(true)];
-        $amountStyles = [self::amountStyle(false), self::amountStyle(true)];
-        $centerStyles = [self::cellStyle(false, CellAlignment::CENTER), self::cellStyle(true, CellAlignment::CENTER)];
-
-        $index = 0;
-
-        (clone $query)
-            ->with(['donor', 'donationType', 'paymentMethod', 'project', 'creator'])
-            ->orderByDesc('donated_at')
-            ->chunkById(200, function ($donations) use ($writer, &$index, $textStyles, $amountStyles, $centerStyles): void {
-                foreach ($donations as $donation) {
-                    /** @var Donation $donation */
-                    $index++;
-                    $zebra = ($index % 2) === 0 ? 1 : 0;
-
-                    $text = $textStyles[$zebra];
-                    $center = $centerStyles[$zebra];
-                    $amount = $amountStyles[$zebra];
-
-                    $cells = [
-                        Cell::fromValue($index, $center),
-                        Cell::fromValue($donation->donation_number ?? '', $text),
-                        Cell::fromValue($donation->receipt_number ?? '', $text),
-                        Cell::fromValue($donation->donor?->first_name ?? '', $text),
-                        Cell::fromValue($donation->donor?->last_name ?? '', $text),
-                        Cell::fromValue($donation->donor?->phone ?? '', $text),
-                        Cell::fromValue($donation->donor?->city ?? '', $text),
-                        Cell::fromValue($donation->donationType?->name ?? '', $text),
-                        Cell::fromValue($donation->paymentMethod?->name ?? '', $text),
-                        Cell::fromValue((float) $donation->amount, $amount),
-                        Cell::fromValue($donation->currency ?? 'TRY', $center),
-                        Cell::fromValue($donation->donated_at?->format('d.m.Y H:i') ?? '', $center),
-                        Cell::fromValue($donation->project?->title ?? '', $text),
-                        Cell::fromValue($donation->description ?? '', $text),
-                        Cell::fromValue($donation->notes ?? '', $text),
-                        Cell::fromValue($donation->creator?->name ?? '', $text),
-                        Cell::fromValue($donation->created_at?->format('d.m.Y H:i') ?? '', $center),
-                    ];
-
-                    $writer->addRow(new Row($cells));
-                }
-            });
+        return [
+            'count' => $count,
+            'total' => $total,
+            'average' => $count > 0 ? $total / $count : 0.0,
+            'currencies' => $currencies,
+            'byType' => self::groupMetrics($donations, fn (Donation $d) => $d->donationType?->name ?: 'Belirtilmemiş'),
+            'byPayment' => self::groupMetrics($donations, fn (Donation $d) => $d->paymentMethod?->name ?: 'Belirtilmemiş'),
+            'byCurrency' => self::groupMetrics($donations, fn (Donation $d) => $d->currency ?: 'TRY'),
+            'byMonth' => self::groupMetrics(
+                $donations,
+                fn (Donation $d) => $d->donated_at?->translatedFormat('F Y') ?: 'Tarihsiz',
+            ),
+        ];
     }
 
     /**
-     * @param  array<string, mixed>  $totalsByCurrency
+     * @param  Collection<int, Donation>  $donations
+     * @param  callable(Donation): string  $key
+     * @return array<int, array{label: string, count: int, total: float}>
      */
-    private static function writeTotalsRow(Writer $writer, float $totalAmount, array $totalsByCurrency, int $lastColumn): void
+    private static function groupMetrics(Collection $donations, callable $key): array
     {
-        $labelStyle = self::totalsLabelStyle();
-        $amountStyle = self::totalsAmountStyle();
-        $cellStyle = self::totalsCellStyle();
+        return $donations
+            ->groupBy($key)
+            ->map(fn (Collection $group, $label): array => [
+                'label' => (string) $label,
+                'count' => $group->count(),
+                'total' => (float) $group->sum('amount'),
+            ])
+            ->sortByDesc('total')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array{
+     *     count: int,
+     *     total: float,
+     *     average: float,
+     *     currencies: array<string, float>,
+     *     byType: array<int, array{label: string, count: int, total: float}>,
+     *     byPayment: array<int, array{label: string, count: int, total: float}>,
+     *     byCurrency: array<int, array{label: string, count: int, total: float}>,
+     *     byMonth: array<int, array{label: string, count: int, total: float}>
+     * }  $stats
+     */
+    private static function writeSummarySheet(Writer $writer, Options $options, array $stats): void
+    {
+        $lastColumn = count(self::METRIC_HEADERS) - 1;
+        $rowNum = 0;
 
         $currencyParts = [];
-        foreach ($totalsByCurrency as $currency => $sum) {
-            $currencyParts[] = number_format((float) $sum, 2, ',', '.') . ' ' . ($currency ?: 'TRY');
+        foreach ($stats['currencies'] as $currency => $sum) {
+            $currencyParts[] = self::money((float) $sum) . ' ' . $currency;
+        }
+        $currencySummary = $currencyParts === [] ? '—' : implode('  |  ', $currencyParts);
+
+        $metaLine = sprintf(
+            'Rapor Tarihi: %s          Kayıt Sayısı: %d          Toplam: %s TRY',
+            now()->format('d.m.Y H:i'),
+            $stats['count'],
+            self::money($stats['total']),
+        );
+
+        foreach (self::titleBands(Setting::current(), 'BAĞIŞ RAPORU — ÖZET', $metaLine) as [$value, $style]) {
+            $writer->addRow(self::bandRow($value, $lastColumn, $style));
+            $rowNum++;
+            $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+        }
+
+        self::spacer($writer, $rowNum);
+        self::sectionTitle($writer, $rowNum, 'Genel Göstergeler', $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+
+        self::writeKpiRow($writer, $rowNum, [
+            ['Bağış Adedi', (string) $stats['count']],
+            ['Toplam Tutar (TRY)', self::money($stats['total'])],
+            ['Ortalama Bağış', self::money($stats['average'])],
+            ['Para Birimi Dağılımı', $currencySummary],
+        ], $lastColumn, $options, self::SHEET_SUMMARY);
+
+        self::spacer($writer, $rowNum);
+        self::sectionTitle($writer, $rowNum, 'Bağış Türü Kırılımı', $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+        self::writeMetricTable($writer, $rowNum, self::METRIC_HEADERS, $stats['byType'], $stats['count'], $stats['total']);
+        $options->mergeCells(0, $rowNum, 1, $rowNum, self::SHEET_SUMMARY);
+
+        self::spacer($writer, $rowNum);
+        self::sectionTitle($writer, $rowNum, 'Ödeme Türü Kırılımı', $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+        self::writeMetricTable($writer, $rowNum, self::METRIC_HEADERS, $stats['byPayment'], $stats['count'], $stats['total']);
+        $options->mergeCells(0, $rowNum, 1, $rowNum, self::SHEET_SUMMARY);
+
+        self::spacer($writer, $rowNum);
+        self::sectionTitle($writer, $rowNum, 'Para Birimi Kırılımı', $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+        self::writeMetricTable($writer, $rowNum, self::METRIC_HEADERS, $stats['byCurrency'], $stats['count'], $stats['total']);
+        $options->mergeCells(0, $rowNum, 1, $rowNum, self::SHEET_SUMMARY);
+
+        if (count($stats['byMonth']) > 1) {
+            self::spacer($writer, $rowNum);
+            self::sectionTitle($writer, $rowNum, 'Aylık Dağılım', $lastColumn);
+            $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+            self::writeMetricTable($writer, $rowNum, self::METRIC_HEADERS, $stats['byMonth'], $stats['count'], $stats['total']);
+            $options->mergeCells(0, $rowNum, 1, $rowNum, self::SHEET_SUMMARY);
+        }
+
+        self::footerNote($writer, $rowNum, $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_SUMMARY);
+    }
+
+    /**
+     * @param  Collection<int, Donation>  $donations
+     * @param  array{count: int, total: float, currencies: array<string, float>}  $stats
+     */
+    private static function writeDetailSheet(Writer $writer, Options $options, Collection $donations, array $stats): void
+    {
+        $lastColumn = count(self::DETAIL_HEADERS) - 1;
+        $rowNum = 0;
+
+        $currencyParts = [];
+        foreach ($stats['currencies'] as $currency => $sum) {
+            $currencyParts[] = self::money((float) $sum) . ' ' . $currency;
+        }
+
+        $metaLine = sprintf(
+            'Kayıt: %d          Toplam: %s          %s',
+            $stats['count'],
+            self::money($stats['total']) . ' TRY',
+            $currencyParts === [] ? '' : implode('  |  ', $currencyParts),
+        );
+
+        foreach (self::titleBands(Setting::current(), 'BAĞIŞ LİSTESİ', $metaLine) as [$value, $style]) {
+            $writer->addRow(self::bandRow($value, $lastColumn, $style));
+            $rowNum++;
+            $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_DETAIL);
+        }
+
+        $headerRow = $rowNum + 1;
+        $headerCells = [];
+        foreach (self::DETAIL_HEADERS as $header) {
+            $headerCells[] = Cell::fromValue($header, self::headerStyle());
+        }
+        $writer->addRow(new Row($headerCells));
+        $rowNum++;
+
+        self::freezeAfterHeader($writer->getCurrentSheet(), $headerRow);
+
+        $index = 0;
+        foreach ($donations as $donation) {
+            $index++;
+            $rowNum++;
+            $zebra = ($index % 2) === 0;
+            $text = self::cellStyle($zebra);
+            $wrap = self::wrapCellStyle($zebra);
+            $center = self::cellStyle($zebra, CellAlignment::CENTER);
+
+            $description = (string) ($donation->description ?? '');
+            $notes = (string) ($donation->notes ?? '');
+            $creator = (string) ($donation->creator?->name ?? '');
+            $project = (string) ($donation->project?->title ?? '');
+
+            $height = max(
+                self::rowHeightForText($description, 36),
+                self::rowHeightForText($notes, 18),
+                self::rowHeightForText($creator, 20),
+                self::rowHeightForText($project, 22),
+                20,
+            );
+
+            $writer->addRow((new Row([
+                Cell::fromValue($index, $center),
+                Cell::fromValue($donation->donation_number ?? '', $text),
+                Cell::fromValue($donation->receipt_number ?? '', $text),
+                Cell::fromValue($donation->donor?->first_name ?? '', $text),
+                Cell::fromValue($donation->donor?->last_name ?? '', $text),
+                Cell::fromValue($donation->donor?->phone ?? '', $text),
+                Cell::fromValue($donation->donor?->city ?? '', $text),
+                Cell::fromValue($donation->donationType?->name ?? '', $wrap),
+                Cell::fromValue($donation->paymentMethod?->name ?? '', $wrap),
+                Cell::fromValue((float) $donation->amount, self::amountStyle($zebra)),
+                Cell::fromValue($donation->currency ?? 'TRY', $center),
+                Cell::fromValue($donation->donated_at?->format('d.m.Y H:i') ?? '', $center),
+                Cell::fromValue($project, $wrap),
+                Cell::fromValue($description, $wrap),
+                Cell::fromValue($notes, $wrap),
+                Cell::fromValue($creator, $wrap),
+                Cell::fromValue($donation->created_at?->format('d.m.Y H:i') ?? '', $center),
+            ]))->setHeight($height));
+        }
+
+        $rowNum++;
+        self::writeDetailTotals($writer, $stats['total'], $stats['currencies'], $lastColumn);
+        $options->mergeCells(0, $rowNum, self::DETAIL_AMOUNT_COL - 1, $rowNum, self::SHEET_DETAIL);
+
+        self::footerNote($writer, $rowNum, $lastColumn);
+        $options->mergeCells(0, $rowNum, $lastColumn, $rowNum, self::SHEET_DETAIL);
+    }
+
+    /**
+     * @param  array<string, float>  $currencies
+     */
+    private static function writeDetailTotals(Writer $writer, float $totalAmount, array $currencies, int $lastColumn): void
+    {
+        $currencyParts = [];
+        foreach ($currencies as $currency => $sum) {
+            $currencyParts[] = self::money((float) $sum) . ' ' . $currency;
         }
         $currencySummary = $currencyParts === [] ? 'TRY' : implode('  |  ', $currencyParts);
 
-        $cells = [Cell::fromValue('GENEL TOPLAM', $labelStyle)];
-        for ($i = 1; $i < self::AMOUNT_COLUMN_INDEX; $i++) {
-            $cells[] = Cell::fromValue('', $labelStyle);
+        $cells = [Cell::fromValue('GENEL TOPLAM', self::totalsLabelStyle())];
+        for ($i = 1; $i < self::DETAIL_AMOUNT_COL; $i++) {
+            $cells[] = Cell::fromValue('', self::totalsLabelStyle());
         }
-        $cells[] = Cell::fromValue($totalAmount, $amountStyle);
-        $cells[] = Cell::fromValue($currencySummary, $cellStyle);
-        for ($i = self::AMOUNT_COLUMN_INDEX + 2; $i <= $lastColumn; $i++) {
-            $cells[] = Cell::fromValue('', $cellStyle);
+        $cells[] = Cell::fromValue($totalAmount, self::totalsAmountStyle());
+        $cells[] = Cell::fromValue($currencySummary, self::totalsCellStyle());
+        for ($i = self::DETAIL_AMOUNT_COL + 2; $i <= $lastColumn; $i++) {
+            $cells[] = Cell::fromValue('', self::totalsCellStyle());
         }
 
         $writer->addRow(new Row($cells));
