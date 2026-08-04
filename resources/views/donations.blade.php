@@ -30,44 +30,44 @@
             x-transition:enter="transition ease-out duration-700"
             x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            class="relative mt-6 overflow-hidden rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 p-5 shadow-lg"
+            class="relative mt-6 overflow-hidden rounded-2xl border-2 border-cyan-200 bg-gradient-to-br from-cyan-50 to-white p-5 shadow-sm"
         >
             {{-- Parlama animasyonu --}}
             <div class="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_2.5s_ease-in-out_1.5s_1_forwards] bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
 
             {{-- Üst köşe vurgu çizgisi --}}
-            <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400"></div>
+            <div class="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-500"></div>
 
             <div class="flex items-start gap-4">
                 {{-- Zil ikonu animasyonlu --}}
-                <div class="flex-shrink-0 animate-bounce rounded-full bg-amber-400 p-2.5 shadow-md">
+                <div class="flex-shrink-0 animate-bounce rounded-full bg-cyan-600 p-2.5 shadow-md shadow-cyan-900/15">
                     <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
                 </div>
 
                 <div class="flex-1">
-                    <p class="text-base font-bold text-amber-900">{{ __('app.donations.notice_title') }}</p>
-                    <p class="mt-1 text-sm text-amber-800">
-                        {{ __('app.donations.notice_body') }} <strong class="underline decoration-amber-500 decoration-2">{{ __('app.donations.notice_bold') }}</strong>
+                    <p class="text-base font-bold text-cyan-900">{{ __('app.donations.notice_title') }}</p>
+                    <p class="mt-1 text-sm text-cyan-800">
+                        {{ __('app.donations.notice_body') }} <strong class="underline decoration-cyan-500 decoration-2">{{ __('app.donations.notice_bold') }}</strong>
                         {{ __('app.donations.notice_suffix') }}
                     </p>
-                    <ul class="mt-3 space-y-1.5 text-sm text-amber-800">
+                    <ul class="mt-3 space-y-1.5 text-sm text-cyan-800">
                         <li class="flex items-center gap-2">
-                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">1</span>
+                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white">1</span>
                             <span><strong>{{ __('app.donations.item_name') }}</strong> — {{ __('app.donations.item_name_desc') }}</span>
                         </li>
                         <li class="flex items-center gap-2">
-                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">2</span>
+                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white">2</span>
                             <span><strong>{{ __('app.donations.item_phone') }}</strong></span>
                         </li>
                         <li class="flex items-center gap-2">
-                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">3</span>
+                            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white">3</span>
                             <span><strong>{{ __('app.donations.item_purpose') }}</strong> — {{ __('app.donations.item_purpose_desc') }}</span>
                         </li>
                     </ul>
-                    <div class="mt-3 rounded-xl border border-amber-200 bg-white/70 px-4 py-2.5">
-                        <p class="text-xs font-semibold text-amber-700">{{ __('app.donations.example_label') }}</p>
+                    <div class="mt-3 rounded-xl border border-cyan-100 bg-white px-4 py-2.5">
+                        <p class="text-xs font-semibold text-cyan-700">{{ __('app.donations.example_label') }}</p>
                         <p class="mt-0.5 font-mono text-sm font-medium text-slate-800" dir="ltr">{{ __('app.donations.example_text') }}</p>
                     </div>
                 </div>

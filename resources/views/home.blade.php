@@ -398,7 +398,7 @@
     <div class="wa-float" style="position:fixed; right:20px; bottom:24px; z-index:9999; filter: drop-shadow(0 4px 16px rgba(34,197,94,0.45));">
         <span class="wa-ring absolute inset-0 rounded-full bg-green-400"></span>
         <a
-            href="https://wa.me/905425214040"
+            href="https://wa.me/905331524219"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="{{ __('app.home.whatsapp_aria') }}"

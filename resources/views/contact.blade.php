@@ -70,7 +70,7 @@
                         `{{ $waEmailLbl }}: ${email}%0A%0A` +
                         `{{ $waMsgLabel }}:%0A${message}%0A%0A` +
                         `{{ $waClosing }}`;
-                    window.open(`https://wa.me/905425214040?text=${text}`, '_blank');
+                    window.open(`https://wa.me/905331524219?text=${text}`, '_blank');
                 "
                 class="space-y-4 rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm"
             >
@@ -82,7 +82,7 @@
                         </svg>
                         {{ __('app.contact.wa_form_title') }}
                     </h2>
-                    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">+90 542 521 40 40</span>
+                    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">+90 533 152 42 19</span>
                 </div>
 
                 <p class="text-sm text-slate-600">
