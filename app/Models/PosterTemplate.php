@@ -17,6 +17,11 @@ class PosterTemplate extends Model
         self::TYPE_THANKS => 'Teşekkür Afişi',
     ];
 
+    /** Yeni şablon oluştururken seçilebilen türler (bağış afişi kaldırıldı). */
+    public const CREATABLE_TYPES = [
+        self::TYPE_THANKS => 'Teşekkür Afişi',
+    ];
+
     protected $fillable = [
         'name',
         'type',

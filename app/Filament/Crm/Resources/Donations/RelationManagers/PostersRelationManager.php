@@ -34,7 +34,7 @@ class PostersRelationManager extends RelationManager
         return $table
             ->defaultSort('generated_at', 'desc')
             ->emptyStateHeading('Henüz afiş yok')
-            ->emptyStateDescription('Yukarıdaki butonlarla bağış afişi veya teşekkür afişi oluşturabilirsiniz. Önce "Afiş Şablonları" bölümünden ilgili şablonu tasarlamış olmalısınız.')
+            ->emptyStateDescription('Yukarıdaki butonla teşekkür afişi oluşturabilirsiniz. Önce "Afiş Şablonları" bölümünden teşekkür afişi şablonunu tasarlamış olmalısınız.')
             ->columns([
                 ImageColumn::make('image_path')
                     ->label('Önizleme')
@@ -47,12 +47,6 @@ class PostersRelationManager extends RelationManager
                 TextColumn::make('generated_at')->label('Oluşturulma')->dateTime('d.m.Y H:i'),
             ])
             ->headerActions([
-                Action::make('generateDonationPoster')
-                    ->label('Bağış Afişi Oluştur')
-                    ->icon(Heroicon::OutlinedMegaphone)
-                    ->color('primary')
-                    ->visible(fn (): bool => $this->canManage())
-                    ->action(fn () => $this->dispatchPosters([PosterTemplate::TYPE_DONATION])),
                 Action::make('generateThanksPoster')
                     ->label('Teşekkür Afişi Oluştur')
                     ->icon(Heroicon::OutlinedHeart)
@@ -124,7 +118,7 @@ class PostersRelationManager extends RelationManager
             Notification::make()->title('Makbuz oluşturulamadı')->body($e->getMessage())->danger()->send();
         }
 
-        $this->dispatchPosters([PosterTemplate::TYPE_DONATION, PosterTemplate::TYPE_THANKS]);
+        $this->dispatchPosters([PosterTemplate::TYPE_THANKS]);
     }
 
     /**

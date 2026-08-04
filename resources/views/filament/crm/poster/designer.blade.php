@@ -33,6 +33,7 @@
         <x-slot name="heading">Nasıl çalışır?</x-slot>
         <ul class="text-sm text-gray-600 list-disc ps-5 space-y-1">
             <li><strong>+ Yazı kutusu ekle</strong> ile kutu oluşturun. Kutuyu tuvalde veya sağ paneldeki <strong>genişlik / yükseklik</strong> alanlarından boyutlandırın.</li>
+            <li>Orta teşekkür metni için içerik kaynağını <strong>Teşekkür metni (kalıptan üretilir) {'{tesekkur_metni}'}</strong> seçin. Kalıp metni şablonun <strong>Düzenle</strong> ekranındaki “Teşekkür metni kalıbı” alanından yönetilir; bağışçı/bağış alanları otomatik dolar.</li>
             <li><strong>Uzun metin önizlemesi</strong> açıkken bağış notu ve teşekkür metni gerçek uzunlukta gösterilir; kutuyu buna göre ayarlayın.</li>
             <li>Yazı kutu içinde kalır: satırlara bölünür, sığacak şekilde ölçeklenir ve <strong>clipPath ile kesinlikle dışarı taşmaz</strong>.</li>
             <li>Sağ panelden içerik kaynağı, yazı tipi, istenen boyut, renk ve hizalamayı ayarlayıp <strong>Şablonu kaydet</strong> deyin.</li>

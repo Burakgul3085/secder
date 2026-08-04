@@ -14,15 +14,26 @@ const GOOGLE_FONTS = [
 ];
 
 /** Uzun metin önizlemesi gereken bağlantılar (şablon tasarımı) */
-const LONG_PREVIEW_BINDINGS = ['not', 'tesekkur_metni'];
+const LONG_PREVIEW_BINDINGS = ['not', 'aciklama', 'tesekkur_metni'];
 
 const LONG_PREVIEW_SAMPLES = {
-    not: '2026 Kurban Bayramı Çad Ülkesi Küçük Baş 1 adet kurban hissesi bağışlamak istiyorum. Allah kabul eylesin.',
-    tesekkur_metni: 'Sayın bağışçımız, 2026 Çad Küçükbaş Kurban Organizasyonu kapsamında yaptığınız değerli bağış için gönülden teşekkür ederiz. Destekleriniz sayesinde ihtiyaç sahiplerine ulaşıyoruz.',
-    faaliyet: '2026 Çad Küçükbaş Kurban Organizasyonu',
-    ad_soyad: 'Mehmet Ali Yılmaz',
-    ad: 'Mehmet Ali',
-    soyad: 'Yılmaz',
+    not: 'Bu 5000 TL SECDER Derneği yani Selahaddin Eyyubi Cami Derneğine cami adına kullanılması için bağışlanmıştır.',
+    aciklama: 'Bu 5000 TL SECDER Derneği yani Selahaddin Eyyubi Cami Derneğine cami adına kullanılması için bağışlanmıştır.',
+    tesekkur_metni: '5.000,00 TRY tutarındaki Genel Bağış bağışınız 04.08.2026 tarihinde derneğimize ulaşmış ve kayda alınmıştır.\n\nCami Bağışı kapsamında verdiğiniz destek, yürüttüğümüz hizmetlere güç katmaktadır.\n\nÖdeme türü: Banka Havalesi / EFT.\n\nBağış No: BAG-2026-00001  |  Makbuz No: MKB-2026-00001',
+    faaliyet: 'Cami Bağışı',
+    bagis_turu: 'Genel Bağış',
+    odeme_turu: 'Banka Havalesi / EFT',
+    tutar_birimli: '5.000,00 TRY',
+    bagis_tutari: '5.000,00',
+    para_birimi: 'TRY',
+    tarih: '04.08.2026',
+    bagis_no: 'BAG-2026-00001',
+    makbuz_no: 'MKB-2026-00001',
+    ad_soyad: 'Burak Gül',
+    ad: 'Burak',
+    soyad: 'Gül',
+    telefon: '05426588530',
+    dernek_adi: 'SECDER',
 };
 
 const MIN_FONT_SIZE = 8;

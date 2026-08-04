@@ -74,7 +74,8 @@ class PosterTemplateResource extends Resource
                     ->maxLength(150),
                 Select::make('type')
                     ->label('Afiş türü')
-                    ->options(PosterTemplate::TYPES)
+                    ->options(PosterTemplate::CREATABLE_TYPES)
+                    ->default(PosterTemplate::TYPE_THANKS)
                     ->required()
                     ->native(false)
                     ->live(),
@@ -88,8 +89,8 @@ class PosterTemplateResource extends Resource
                     ->columnSpanFull(),
                 Textarea::make('thanks_text_template')
                     ->label('Teşekkür metni kalıbı')
-                    ->rows(5)
-                    ->helperText('Yer tutucu kullanabilirsiniz: {ad_soyad}, {faaliyet}, {tarih}, {tutar_birimli}. Boş bırakırsanız varsayılan metin kullanılır.')
+                    ->rows(8)
+                    ->helperText(new \Illuminate\Support\HtmlString(PosterDataResolver::templateHelperHtml()))
                     ->visible(fn (callable $get): bool => $get('type') === PosterTemplate::TYPE_THANKS)
                     ->placeholder((new PosterDataResolver())->defaultThanksTemplate())
                     ->columnSpanFull(),
