@@ -770,8 +770,10 @@
                         : 'https://www.google.com/maps?q=' . urlencode($mapsEmbedUrl) . '&output=embed';
                 }
             }
-            $officialAssocDesc = $page->getLocalized('content')
-                ?: ($settings->site_description ?: __('app.page.official_assoc_desc'));
+            $officialAssocDesc = trim(html_entity_decode(strip_tags(
+                (string) ($page->getLocalized('content')
+                    ?: ($settings->site_description ?: __('app.page.official_assoc_desc')))
+            )));
             $socialMap = [
                 'instagram_url' => 'instagram',
                 'youtube_url' => 'youtube',
