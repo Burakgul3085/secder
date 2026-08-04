@@ -136,4 +136,42 @@ class Setting extends Model
 
         return $items;
     }
+
+    /**
+     * Sadece dolu sosyal medya linklerini döner.
+     * Boş bırakılan platformlar sitede ikon olarak gösterilmez.
+     *
+     * @return array<string, array{platform: string, url: string}>
+     */
+    public function activeSocialLinks(): array
+    {
+        $map = [
+            'instagram_url' => 'instagram',
+            'youtube_url' => 'youtube',
+            'tiktok_url' => 'tiktok',
+            'facebook_url' => 'facebook',
+            'x_url' => 'x',
+            'linkedin_url' => 'linkedin',
+            'whatsapp_url' => 'whatsapp',
+            'telegram_url' => 'telegram',
+            'website_url' => 'website',
+        ];
+
+        $links = [];
+
+        foreach ($map as $field => $platform) {
+            $url = trim((string) ($this->{$field} ?? ''));
+
+            if ($url === '') {
+                continue;
+            }
+
+            $links[$field] = [
+                'platform' => $platform,
+                'url' => $url,
+            ];
+        }
+
+        return $links;
+    }
 }

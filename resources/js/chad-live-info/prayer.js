@@ -5,7 +5,7 @@ const ALADHAN_ENDPOINT = 'https://api.aladhan.com/v1/timings';
 const PRAYER_KEYS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
 
 /**
- * Seçili şehir için hicri tarih ve sıradaki namaz vaktini getirir.
+ * Seçili şehir için hicri tarih ve günlük namaz vakitlerini getirir.
  *
  * @param {{latitude: number, longitude: number, prayerMethod: number}} location
  */
@@ -32,11 +32,28 @@ export async function fetchAladhanData(location) {
         throw new Error('Aladhan returned invalid payload');
     }
 
+    const timings = pickTimings(data.timings);
+
     return {
         hijri: formatHijri(data.date.hijri),
         hijriRaw: data.date.hijri,
-        nextPrayer: resolveNextPrayer(data.timings),
+        timings,
+        nextPrayer: resolveNextPrayer(timings),
     };
+}
+
+function pickTimings(timings) {
+    const out = {};
+
+    for (const key of PRAYER_KEYS) {
+        if (!timings[key]) {
+            continue;
+        }
+
+        out[key] = String(timings[key]).slice(0, 5);
+    }
+
+    return out;
 }
 
 function formatHijri(hijri) {
@@ -62,7 +79,15 @@ export function localizeHijri(hijriRaw, hijriMonths = {}) {
     return `${hijriRaw.day} ${monthName} ${hijriRaw.year}`.trim();
 }
 
-function resolveNextPrayer(timings) {
+/**
+ * Günlük vakit çizelgesinden şu ana göre sıradaki namazı hesaplar.
+ * Tüm vakitler geçtiyse yarının imsakini (bugünün Fajr saatiyle) döner.
+ */
+export function resolveNextPrayer(timings) {
+    if (!timings || typeof timings !== 'object') {
+        return null;
+    }
+
     const now = getMinutesSinceMidnight();
 
     for (const key of PRAYER_KEYS) {
@@ -75,12 +100,12 @@ function resolveNextPrayer(timings) {
         if (minutes > now) {
             return {
                 key,
-                time: time.slice(0, 5),
+                time: String(time).slice(0, 5),
             };
         }
     }
 
-    const fajr = timings.Fajr?.slice(0, 5) ?? '--';
+    const fajr = timings.Fajr ? String(timings.Fajr).slice(0, 5) : '--';
 
     return {
         key: 'Fajr',

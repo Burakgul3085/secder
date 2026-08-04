@@ -140,16 +140,7 @@
                 ? \Illuminate\Support\Facades\Storage::url($meta['about_image'])
                 : null;
             $aboutContentHtml = $page->getLocalized('content', __('app.page.about_content_html'));
-            $socialMap = [
-                'instagram_url' => 'instagram',
-                'youtube_url' => 'youtube',
-                'tiktok_url' => 'tiktok',
-                'facebook_url' => 'facebook',
-                'x_url' => 'x',
-                'linkedin_url' => 'linkedin',
-                'whatsapp_url' => 'whatsapp',
-                'telegram_url' => 'telegram',
-            ];
+            $socialLinks = $settings->activeSocialLinks();
             $socialAria = [
                 'instagram' => 'Instagram',
                 'youtube' => 'YouTube',
@@ -159,6 +150,7 @@
                 'linkedin' => 'LinkedIn',
                 'whatsapp' => 'WhatsApp',
                 'telegram' => 'Telegram',
+                'website' => __('app.page.social_media_us'),
             ];
         @endphp
 
@@ -207,25 +199,25 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-cyan-50 bg-slate-50/60 px-5 py-5 md:px-8">
-                        <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
-                        <div class="flex flex-wrap items-center justify-center gap-2">
-                            @foreach ($socialMap as $field => $platform)
-                                @if (! empty($settings->$field))
+                    @if (! empty($socialLinks))
+                        <div class="border-t border-cyan-50 bg-slate-50/60 px-5 py-5 md:px-8">
+                            <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
+                            <div class="flex flex-wrap items-center justify-center gap-2">
+                                @foreach ($socialLinks as $social)
                                     <a
-                                        href="{{ $settings->$field }}"
+                                        href="{{ $social['url'] }}"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
-                                        title="{{ $socialAria[$platform] ?? $platform }}"
-                                        aria-label="{{ $socialAria[$platform] ?? $platform }}"
+                                        title="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
+                                        aria-label="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
                                     >
-                                        <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
+                                        <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                                     </a>
-                                @endif
-                            @endforeach
+                                @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </article>
             </div>
         </section>
@@ -285,16 +277,7 @@
                 ?: '<p>' . e(__('app.page.vision_body')) . '</p>';
             $missionHtml = $page->getMetaLocalized('mission_text')
                 ?: '<p>' . e(__('app.page.mission_body')) . '</p>';
-            $socialMap = [
-                'instagram_url' => 'instagram',
-                'youtube_url' => 'youtube',
-                'tiktok_url' => 'tiktok',
-                'facebook_url' => 'facebook',
-                'x_url' => 'x',
-                'linkedin_url' => 'linkedin',
-                'whatsapp_url' => 'whatsapp',
-                'telegram_url' => 'telegram',
-            ];
+            $socialLinks = $settings->activeSocialLinks();
             $socialAria = [
                 'instagram' => 'Instagram',
                 'youtube' => 'YouTube',
@@ -304,6 +287,7 @@
                 'linkedin' => 'LinkedIn',
                 'whatsapp' => 'WhatsApp',
                 'telegram' => 'Telegram',
+                'website' => __('app.page.social_media_us'),
             ];
         @endphp
 
@@ -360,25 +344,25 @@
                     </article>
                 </div>
 
-                <div class="mt-8 rounded-2xl border border-cyan-100 bg-white/80 px-5 py-5 shadow-sm backdrop-blur-sm md:mt-10 md:px-8">
-                    <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
-                    <div class="flex flex-wrap items-center justify-center gap-2">
-                        @foreach ($socialMap as $field => $platform)
-                            @if (! empty($settings->$field))
+                @if (! empty($socialLinks))
+                    <div class="mt-8 rounded-2xl border border-cyan-100 bg-white/80 px-5 py-5 shadow-sm backdrop-blur-sm md:mt-10 md:px-8">
+                        <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
+                        <div class="flex flex-wrap items-center justify-center gap-2">
+                            @foreach ($socialLinks as $social)
                                 <a
-                                    href="{{ $settings->$field }}"
+                                    href="{{ $social['url'] }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
-                                    title="{{ $socialAria[$platform] ?? $platform }}"
-                                    aria-label="{{ $socialAria[$platform] ?? $platform }}"
+                                    title="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
+                                    aria-label="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
                                 >
-                                    <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
+                                    <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                                 </a>
-                            @endif
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
         </section>
 
@@ -683,16 +667,7 @@
             $signatureName = trim((string) ($meta['signature_name'] ?? ''));
             $presidentMessageHtml = $page->getLocalized('content')
                 ?: nl2br(e(__('app.page.president_message_body')));
-            $socialMap = [
-                'instagram_url' => 'instagram',
-                'youtube_url' => 'youtube',
-                'tiktok_url' => 'tiktok',
-                'facebook_url' => 'facebook',
-                'x_url' => 'x',
-                'linkedin_url' => 'linkedin',
-                'whatsapp_url' => 'whatsapp',
-                'telegram_url' => 'telegram',
-            ];
+            $socialLinks = $settings->activeSocialLinks();
             $socialAria = [
                 'instagram' => 'Instagram',
                 'youtube' => 'YouTube',
@@ -702,6 +677,7 @@
                 'linkedin' => 'LinkedIn',
                 'whatsapp' => 'WhatsApp',
                 'telegram' => 'Telegram',
+                'website' => __('app.page.social_media_us'),
             ];
         @endphp
         <section class="mx-auto max-w-6xl px-4 py-12 md:px-6 lg:py-16">
@@ -725,22 +701,22 @@
                             {!! $presidentMessageHtml !!}
                         </div>
 
-                        <div class="mt-6 flex flex-wrap items-center gap-2">
-                            @foreach ($socialMap as $field => $platform)
-                                @if (! empty($settings->$field))
+                        @if (! empty($socialLinks))
+                            <div class="mt-6 flex flex-wrap items-center gap-2">
+                                @foreach ($socialLinks as $social)
                                     <a
-                                        href="{{ $settings->$field }}"
+                                        href="{{ $social['url'] }}"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-cyan-200 bg-cyan-50 text-cyan-700 transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
-                                        title="{{ $socialAria[$platform] ?? $platform }}"
-                                        aria-label="{{ $socialAria[$platform] ?? $platform }}"
+                                        title="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
+                                        aria-label="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
                                     >
-                                        <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
+                                        <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                                     </a>
-                                @endif
-                            @endforeach
-                        </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
             </article>
@@ -774,16 +750,7 @@
                 (string) ($page->getLocalized('content')
                     ?: ($settings->site_description ?: __('app.page.official_assoc_desc')))
             )));
-            $socialMap = [
-                'instagram_url' => 'instagram',
-                'youtube_url' => 'youtube',
-                'tiktok_url' => 'tiktok',
-                'facebook_url' => 'facebook',
-                'x_url' => 'x',
-                'linkedin_url' => 'linkedin',
-                'whatsapp_url' => 'whatsapp',
-                'telegram_url' => 'telegram',
-            ];
+            $socialLinks = $settings->activeSocialLinks();
             $socialAria = [
                 'instagram' => 'Instagram',
                 'youtube' => 'YouTube',
@@ -793,6 +760,7 @@
                 'linkedin' => 'LinkedIn',
                 'whatsapp' => 'WhatsApp',
                 'telegram' => 'Telegram',
+                'website' => __('app.page.social_media_us'),
             ];
         @endphp
 
@@ -841,28 +809,28 @@
                     </article>
                 @endforeach
 
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
-                    <div class="mb-3 flex items-center justify-between">
-                        <h3 class="text-xl font-bold text-cyan-800">{{ __('app.page.official_social') }}</h3>
-                        <span class="text-2xl font-bold text-slate-200">{{ str_pad((string) ($accounts->count() + 2), 2, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        @foreach ($socialMap as $field => $platform)
-                            @if (! empty($settings->$field))
+                @if (! empty($socialLinks))
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
+                        <div class="mb-3 flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-cyan-800">{{ __('app.page.official_social') }}</h3>
+                            <span class="text-2xl font-bold text-slate-200">{{ str_pad((string) ($accounts->count() + 2), 2, '0', STR_PAD_LEFT) }}</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            @foreach ($socialLinks as $social)
                                 <a
-                                    href="{{ $settings->$field }}"
+                                    href="{{ $social['url'] }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-cyan-200 bg-cyan-50 text-cyan-700 transition hover:-translate-y-0.5 hover:bg-cyan-600 hover:text-white"
-                                    title="{{ $socialAria[$platform] ?? $platform }}"
-                                    aria-label="{{ $socialAria[$platform] ?? $platform }}"
+                                    title="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
+                                    aria-label="{{ $socialAria[$social['platform']] ?? $social['platform'] }}"
                                 >
-                                    <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
+                                    <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                                 </a>
-                            @endif
-                        @endforeach
-                    </div>
-                </article>
+                            @endforeach
+                        </div>
+                    </article>
+                @endif
 
                 <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
                     <div class="mb-3 flex items-center justify-between">

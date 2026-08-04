@@ -1,6 +1,6 @@
 import { configureCachePrefix, getCachedValue, isExpired, setCache } from './cache';
-import { fetchAladhanData, localizeHijri, localizePrayer } from './prayer';
-import { configureTimezone, formatLocalTime } from './time';
+import { fetchAladhanData, localizeHijri, localizePrayer, resolveNextPrayer } from './prayer';
+import { configureTimezone, formatLocalTime, getLocalDateKey } from './time';
 import { fetchWeather } from './weather';
 
 const TTL = {
@@ -38,6 +38,7 @@ document.addEventListener('alpine:init', () => {
         _clockTimer: null,
         _refreshTimer: null,
         _tickTimer: null,
+        _lastPrayerMinute: null,
 
         init() {
             // Önbellek ve saat dilimi, veri okumadan önce şehre göre ayarlanır.
@@ -84,31 +85,73 @@ document.addEventListener('alpine:init', () => {
             if (isExpired('weather', TTL.weather)) {
                 tasks.push(this.loadWeather());
             }
-            if (isExpired('hijri', TTL.hijri) || isExpired('prayer', TTL.prayer)) {
+            if (this.isPrayerScheduleStale() || isExpired('hijri', TTL.hijri)) {
                 tasks.push(this.loadAladhan());
             }
 
             if (tasks.length) {
                 await Promise.allSettled(tasks);
+            } else {
+                this.updateNextPrayer();
             }
         },
 
         tickClock() {
             const next = formatLocalTime(this.locale);
-            if (next === this.localTime) {
+            if (next !== this.localTime) {
+                this.localTime = next;
+                this.timeTick = true;
+
+                if (this._tickTimer) {
+                    window.clearTimeout(this._tickTimer);
+                }
+
+                this._tickTimer = window.setTimeout(() => {
+                    this.timeTick = false;
+                }, 280);
+            }
+
+            // Dakika değişince sıradaki namazı canlı çizelgeden yeniden hesapla.
+            const minuteKey = Math.floor(Date.now() / 60_000);
+            if (minuteKey !== this._lastPrayerMinute) {
+                this._lastPrayerMinute = minuteKey;
+                this.updateNextPrayer();
+            }
+        },
+
+        isPrayerScheduleStale() {
+            if (isExpired('prayer', TTL.prayer)) {
+                return true;
+            }
+
+            const cached = getCachedValue('prayer');
+            if (!cached?.timings) {
+                return true;
+            }
+
+            if (cached.date && cached.date !== getLocalDateKey()) {
+                return true;
+            }
+
+            return false;
+        },
+
+        updateNextPrayer() {
+            const cached = getCachedValue('prayer');
+            const timings = cached?.timings;
+
+            if (!timings) {
                 return;
             }
 
-            this.localTime = next;
-            this.timeTick = true;
-
-            if (this._tickTimer) {
-                window.clearTimeout(this._tickTimer);
+            if (cached.date && cached.date !== getLocalDateKey()) {
+                return;
             }
 
-            this._tickTimer = window.setTimeout(() => {
-                this.timeTick = false;
-            }, 280);
+            const nextPrayer = resolveNextPrayer(timings);
+            const localized = localizePrayer(nextPrayer, this.prayerNames);
+            this.prayerName = localized.name;
+            this.prayerTime = localized.time;
         },
 
         applyWeatherFromCache() {
@@ -128,7 +171,13 @@ document.addEventListener('alpine:init', () => {
 
         applyPrayerFromCache() {
             const cached = getCachedValue('prayer');
-            if (cached) {
+            if (cached?.timings) {
+                this.updateNextPrayer();
+                return;
+            }
+
+            // Eski önbellek formatı (yalnızca tek vakit) — bir kez göster, sonra yenile.
+            if (cached?.key) {
                 const localized = localizePrayer(cached, this.prayerNames);
                 this.prayerName = localized.name;
                 this.prayerTime = localized.time;
@@ -160,11 +209,11 @@ document.addEventListener('alpine:init', () => {
 
         async loadAladhan() {
             const hijriFresh = !isExpired('hijri', TTL.hijri);
-            const prayerFresh = !isExpired('prayer', TTL.prayer);
+            const prayerFresh = !this.isPrayerScheduleStale();
 
             if (hijriFresh && prayerFresh) {
                 this.applyHijriFromCache();
-                this.applyPrayerFromCache();
+                this.updateNextPrayer();
                 return;
             }
 
@@ -176,11 +225,12 @@ document.addEventListener('alpine:init', () => {
                     this.hijri = localizeHijri(data.hijri, this.hijriMonths);
                 }
 
-                if (!prayerFresh || !getCachedValue('prayer')) {
-                    setCache('prayer', data.nextPrayer);
-                    const localized = localizePrayer(data.nextPrayer, this.prayerNames);
-                    this.prayerName = localized.name;
-                    this.prayerTime = localized.time;
+                if (!prayerFresh || !getCachedValue('prayer')?.timings) {
+                    setCache('prayer', {
+                        timings: data.timings,
+                        date: getLocalDateKey(),
+                    });
+                    this.updateNextPrayer();
                 }
             } catch {
                 this.applyHijriFromCache();

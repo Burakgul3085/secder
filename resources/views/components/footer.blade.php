@@ -1,16 +1,6 @@
 @props(['siteSettings' => \App\Models\Setting::current()])
 @php
-    $topBarSocialMap = [
-        'instagram_url' => 'instagram',
-        'youtube_url'   => 'youtube',
-        'tiktok_url'    => 'tiktok',
-        'facebook_url'  => 'facebook',
-        'x_url'         => 'x',
-        'linkedin_url'  => 'linkedin',
-        'whatsapp_url'  => 'whatsapp',
-        'telegram_url'  => 'telegram',
-        'website_url'   => 'website',
-    ];
+    $socialLinks = $siteSettings->activeSocialLinks();
     $topBarAria = [
         'instagram' => 'Instagram', 'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'facebook' => 'Facebook',
         'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.footer.website_aria'),
@@ -58,8 +48,6 @@
         ->groupBy('parent_id');
 
     $hasContact = filled($siteSettings->email) || filled($siteSettings->phone) || filled($siteSettings->address);
-    $socialLinks = collect($topBarSocialMap)
-        ->filter(fn ($platform, $field): bool => filled($siteSettings->{$field} ?? null));
 
     if (! function_exists('footerMenuLabel')) {
         function footerMenuLabel(string $label): string
@@ -250,18 +238,18 @@
                     <p class="text-xs font-semibold uppercase tracking-wider text-white">
                         {{ __('app.footer.follow_us') }}
                     </p>
-                    @if ($socialLinks->isNotEmpty())
+                    @if (! empty($socialLinks))
                         <div class="mt-3 flex flex-wrap gap-2">
-                            @foreach ($socialLinks as $field => $platform)
+                            @foreach ($socialLinks as $social)
                                 <a
-                                    href="{{ $siteSettings->$field }}"
+                                    href="{{ $social['url'] }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-900 text-slate-300 transition hover:border-cyan-500 hover:text-white"
-                                    title="{{ $topBarAria[$platform] ?? $platform }}"
-                                    aria-label="{{ $topBarAria[$platform] ?? $platform }}"
+                                    title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                                    aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                                 >
-                                    <x-social-brand-icon :platform="$platform" icon-class="h-3.5 w-3.5" />
+                                    <x-social-brand-icon :platform="$social['platform']" icon-class="h-3.5 w-3.5" />
                                 </a>
                             @endforeach
                         </div>

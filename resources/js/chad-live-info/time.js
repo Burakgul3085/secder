@@ -42,6 +42,16 @@ export function getMinutesSinceMidnight() {
     return hour * 60 + minute;
 }
 
+/** Yerel takvim günü (YYYY-MM-DD); namaz çizelgesi gün değişince yenilenir. */
+export function getLocalDateKey() {
+    return new Intl.DateTimeFormat('en-CA', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    }).format(new Date());
+}
+
 export function parsePrayerTime(time) {
     const [hour, minute] = String(time).split(':').map(Number);
 

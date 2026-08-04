@@ -6,20 +6,9 @@
     $socialTitle = $isTr
         ? ($siteSettings->social_section_title ?: __('app.panel.social_title'))
         : __('app.panel.social_title');
-    $socials = array_filter(
-        [
-            'instagram' => $siteSettings->instagram_url ?? null,
-            'youtube' => $siteSettings->youtube_url ?? null,
-            'x' => $siteSettings->x_url ?? null,
-            'facebook' => $siteSettings->facebook_url ?? null,
-            'linkedin' => $siteSettings->linkedin_url ?? null,
-            'whatsapp' => $siteSettings->whatsapp_url ?? null,
-            'telegram' => $siteSettings->telegram_url ?? null,
-            'tiktok' => $siteSettings->tiktok_url ?? null,
-            'website' => $siteSettings->website_url ?? null,
-        ],
-        fn ($u) => filled($u)
-    );
+    $socials = collect($siteSettings->activeSocialLinks())
+        ->mapWithKeys(fn (array $item): array => [$item['platform'] => $item['url']])
+        ->all();
 @endphp
 
 <template x-teleport="body">
@@ -118,39 +107,39 @@
                             </svg>
                             {{ __('app.panel.volunteer_btn') }}
                         </a>
-                        <div class="mt-auto border-t border-white/10 pt-8">
-                            <h3 class="text-sm font-semibold uppercase tracking-wider text-cyan-100/90">{{ $socialTitle }}</h3>
-                            <div class="mt-4 flex flex-wrap gap-2.5">
-                                @forelse($socials as $key => $url)
-                                    @php
-                                        $label = match ($key) {
-                                            'instagram' => 'Instagram',
-                                            'youtube' => 'YouTube',
-                                            'x' => 'X (Twitter)',
-                                            'facebook' => 'Facebook',
-                                            'linkedin' => 'LinkedIn',
-                                            'whatsapp' => 'WhatsApp',
-                                            'telegram' => 'Telegram',
-                                            'tiktok' => 'TikTok',
-                            'website' => __('app.panel.website_label'),
-                            default => ucfirst($key),
-                                        };
-                                    @endphp
-                                    <a
-                                        href="{{ $url }}"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition hover:border-cyan-300/50 hover:bg-white/15"
-                                        title="{{ $label }}"
-                                        aria-label="{{ $label }}"
-                                    >
-                                        <x-social-brand-icon :platform="$key" />
-                                    </a>
-                                @empty
-                                    <p class="text-sm text-cyan-100/80">{{ __('app.panel.social_empty') }}</p>
-                                @endforelse
+                        @if (! empty($socials))
+                            <div class="mt-auto border-t border-white/10 pt-8">
+                                <h3 class="text-sm font-semibold uppercase tracking-wider text-cyan-100/90">{{ $socialTitle }}</h3>
+                                <div class="mt-4 flex flex-wrap gap-2.5">
+                                    @foreach ($socials as $key => $url)
+                                        @php
+                                            $label = match ($key) {
+                                                'instagram' => 'Instagram',
+                                                'youtube' => 'YouTube',
+                                                'x' => 'X (Twitter)',
+                                                'facebook' => 'Facebook',
+                                                'linkedin' => 'LinkedIn',
+                                                'whatsapp' => 'WhatsApp',
+                                                'telegram' => 'Telegram',
+                                                'tiktok' => 'TikTok',
+                                                'website' => __('app.panel.website_label'),
+                                                default => ucfirst($key),
+                                            };
+                                        @endphp
+                                        <a
+                                            href="{{ $url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition hover:border-cyan-300/50 hover:bg-white/15"
+                                            title="{{ $label }}"
+                                            aria-label="{{ $label }}"
+                                        >
+                                            <x-social-brand-icon :platform="$key" />
+                                        </a>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

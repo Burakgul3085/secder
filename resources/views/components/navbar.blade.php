@@ -85,17 +85,7 @@
         :class="scrolled ? 'md:max-h-0 md:border-b-0 md:opacity-0' : 'md:max-h-24 md:opacity-100'"
     >
         @php
-            $topBarSocialMap = [
-                'instagram_url' => 'instagram',
-                'youtube_url'   => 'youtube',
-                'tiktok_url'    => 'tiktok',
-                'facebook_url'  => 'facebook',
-                'x_url'         => 'x',
-                'linkedin_url'  => 'linkedin',
-                'whatsapp_url'  => 'whatsapp',
-                'telegram_url'  => 'telegram',
-                'website_url'   => 'website',
-            ];
+            $topBarSocialLinks = $siteSettings->activeSocialLinks();
             $topBarAria = [
                 'instagram' => 'Instagram', 'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'facebook' => 'Facebook',
                 'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.nav.website_aria'),
@@ -125,19 +115,17 @@
             </div>
             <div class="flex items-center justify-between gap-2">
                 <div class="no-scrollbar flex items-center gap-0.5 overflow-x-auto pr-1">
-                    @foreach ($topBarSocialMap as $field => $platform)
-                        @if (! empty($siteSettings->$field))
-                            <a
-                                href="{{ $siteSettings->$field }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
-                                title="{{ $topBarAria[$platform] ?? $platform }}"
-                                aria-label="{{ $topBarAria[$platform] ?? $platform }}"
-                            >
-                                <x-social-brand-icon :platform="$platform" icon-class="h-3 w-3" />
-                            </a>
-                        @endif
+                    @foreach ($topBarSocialLinks as $social)
+                        <a
+                            href="{{ $social['url'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
+                            title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                            aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                        >
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3" />
+                        </a>
                     @endforeach
                 </div>
                 <div class="flex shrink-0 items-center gap-1">
@@ -169,19 +157,17 @@
                 @endif
             </div>
             <div class="flex flex-wrap items-center justify-end gap-2">
-                @foreach ($topBarSocialMap as $field => $platform)
-                    @if (! empty($siteSettings->$field))
-                        <a
-                            href="{{ $siteSettings->$field }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex h-7 w-7 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
-                            title="{{ $topBarAria[$platform] ?? $platform }}"
-                            aria-label="{{ $topBarAria[$platform] ?? $platform }}"
-                        >
-                            <x-social-brand-icon :platform="$platform" icon-class="h-3.5 w-3.5" />
-                        </a>
-                    @endif
+                @foreach ($topBarSocialLinks as $social)
+                    <a
+                        href="{{ $social['url'] }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex h-7 w-7 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
+                        title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                        aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                    >
+                        <x-social-brand-icon :platform="$social['platform']" icon-class="h-3.5 w-3.5" />
+                    </a>
                 @endforeach
                 <a href="{{ route('donations') }}" class="ml-2 rounded-full bg-white/15 px-3 py-1.5 font-medium text-cyan-50 transition hover:bg-white/25">{{ __('app.nav.donate') }}</a>
                 <a href="{{ route('volunteer') }}" class="rounded-full border border-cyan-100/50 px-3 py-1.5 font-medium text-cyan-50 transition hover:bg-white/10">{{ __('app.nav.volunteer') }}</a>
