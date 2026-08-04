@@ -1,10 +1,7 @@
 @php
     use Illuminate\Support\Carbon;
 
-    $isTr = app()->getLocale() === 'tr';
-    $kvkkText = $isTr
-        ? (trim((string) ($siteSettings->kvkk_text ?? '')) ?: __('app.legal.kvkk_content'))
-        : __('app.legal.kvkk_content');
+    $kvkkText = __('app.legal.kvkk_content');
 
     $carouselItems = $testimonials->map(function ($item) {
         $date = $item->approved_at ?? $item->created_at;

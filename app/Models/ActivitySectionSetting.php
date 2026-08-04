@@ -20,9 +20,9 @@ class ActivitySectionSetting extends Model
     public static function current(): self
     {
         return static::query()->where('is_active', true)->latest('id')->first() ?? new self([
-            'badge_text' => 'Birlikte Kardeşlik Derneği',
+            'badge_text' => 'SECDER',
             'title' => 'Faaliyetlerimiz',
-            'description' => 'Afrika’da açlık ve susuzlukla mücadele için yürüttüğümüz gıda, temiz su ve acil yardım faaliyetleri.',
+            'description' => 'Gaziantep\'te cami merkezli ilmi eğitim, sosyal projeler ve dayanışma çalışmalarımızla nesillerin yanında yer alıyoruz.',
             'is_active' => true,
         ]);
     }

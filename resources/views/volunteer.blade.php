@@ -3,13 +3,8 @@
 
     <section class="mx-auto max-w-7xl px-4 py-10 md:px-6" x-data="{ policyModal: null }">
         @php
-            $isTr = app()->getLocale() === 'tr';
-            $kvkkText = $isTr
-                ? (trim((string) ($siteSettings->kvkk_text ?? '')) ?: __('app.legal.kvkk_content'))
-                : __('app.legal.kvkk_content');
-            $volunteerClarificationText = $isTr
-                ? (trim((string) ($siteSettings->volunteer_clarification_text ?? '')) ?: __('app.legal.clarification_content'))
-                : __('app.legal.clarification_content');
+            $kvkkText = __('app.legal.kvkk_content');
+            $volunteerClarificationText = __('app.legal.clarification_content');
 
             $kvkkModalTitle = __('app.volunteer.kvkk_modal_title');
             $volModalTitle  = __('app.volunteer.vol_modal_title');

@@ -16,39 +16,30 @@
         'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.footer.website_aria'),
     ];
     $logoSrc = $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg');
-    $isTr = app()->getLocale() === 'tr';
     $legalTextItems = [
         [
             'key'     => 'kvkk',
             'label'   => __('app.legal.kvkk_label'),
             'title'   => __('app.legal.kvkk_title'),
-            'content' => $isTr
-                ? (trim((string) ($siteSettings->kvkk_text ?? '')) ?: __('app.legal.kvkk_content'))
-                : __('app.legal.kvkk_content'),
+            'content' => __('app.legal.kvkk_content'),
         ],
         [
             'key'     => 'clarification',
             'label'   => __('app.legal.clarification_label'),
             'title'   => __('app.legal.clarification_title'),
-            'content' => $isTr
-                ? (trim((string) ($siteSettings->volunteer_clarification_text ?? '')) ?: __('app.legal.clarification_content'))
-                : __('app.legal.clarification_content'),
+            'content' => __('app.legal.clarification_content'),
         ],
         [
             'key'     => 'privacy',
             'label'   => __('app.legal.privacy_label'),
             'title'   => __('app.legal.privacy_title'),
-            'content' => $isTr
-                ? (trim((string) ($siteSettings->privacy_policy_text ?? '')) ?: __('app.legal.privacy_content'))
-                : __('app.legal.privacy_content'),
+            'content' => __('app.legal.privacy_content'),
         ],
         [
             'key'     => 'cookie',
             'label'   => __('app.legal.cookie_label'),
             'title'   => __('app.legal.cookie_title'),
-            'content' => $isTr
-                ? (trim((string) ($siteSettings->cookie_policy_text ?? '')) ?: __('app.legal.cookie_content'))
-                : __('app.legal.cookie_content'),
+            'content' => __('app.legal.cookie_content'),
         ],
     ];
     $legalTextItems = array_values($legalTextItems);
