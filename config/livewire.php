@@ -130,7 +130,7 @@ return [
 
     'temporary_file_upload' => [
         'disk' => env('LIVEWIRE_TEMPORARY_FILE_UPLOAD_DISK'), // Example: 'local', 's3'             | Default: 'default'
-        'rules' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf,svg,zip,doc,docx,ppt,pptx,mp4,mov,webm,avi,mkv'], // sınırsız
+        'rules' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,pdf,svg,zip,doc,docx,xls,xlsx,csv,ppt,pptx,mp4,mov,webm,avi,mkv'], // sınırsız
         'directory' => null,                                  // Example: 'tmp'                     | Default: 'livewire-tmp'
         'middleware' => null,                                 // Example: 'throttle:5,1'            | Default: 'throttle:60,1'
         'preview_mimes' => [                                  // Supported file types for temporary pre-signed file URLs...

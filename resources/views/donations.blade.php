@@ -100,7 +100,23 @@
                             </p>
 
                             <div class="rounded-2xl border border-slate-200 bg-white p-4">
-                                <p class="text-lg font-semibold text-slate-900">{{ __('app.donations.iban_label') }} <span class="font-mono">{{ $account->iban }}</span></p>
+                                <div class="mb-3 flex items-center justify-between gap-3">
+                                    <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('app.donations.iban_label') }}</p>
+                                    @php
+                                        $bankKey = \Illuminate\Support\Str::of((string) $account->bank_name)->lower()->ascii()->value();
+                                        $ibanDigits = preg_replace('/\D+/', '', (string) $account->iban);
+                                        $bankCode = strlen($ibanDigits) >= 7 ? substr($ibanDigits, 2, 5) : '';
+                                        $isKuveytTurk = str_contains($bankKey, 'kuveyt') || $bankCode === '00205';
+                                    @endphp
+                                    @if ($isKuveytTurk)
+                                        <img
+                                            src="{{ asset('images/banks/kuveyt-turk.svg') }}"
+                                            alt="Kuveyt Türk"
+                                            class="h-7 w-auto max-w-[140px] object-contain sm:h-8"
+                                        >
+                                    @endif
+                                </div>
+                                <p class="font-mono text-lg font-semibold tracking-wide text-slate-900">{{ $account->iban }}</p>
                                 <p class="mt-2 text-lg font-semibold text-slate-900">{{ __('app.donations.account_no') }} <span class="font-medium">{{ $account->account_number ?: '-' }}</span></p>
                             </div>
 

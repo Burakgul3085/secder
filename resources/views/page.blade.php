@@ -1,6 +1,5 @@
 <x-layouts.app>
     @php
-        $isTr = app()->getLocale() === 'tr';
         $pageHeroTitleMap = [
             'hikayemiz' => __('app.page.story_page_title'),
             'dernek-tuzugu' => __('app.page.doc_charter_title'),
@@ -15,36 +14,28 @@
             'vizyon-misyon' => __('app.page.vision_page_title'),
             'faaliyetler' => __('app.page.activities_page_title'),
         ];
-        $pageHeroTitle = (! $isTr && isset($pageHeroTitleMap[$page->slug]))
-            ? $pageHeroTitleMap[$page->slug]
-            : $page->title;
+        $pageHeroTitle = $page->getLocalized('title', $pageHeroTitleMap[$page->slug] ?? $page->title);
     @endphp
     <x-page-hero :title="$pageHeroTitle" />
 
     @if ($page->slug === 'hikayemiz')
         <section class="mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
             @php
-                $storyIntroHtml = ($isTr && ! empty($page->content))
-                    ? (string) $page->content
-                    : '<p>' . e(__('app.page.story_intro')) . '</p>';
+                $storyIntroHtml = $page->getLocalized('content')
+                    ?: '<p>' . e(__('app.page.story_intro')) . '</p>';
             @endphp
             @if (! empty($storyIntroHtml))
                 <div class="prose mx-auto mb-10 max-w-3xl text-center text-slate-600 prose-slate">{!! $storyIntroHtml !!}</div>
             @endif
 
             @php
-                $defaultStoryItems = collect(__('app.page.story_items'));
-                $storyItems = $isTr
-                    ? collect($page->story_items ?? [])
-                    : $defaultStoryItems->map(function ($item, $index) use ($page) {
-                        $source = collect($page->story_items ?? [])->get($index, []);
-                        return [
-                            'title' => $item['title'] ?? null,
-                            'description' => $item['description'] ?? null,
-                            'image' => $source['image'] ?? null,
-                        ];
-                    });
-                $storyItems = $storyItems->filter(fn ($item) => filled($item['title'] ?? null) && filled($item['description'] ?? null));
+                $storyItems = collect($page->story_items ?? [])
+                    ->map(fn ($item) => [
+                        'title' => \App\Models\Page::localizedFromItem($item, 'title'),
+                        'description' => \App\Models\Page::localizedFromItem($item, 'description'),
+                        'image' => $item['image'] ?? null,
+                    ])
+                    ->filter(fn ($item) => filled($item['title']) && filled($item['description']));
             @endphp
 
             @if ($storyItems->isNotEmpty())
@@ -144,10 +135,11 @@
         @php
             $settings = \App\Models\Setting::current();
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
-            $aboutImage = ! empty($meta['about_image']) ? \Illuminate\Support\Facades\Storage::url($meta['about_image']) : asset('images/default-logo.svg');
-            $aboutContentHtml = ($isTr && ! empty($page->content))
-                ? (string) $page->content
-                : __('app.page.about_content_html');
+            $hasAboutImage = ! empty($meta['about_image']);
+            $aboutImage = $hasAboutImage
+                ? \Illuminate\Support\Facades\Storage::url($meta['about_image'])
+                : null;
+            $aboutContentHtml = $page->getLocalized('content', __('app.page.about_content_html'));
             $socialMap = [
                 'instagram_url' => 'instagram',
                 'youtube_url' => 'youtube',
@@ -169,42 +161,54 @@
                 'telegram' => 'Telegram',
             ];
         @endphp
-        <section class="relative overflow-hidden py-12 md:py-14 lg:py-16">
-            <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-slate-50 via-white to-cyan-50/35"></div>
-            <div
-                class="pointer-events-none absolute inset-0 -z-10 opacity-[0.055]"
-                style="background-image: radial-gradient(circle at 1px 1px, rgba(14,116,144,.22) 1px, transparent 0); background-size: 22px 22px;"
-                aria-hidden="true"
-            ></div>
-            <div class="mx-auto max-w-5xl px-4 md:px-6">
-            <article class="relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_20px_52px_rgba(15,23,42,0.12)]">
-                <div class="pointer-events-none absolute -left-14 -top-14 h-40 w-40 rounded-full bg-cyan-200/35 blur-2xl"></div>
-                <div class="pointer-events-none absolute -bottom-14 -right-10 h-44 w-44 rounded-full bg-sky-200/35 blur-2xl"></div>
 
-                <div class="mx-auto max-w-3xl p-5 md:p-8">
-                    <div class="group relative mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white/80 p-2 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_18px_34px_rgba(14,116,144,0.18)]">
-                        <div class="absolute -inset-0.5 -z-10 rounded-2xl bg-gradient-to-r from-cyan-200/35 via-sky-200/30 to-cyan-200/35 opacity-0 blur transition duration-500 group-hover:opacity-100"></div>
-                        <div class="rounded-xl bg-white p-2">
-                            <img
-                                src="{{ $aboutImage }}"
-                                alt="{{ $page->title }}"
-                                class="mx-auto block h-auto max-h-[520px] w-full rounded-lg object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-                            >
+        <section class="relative overflow-hidden">
+            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(95,111,155,0.10),_transparent_55%)]"></div>
+
+            <div class="relative mx-auto max-w-5xl px-4 py-12 md:px-6 lg:py-16">
+                <header class="mx-auto mb-8 max-w-3xl text-center md:mb-10">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">SECDER</p>
+                    <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-cyan-950 md:text-4xl">{{ __('app.page.about_us') }}</h2>
+                    <div class="mx-auto mt-5 h-1 w-16 rounded-full bg-cyan-600"></div>
+                </header>
+
+                <article class="overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_18px_48px_rgba(15,23,42,0.10)]">
+                    <div class="h-1.5 w-full bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-700"></div>
+
+                    <div class="grid items-stretch gap-0 md:grid-cols-2">
+                        @if ($hasAboutImage && $aboutImage)
+                            <div class="flex min-w-0 items-center justify-center bg-gradient-to-br from-cyan-50 via-white to-slate-50 p-6 md:p-8">
+                                <img
+                                    src="{{ $aboutImage }}"
+                                    alt="{{ $page->title }}"
+                                    class="h-44 w-44 rounded-full object-cover shadow-lg shadow-cyan-900/15 ring-4 ring-white sm:h-52 sm:w-52 md:h-56 md:w-56 lg:h-64 lg:w-64"
+                                    loading="lazy"
+                                >
+                            </div>
+                        @endif
+
+                        <div @class([
+                            'min-w-0 w-full px-5 py-7 md:px-8 md:py-9',
+                            'md:col-span-2' => ! ($hasAboutImage && $aboutImage),
+                        ])>
+                            <div class="mb-5 flex items-center gap-3">
+                                <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-md shadow-cyan-900/15">
+                                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-4.5-7-10a7 7 0 1 1 14 0c0 5.5-7 10-7 10Z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                                    </svg>
+                                </span>
+                                <h3 class="text-xl font-bold tracking-tight text-cyan-950 md:text-2xl">{{ __('app.page.about_us') }}</h3>
+                            </div>
+
+                            <div class="about-prose w-full max-w-none text-left text-[15px] leading-8 text-slate-700">
+                                {!! $aboutContentHtml !!}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="group mt-8 rounded-2xl border border-cyan-100 bg-gradient-to-br from-cyan-50/75 via-white to-cyan-50/55 p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_16px_34px_rgba(14,116,144,0.16)] md:p-6">
-                        <div class="mb-3 flex items-center justify-center gap-2">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white shadow-sm transition-transform duration-300 group-hover:scale-110">BK</span>
-                            <h2 class="text-center text-xl font-bold text-cyan-900 transition-colors duration-300 group-hover:text-cyan-700 md:text-2xl">{{ __('app.page.about_us') }}</h2>
-                        </div>
-                        <div class="prose mx-auto max-w-none text-center prose-slate prose-p:leading-8 prose-p:transition-colors prose-p:duration-300 group-hover:prose-p:text-cyan-900">
-                            {!! $aboutContentHtml !!}
-                        </div>
-                    </div>
-
-                    <div class="mt-8 border-t border-slate-100 pt-6">
-                        <p class="mb-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('app.page.social_media_us') }}</p>
+                    <div class="border-t border-cyan-50 bg-slate-50/60 px-5 py-5 md:px-8">
+                        <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
                         <div class="flex flex-wrap items-center justify-center gap-2">
                             @foreach ($socialMap as $field => $platform)
                                 @if (! empty($settings->$field))
@@ -212,7 +216,7 @@
                                         href="{{ $settings->$field }}"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:scale-105 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white hover:shadow-[0_10px_18px_rgba(77,92,131,0.32)]"
+                                        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
                                         title="{{ $socialAria[$platform] ?? $platform }}"
                                         aria-label="{{ $socialAria[$platform] ?? $platform }}"
                                     >
@@ -222,22 +226,65 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
-            </article>
+                </article>
             </div>
         </section>
+
+        <style>
+            .about-prose {
+                width: 100%;
+                max-width: 100%;
+            }
+            .about-prose > * {
+                max-width: 100%;
+            }
+            .about-prose h2,
+            .about-prose h3 {
+                margin-top: 1.5rem;
+                margin-bottom: 0.75rem;
+                font-size: 1.125rem;
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                color: #2b3245;
+            }
+            .about-prose h2:first-child,
+            .about-prose h3:first-child {
+                margin-top: 0;
+            }
+            .about-prose p {
+                margin: 0.75rem 0;
+                line-height: 1.85;
+                color: #334155;
+            }
+            .about-prose p:empty {
+                display: none;
+            }
+            .about-prose ul,
+            .about-prose ol {
+                margin: 0.75rem 0;
+                padding-left: 1.25rem;
+            }
+            .about-prose li {
+                margin: 0.4rem 0;
+                line-height: 1.7;
+            }
+            .about-prose a {
+                color: #4d5c83;
+                text-decoration: underline;
+            }
+            .about-prose strong {
+                color: #2b3245;
+                font-weight: 700;
+            }
+        </style>
     @elseif ($page->slug === 'vizyon-misyon')
         @php
             $settings = \App\Models\Setting::current();
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
-            $visionText = $meta['vision_text'] ?? null;
-            $missionText = $meta['mission_text'] ?? null;
-            $visionHtml = ($isTr && filled($visionText))
-                ? (string) $visionText
-                : nl2br(e(__('app.page.vision_body')));
-            $missionHtml = ($isTr && filled($missionText))
-                ? (string) $missionText
-                : nl2br(e(__('app.page.mission_body')));
+            $visionHtml = $page->getMetaLocalized('vision_text')
+                ?: '<p>' . e(__('app.page.vision_body')) . '</p>';
+            $missionHtml = $page->getMetaLocalized('mission_text')
+                ?: '<p>' . e(__('app.page.mission_body')) . '</p>';
             $socialMap = [
                 'instagram_url' => 'instagram',
                 'youtube_url' => 'youtube',
@@ -259,56 +306,115 @@
                 'telegram' => 'Telegram',
             ];
         @endphp
-        <section class="mx-auto max-w-5xl px-4 py-12 md:px-6 lg:py-16">
-            <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_18px_44px_rgba(15,23,42,0.10)]">
-                <div class="border-b border-cyan-100/70 bg-gradient-to-r from-cyan-50 via-sky-50 to-cyan-50 px-5 py-5 md:px-8">
-                    <h2 class="text-center text-2xl font-extrabold tracking-tight text-cyan-900 md:text-3xl">{{ __('app.page.vision_title') }}</h2>
-                    <p class="mt-2 text-center text-sm text-slate-600 md:text-base">{{ __('app.page.vision_subtitle') }}</p>
+
+        <section class="relative overflow-hidden">
+            <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(95,111,155,0.10),_transparent_55%)]"></div>
+            <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-cyan-50/60 to-transparent"></div>
+
+            <div class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 lg:py-16">
+                <header class="mx-auto mb-10 max-w-3xl text-center md:mb-12">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">SECDER</p>
+                    <h2 class="mt-3 text-3xl font-extrabold tracking-tight text-cyan-950 md:text-4xl">{{ __('app.page.vision_title') }}</h2>
+                    <p class="mt-3 text-sm leading-7 text-slate-600 md:text-base">{{ __('app.page.vision_subtitle') }}</p>
+                    <div class="mx-auto mt-5 h-1 w-16 rounded-full bg-cyan-600"></div>
+                </header>
+
+                <div class="grid gap-5 lg:grid-cols-2 lg:gap-6">
+                    {{-- Vizyon --}}
+                    <article class="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_48px_rgba(77,92,131,0.18)]">
+                        <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-700"></div>
+                        <div class="flex flex-1 flex-col p-6 md:p-8">
+                            <div class="mb-5 flex items-center gap-3">
+                                <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-md shadow-cyan-900/15">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7Z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                    </svg>
+                                </span>
+                                <h3 class="text-xl font-bold tracking-tight text-cyan-950 md:text-2xl">{{ __('app.page.vision_our') }}</h3>
+                            </div>
+
+                            <div class="vision-mission-prose prose max-w-none flex-1 text-left prose-slate prose-p:my-3 prose-p:text-[15px] prose-p:leading-8 prose-p:text-slate-700 prose-headings:text-cyan-950 prose-strong:text-cyan-900 prose-li:my-1.5 prose-li:text-[15px] prose-li:leading-7 prose-li:text-slate-700 prose-ul:my-4 prose-ol:my-4">
+                                {!! $visionHtml !!}
+                            </div>
+                        </div>
+                    </article>
+
+                    {{-- Misyon --}}
+                    <article class="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-[0_16px_40px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_48px_rgba(77,92,131,0.18)]">
+                        <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-cyan-700 via-cyan-600 to-cyan-500"></div>
+                        <div class="flex flex-1 flex-col p-6 md:p-8">
+                            <div class="mb-5 flex items-center gap-3">
+                                <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-cyan-700 text-white shadow-md shadow-cyan-900/15">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 0 1 2-2h6.5l1 2H21l-3 6 3 6h-8.5l-1-2H5a2 2 0 0 0-2 2Zm9-13.5V9"/>
+                                    </svg>
+                                </span>
+                                <h3 class="text-xl font-bold tracking-tight text-cyan-950 md:text-2xl">{{ __('app.page.mission_our') }}</h3>
+                            </div>
+
+                            <div class="vision-mission-prose prose max-w-none flex-1 text-left prose-slate prose-p:my-3 prose-p:text-[15px] prose-p:leading-8 prose-p:text-slate-700 prose-headings:text-cyan-950 prose-strong:text-cyan-900 prose-li:my-1.5 prose-li:text-[15px] prose-li:leading-7 prose-li:text-slate-700 prose-ul:my-4 prose-ol:my-4">
+                                {!! $missionHtml !!}
+                            </div>
+                        </div>
+                    </article>
                 </div>
 
-                <div class="space-y-5 p-5 md:space-y-6 md:p-8">
-                    <div class="group relative rounded-2xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-cyan-50/50 p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_16px_30px_rgba(14,116,144,0.14)] md:p-6">
-                        <div class="mb-3 flex items-center justify-center gap-2">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white shadow-sm">V</span>
-                            <h2 class="text-center text-xl font-bold text-cyan-900 transition-colors duration-300 group-hover:text-cyan-700 md:text-2xl">{{ __('app.page.vision_our') }}</h2>
-                        </div>
-                        <div class="prose mx-auto max-w-none text-center prose-slate prose-p:leading-8 prose-p:transition-colors prose-p:duration-300 group-hover:prose-p:text-cyan-900">
-                            {!! $visionHtml !!}
-                        </div>
-                    </div>
-
-                    <div class="group relative rounded-2xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 via-white to-cyan-50/50 p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-cyan-300 hover:shadow-[0_16px_30px_rgba(14,116,144,0.14)] md:p-6">
-                        <div class="mb-3 flex items-center justify-center gap-2">
-                            <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-cyan-600 text-xs font-bold text-white shadow-sm">M</span>
-                            <h2 class="text-center text-xl font-bold text-cyan-900 transition-colors duration-300 group-hover:text-cyan-700 md:text-2xl">{{ __('app.page.mission_our') }}</h2>
-                        </div>
-                        <div class="prose mx-auto max-w-none text-center prose-slate prose-p:leading-8 prose-p:transition-colors prose-p:duration-300 group-hover:prose-p:text-cyan-900">
-                            {!! $missionHtml !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t border-slate-100 bg-slate-50/70 px-5 py-5 md:px-8">
-                    <p class="mb-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-500">{{ __('app.page.social_media_us') }}</p>
+                <div class="mt-8 rounded-2xl border border-cyan-100 bg-white/80 px-5 py-5 shadow-sm backdrop-blur-sm md:mt-10 md:px-8">
+                    <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{{ __('app.page.social_media_us') }}</p>
                     <div class="flex flex-wrap items-center justify-center gap-2">
-                    @foreach ($socialMap as $field => $platform)
-                        @if (! empty($settings->$field))
-                            <a
-                                href="{{ $settings->$field }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
-                                title="{{ $socialAria[$platform] ?? $platform }}"
-                                aria-label="{{ $socialAria[$platform] ?? $platform }}"
-                            >
-                                <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
-                            </a>
-                        @endif
-                    @endforeach
+                        @foreach ($socialMap as $field => $platform)
+                            @if (! empty($settings->$field))
+                                <a
+                                    href="{{ $settings->$field }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-cyan-600 hover:text-white"
+                                    title="{{ $socialAria[$platform] ?? $platform }}"
+                                    aria-label="{{ $socialAria[$platform] ?? $platform }}"
+                                >
+                                    <x-social-brand-icon :platform="$platform" icon-class="h-4 w-4" />
+                                </a>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
-            </article>
+            </div>
         </section>
+
+        <style>
+            .vision-mission-prose ul {
+                list-style: none;
+                padding-left: 0;
+            }
+            .vision-mission-prose ul > li {
+                position: relative;
+                padding-left: 1.65rem;
+                margin-top: 0.65rem;
+                margin-bottom: 0.65rem;
+            }
+            .vision-mission-prose ul > li::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0.55rem;
+                width: 0.55rem;
+                height: 0.55rem;
+                border-radius: 9999px;
+                background: #4d5c83;
+                box-shadow: 0 0 0 3px rgba(77, 92, 131, 0.16);
+            }
+            .vision-mission-prose ol {
+                padding-left: 1.15rem;
+            }
+            .vision-mission-prose ol > li::marker {
+                color: #4d5c83;
+                font-weight: 700;
+            }
+            .vision-mission-prose p:empty {
+                display: none;
+            }
+        </style>
     @elseif (in_array($page->slug, ['dernek-tuzugu', 'faaliyet-belgesi', 'kurumsal-evrak-arsivi'], true))
         @php
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
@@ -335,18 +441,19 @@
             $currentDoc = $documentConfig[$page->slug] ?? $documentConfig['dernek-tuzugu'];
             $documentFile = $meta['document_file'] ?? ($meta[$currentDoc['legacy_file_key']] ?? null);
             $documentUrl = filled($documentFile) ? \Illuminate\Support\Facades\Storage::url($documentFile) : null;
-            $documentTitle = $isTr
-                ? (trim((string) ($meta['document_title'] ?? ($meta[$currentDoc['legacy_title_key']] ?? ''))) ?: $currentDoc['default_title'])
-                : $currentDoc['default_title'];
+            $documentTitle = $page->getMetaLocalized(
+                'document_title',
+                trim((string) ($meta[$currentDoc['legacy_title_key']] ?? '')) ?: $currentDoc['default_title']
+            );
             $documentExt = $documentFile ? strtolower(pathinfo((string) $documentFile, PATHINFO_EXTENSION)) : null;
             $isImagePreview = in_array($documentExt, ['jpg', 'jpeg', 'png'], true);
             $isPdfPreview = $documentExt === 'pdf';
         @endphp
         <section class="mx-auto max-w-5xl px-4 py-12 md:px-6 lg:py-16">
             <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_14px_34px_rgba(15,23,42,0.08)] md:p-8">
-                @if (! empty($page->content))
+                @if (filled($page->getLocalized('content')))
                     <div class="prose mx-auto mb-6 max-w-none text-center prose-slate prose-p:leading-8">
-                        {!! $page->content !!}
+                        {!! $page->getLocalized('content') !!}
                     </div>
                 @endif
 
@@ -410,9 +517,8 @@
             $fq     = request('q', '');
             $fstat  = request('status', '');
             $fsort  = request('sort', 'default');
-            $activitiesIntroHtml = ($isTr && ! empty($page->content))
-                ? (string) $page->content
-                : '<p>' . e(__('app.page.activities_intro')) . '</p>';
+            $activitiesIntroHtml = $page->getLocalized('content')
+                ?: '<p>' . e(__('app.page.activities_intro')) . '</p>';
 
             $actQuery = \App\Models\Project::query()->active();
 
@@ -573,11 +679,10 @@
             $settings = \App\Models\Setting::current();
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
             $presidentImage = ! empty($meta['president_image']) ? \Illuminate\Support\Facades\Storage::url($meta['president_image']) : asset('images/default-logo.svg');
-            $signatureTitle = trim((string) ($meta['signature_title'] ?? '')) ?: __('app.page.president_signature_title');
+            $signatureTitle = trim((string) ($page->getMetaLocalized('signature_title') ?? '')) ?: __('app.page.president_signature_title');
             $signatureName = trim((string) ($meta['signature_name'] ?? ''));
-            $presidentMessageHtml = ($isTr && ! empty($page->content))
-                ? (string) $page->content
-                : nl2br(e(__('app.page.president_message_body')));
+            $presidentMessageHtml = $page->getLocalized('content')
+                ?: nl2br(e(__('app.page.president_message_body')));
             $socialMap = [
                 'instagram_url' => 'instagram',
                 'youtube_url' => 'youtube',
@@ -665,9 +770,8 @@
                         : 'https://www.google.com/maps?q=' . urlencode($mapsEmbedUrl) . '&output=embed';
                 }
             }
-            $officialAssocDesc = $isTr
-                ? ($settings->site_description ?: __('app.page.official_assoc_desc'))
-                : __('app.page.official_assoc_desc');
+            $officialAssocDesc = $page->getLocalized('content')
+                ?: ($settings->site_description ?: __('app.page.official_assoc_desc'));
             $socialMap = [
                 'instagram_url' => 'instagram',
                 'youtube_url' => 'youtube',
@@ -798,13 +902,11 @@
         @php
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
             $items = collect($meta['press_kit_items'] ?? [])
-                ->filter(fn ($item) => filled($item['title'] ?? null) && filled($item['file'] ?? null))
+                ->filter(fn ($item) => filled(\App\Models\Page::localizedFromItem($item, 'title')) && filled($item['file'] ?? null))
                 ->values();
             $siteSettings = \App\Models\Setting::current();
             $defaultLogo = $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg');
-            $pressIntro = $isTr
-                ? ($page->content ?: __('app.page.press_intro'))
-                : __('app.page.press_intro');
+            $pressIntro = $page->getLocalized('content', __('app.page.press_intro'));
         @endphp
 
         <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
@@ -823,10 +925,12 @@
                             $fileExt = strtoupper(pathinfo($filePath, PATHINFO_EXTENSION) ?: 'DOSYA');
                             $formatLabel = filled($item['format_label'] ?? null) ? strtoupper((string) $item['format_label']) : $fileExt;
                             $logo = ! empty($item['logo']) ? asset('storage/' . ltrim((string) $item['logo'], '/')) : $defaultLogo;
+                            $itemTitle = \App\Models\Page::localizedFromItem($item, 'title');
                         @endphp
                         <article class="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-                            <img src="{{ $logo }}" alt="{{ $item['title'] }}" class="mx-auto h-16 w-auto object-contain">
-                            <p class="mt-4 text-sm font-medium text-slate-500">{{ __('app.page.press_format') }}</p>
+                            <img src="{{ $logo }}" alt="{{ $itemTitle }}" class="mx-auto h-16 w-auto object-contain">
+                            <h3 class="mt-4 text-base font-semibold text-slate-900">{{ $itemTitle }}</h3>
+                            <p class="mt-3 text-sm font-medium text-slate-500">{{ __('app.page.press_format') }}</p>
                             <p class="mt-1 text-3xl font-extrabold tracking-tight text-slate-900">"{{ $formatLabel }}"</p>
                             <div class="my-5 h-px bg-slate-200"></div>
                             <a
@@ -853,72 +957,112 @@
     @elseif ($page->slug === 'yonetim')
         @php
             $meta = is_array($page->page_meta ?? null) ? $page->page_meta : [];
-            $managementIntro = $isTr ? ($page->content ?: __('app.page.management_intro')) : __('app.page.management_intro');
-            $managementRoleMap = [
-                'başkan' => 'app.page.role_president',
-                'baskan' => 'app.page.role_president',
-                'başkan yardımcısı' => 'app.page.role_vice_president',
-                'baskan yardimcisi' => 'app.page.role_vice_president',
-                'genel sekreter' => 'app.page.role_secretary_general',
-                'sayman' => 'app.page.role_treasurer',
-                'üye' => 'app.page.role_member',
-                'uye' => 'app.page.role_member',
-            ];
-            $translateManagementRole = function (?string $value) use ($isTr, $managementRoleMap): string {
-                $value = trim((string) $value);
-                if ($value === '' || $isTr) {
-                    return $value;
-                }
-                $normalized = \Illuminate\Support\Str::of($value)->lower()->ascii()->value();
-                $key = $managementRoleMap[$normalized] ?? null;
-                return $key ? __($key) : $value;
-            };
+            $managementIntro = $page->getLocalized('content', __('app.page.management_intro'));
             $sections = collect($meta['management_sections'] ?? [])
-                ->filter(fn ($section) => filled($section['section_title'] ?? null))
+                ->filter(fn ($section) => filled(\App\Models\Page::localizedFromItem($section, 'section_title') ?: ($section['section_title'] ?? null)))
+                ->map(function ($section) {
+                    $members = collect($section['members'] ?? [])
+                        ->filter(fn ($member) => filled($member['name'] ?? null) && filled(
+                            \App\Models\Page::localizedFromItem($member, 'role') ?: ($member['role'] ?? null)
+                        ))
+                        ->values();
+
+                    $sectionTitle = \App\Models\Page::localizedFromItem($section, 'section_title', $section['section_title'] ?? '');
+
+                    return [
+                        'title' => \App\Models\Page::localizeManagementRole($sectionTitle),
+                        'members' => $members,
+                    ];
+                })
+                ->filter(fn ($section) => $section['members']->isNotEmpty())
                 ->values();
+
+            // Tek kişilik bölümleri yan yana grid'de topla; çoklu bölümleri ayrı tut.
+            $blocks = [];
+            $soloBuffer = [];
+            foreach ($sections as $section) {
+                if ($section['members']->count() === 1) {
+                    $soloBuffer[] = $section;
+                    continue;
+                }
+                if ($soloBuffer !== []) {
+                    $blocks[] = ['type' => 'solo', 'sections' => $soloBuffer];
+                    $soloBuffer = [];
+                }
+                $blocks[] = ['type' => 'group', 'section' => $section];
+            }
+            if ($soloBuffer !== []) {
+                $blocks[] = ['type' => 'solo', 'sections' => $soloBuffer];
+            }
         @endphp
 
         <section class="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
             @if (! empty($managementIntro))
-                <div class="prose mx-auto mb-10 max-w-3xl text-center prose-slate">
-                    {!! $isTr ? $managementIntro : e($managementIntro) !!}
+                <div class="prose mx-auto mb-10 max-w-3xl text-center prose-slate md:mb-12">
+                    {!! $managementIntro !!}
                 </div>
             @endif
 
             @if ($sections->isNotEmpty())
-                <div class="space-y-14 md:space-y-16">
-                    @foreach ($sections as $section)
-                        @php
-                            $members = collect($section['members'] ?? [])
-                                ->filter(fn ($member) => filled($member['name'] ?? null) && filled($member['role'] ?? null))
-                                ->values();
-                        @endphp
-
-                        @if ($members->isNotEmpty())
+                <div class="space-y-12 md:space-y-14">
+                    @foreach ($blocks as $block)
+                        @if ($block['type'] === 'solo')
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+                                @foreach ($block['sections'] as $section)
+                                    @php
+                                        $member = $section['members']->first();
+                                        $memberPhoto = ! empty($member['photo']) ? \Illuminate\Support\Facades\Storage::url($member['photo']) : null;
+                                        $displayPhoto = $memberPhoto ?: asset('images/default-logo.svg');
+                                        $roleLabel = \App\Models\Page::localizeManagementRole(
+                                            \App\Models\Page::localizedFromItem($member, 'role')
+                                        ) ?: $section['title'];
+                                    @endphp
+                                    <article class="group relative overflow-hidden rounded-2xl border border-cyan-100 bg-gradient-to-b from-white to-cyan-50/40 p-5 text-center shadow-[0_10px_24px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_18px_34px_rgba(77,92,131,0.18)]">
+                                        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-500"></div>
+                                        <div class="mx-auto mt-1 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-cyan-50 ring-4 ring-white shadow-md sm:h-32 sm:w-32">
+                                            <img
+                                                src="{{ $displayPhoto }}"
+                                                alt="{{ $member['name'] }}"
+                                                class="h-full w-full {{ $memberPhoto ? 'object-cover' : 'object-contain p-4' }} transition duration-500 group-hover:scale-105"
+                                                loading="lazy"
+                                            >
+                                        </div>
+                                        <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-700">{{ $roleLabel }}</p>
+                                        <h3 class="mt-1.5 text-lg font-bold tracking-tight text-slate-900">{{ $member['name'] }}</h3>
+                                    </article>
+                                @endforeach
+                            </div>
+                        @else
+                            @php $section = $block['section']; @endphp
                             <div>
-                                <h2 class="mb-6 text-center text-2xl font-extrabold uppercase tracking-wide text-cyan-950 md:mb-8 md:text-3xl">
-                                    {{ $translateManagementRole($section['section_title']) }}
-                                </h2>
+                                <div class="mb-6 text-center md:mb-8">
+                                    <h2 class="text-2xl font-extrabold uppercase tracking-wide text-cyan-950 md:text-3xl">
+                                        {{ $section['title'] }}
+                                    </h2>
+                                    <div class="mx-auto mt-3 h-1 w-16 rounded-full bg-cyan-500/80"></div>
+                                </div>
 
-                                <div class="mx-auto flex max-w-6xl flex-wrap justify-center gap-5">
-                                    @foreach ($members as $member)
+                                <div class="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+                                    @foreach ($section['members'] as $member)
                                         @php
                                             $memberPhoto = ! empty($member['photo']) ? \Illuminate\Support\Facades\Storage::url($member['photo']) : null;
                                             $displayPhoto = $memberPhoto ?: asset('images/default-logo.svg');
+                                            $roleLabel = \App\Models\Page::localizeManagementRole(
+                                                \App\Models\Page::localizedFromItem($member, 'role', $member['role'] ?? '')
+                                            );
                                         @endphp
-                                        <article class="group w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] xl:w-[calc(25%-15px)] max-w-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_28px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_36px_rgba(6,78,100,0.2)]">
-                                            <div class="h-[280px] w-full overflow-hidden bg-white/10 p-2 sm:h-[300px] lg:h-[320px]">
+                                        <article class="group relative overflow-hidden rounded-2xl border border-cyan-100 bg-gradient-to-b from-white to-cyan-50/40 p-5 text-center shadow-[0_10px_24px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-cyan-200 hover:shadow-[0_18px_34px_rgba(77,92,131,0.18)]">
+                                            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-500 via-cyan-600 to-cyan-500"></div>
+                                            <div class="mx-auto mt-1 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-cyan-50 ring-4 ring-white shadow-md sm:h-32 sm:w-32">
                                                 <img
                                                     src="{{ $displayPhoto }}"
                                                     alt="{{ $member['name'] }}"
-                                                    class="h-full w-full object-contain transition duration-500 group-hover:scale-105"
+                                                    class="h-full w-full {{ $memberPhoto ? 'object-cover' : 'object-contain p-4' }} transition duration-500 group-hover:scale-105"
                                                     loading="lazy"
                                                 >
                                             </div>
-                                            <div class="p-4">
-                                                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ $translateManagementRole($member['role']) }}</p>
-                                                <h3 class="mt-1 text-lg font-bold text-slate-900">{{ $member['name'] }}</h3>
-                                            </div>
+                                            <p class="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-700">{{ $roleLabel }}</p>
+                                            <h3 class="mt-1.5 text-lg font-bold tracking-tight text-slate-900">{{ $member['name'] }}</h3>
                                         </article>
                                     @endforeach
                                 </div>
@@ -936,7 +1080,7 @@
     @else
         <section class="mx-auto max-w-4xl px-4 py-12 md:px-6">
             <article class="card-ui">
-                <div class="prose mt-6 max-w-none prose-slate">{!! $page->content !!}</div>
+                <div class="prose mt-6 max-w-none prose-slate">{!! $page->getLocalized('content') !!}</div>
             </article>
         </section>
     @endif
