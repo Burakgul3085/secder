@@ -365,12 +365,9 @@
                 :aria-expanded="contactOpen"
                 aria-label="{{ __('app.nav.quick_contact') }}"
             >
-                <span class="grid grid-cols-2 gap-0.5" aria-hidden="true">
-                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
-                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
-                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
-                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
-                </span>
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
             </button>
             <a
                 href="{{ route('donations') }}"
