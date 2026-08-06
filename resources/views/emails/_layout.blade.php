@@ -12,11 +12,11 @@
     }
 
     $socialMeta = [
-        'instagram' => ['label' => 'IG', 'color' => '#E4405F', 'url' => $settings->instagram_url],
-        'youtube' => ['label' => 'YT', 'color' => '#FF0000', 'url' => $settings->youtube_url],
-        'tiktok' => ['label' => 'TT', 'color' => '#111111', 'url' => $settings->tiktok_url],
-        'facebook' => ['label' => 'FB', 'color' => '#1877F2', 'url' => $settings->facebook_url],
-        'x' => ['label' => 'X', 'color' => '#111111', 'url' => $settings->x_url ?? null],
+        'instagram' => ['label' => 'Instagram', 'icon' => 'instagram.png', 'url' => $settings->instagram_url],
+        'youtube' => ['label' => 'YouTube', 'icon' => 'youtube.png', 'url' => $settings->youtube_url],
+        'tiktok' => ['label' => 'TikTok', 'icon' => 'tiktok.png', 'url' => $settings->tiktok_url],
+        'facebook' => ['label' => 'Facebook', 'icon' => 'facebook.png', 'url' => $settings->facebook_url],
+        'x' => ['label' => 'X', 'icon' => 'x.png', 'url' => $settings->x_url ?? null],
     ];
     $activeSocial = collect($socialMeta)->filter(fn ($item) => filled($item['url'] ?? null));
 
@@ -210,8 +210,8 @@
                                     <tr>
                                         @foreach($activeSocial as $item)
                                             <td style="padding:0 8px 0 0;">
-                                                <a href="{{ $item['url'] }}" target="_blank" style="display:inline-block; width:30px; height:30px; line-height:30px; text-align:center; background:{{ $item['color'] }}; color:#ffffff; text-decoration:none; font-size:11px; font-weight:700; border-radius:2px;">
-                                                    {{ $item['label'] }}
+                                                <a href="{{ $item['url'] }}" target="_blank" style="display:inline-block; text-decoration:none; border:0; outline:none;">
+                                                    <img src="{{ $appBase }}/images/email/{{ $item['icon'] }}" width="30" height="30" alt="{{ $item['label'] }}" style="display:block; width:30px; height:30px; border:0; border-radius:2px;">
                                                 </a>
                                             </td>
                                         @endforeach
