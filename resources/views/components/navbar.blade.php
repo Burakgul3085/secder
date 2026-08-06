@@ -43,8 +43,8 @@
         return $currentPath === $path || str_starts_with($currentPath, $path . '/');
     };
 
-    /* Masaüstü menü: orta alan, hafif büyütülmüş */
-    $navLinkBase = 'whitespace-nowrap rounded-md px-2.5 py-1.5 text-[13.5px] font-semibold transition xl:px-3 xl:text-[14.5px]';
+    /* Masaüstü menü: orta alanda yayılmış, dengeli boyut */
+    $navLinkBase = 'whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold transition';
     $navLinkIdle = 'text-slate-800 hover:bg-slate-100 hover:text-cyan-700';
     $navLinkActive = 'bg-cyan-50 text-cyan-800';
 @endphp
@@ -291,8 +291,11 @@
             <a href="{{ route('zakat.index') }}" class="inline-flex h-8 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300" title="{{ __('app.nav.zakat_calculate') }}">{{ __('app.nav.zakat_short') }}</a>
         </div>
 
-        {{-- ORTA: Menü (sola yaslı orta alan — markaya yakın, sağ aksiyonlardan ayrı) --}}
-        <nav class="hidden min-w-0 flex-1 items-center justify-start gap-0.5 pl-2 md:flex lg:gap-1 lg:pl-4">
+        {{-- ORTA: Menü — boş alanı eşit yayar (sıkışık kalmaz) --}}
+        <nav
+            class="hidden min-w-0 flex-1 items-center md:flex"
+            style="justify-content:space-evenly; padding-left:0.75rem; padding-right:0.75rem;"
+        >
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
@@ -348,8 +351,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât (İletişim'den belirgin boşluk) --}}
-        <div class="hidden shrink-0 items-center gap-1.5 md:flex xl:gap-2" style="margin-left:1.5rem;">
+        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât --}}
+        <div class="hidden shrink-0 items-center gap-1.5 md:flex xl:gap-2" style="margin-left:0.75rem;">
             <a
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"
