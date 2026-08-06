@@ -52,6 +52,22 @@ export function getLocalDateKey() {
     }).format(new Date());
 }
 
+/** Örn. tr: "6 Ağustos Perşembe" */
+export function formatGregorianDate(locale = 'tr') {
+    const parts = new Intl.DateTimeFormat(resolveLocale(locale), {
+        timeZone: timezone,
+        day: 'numeric',
+        month: 'long',
+        weekday: 'long',
+    }).formatToParts(new Date());
+
+    const day = parts.find((part) => part.type === 'day')?.value ?? '';
+    const month = parts.find((part) => part.type === 'month')?.value ?? '';
+    const weekday = parts.find((part) => part.type === 'weekday')?.value ?? '';
+
+    return [day, month, weekday].filter(Boolean).join(' ').trim() || '--';
+}
+
 export function parsePrayerTime(time) {
     const [hour, minute] = String(time).split(':').map(Number);
 

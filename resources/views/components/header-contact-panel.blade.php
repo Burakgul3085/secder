@@ -9,6 +9,17 @@
     $socials = collect($siteSettings->activeSocialLinks())
         ->mapWithKeys(fn (array $item): array => [$item['platform'] => $item['url']])
         ->all();
+    $socialBrandStyle = [
+        'instagram' => 'background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);color:#fff;border-color:transparent;',
+        'youtube'   => 'background:#FF0000;color:#fff;border-color:transparent;',
+        'tiktok'    => 'background:#010101;color:#fff;border-color:rgba(37,244,238,.45);',
+        'facebook'  => 'background:#1877F2;color:#fff;border-color:transparent;',
+        'x'         => 'background:#ffffff;color:#0f172a;border-color:transparent;',
+        'linkedin'  => 'background:#0A66C2;color:#fff;border-color:transparent;',
+        'whatsapp'  => 'background:#25D366;color:#fff;border-color:transparent;',
+        'telegram'  => 'background:#26A5E4;color:#fff;border-color:transparent;',
+        'website'   => 'background:#ffffff;color:#155e75;border-color:transparent;',
+    ];
 @endphp
 
 <template x-teleport="body">
@@ -130,7 +141,8 @@
                                             href="{{ $url }}"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition hover:border-cyan-300/50 hover:bg-white/15"
+                                            class="inline-flex h-12 w-12 items-center justify-center rounded-full border shadow-sm transition hover:-translate-y-0.5 hover:brightness-110"
+                                            style="{{ $socialBrandStyle[$key] ?? 'background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2);' }}"
                                             title="{{ $label }}"
                                             aria-label="{{ $label }}"
                                         >

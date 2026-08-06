@@ -90,6 +90,18 @@
                 'instagram' => 'Instagram', 'youtube' => 'YouTube', 'tiktok' => 'TikTok', 'facebook' => 'Facebook',
                 'x' => 'X (Twitter)', 'linkedin' => 'LinkedIn', 'whatsapp' => 'WhatsApp', 'telegram' => 'Telegram', 'website' => __('app.nav.website_aria'),
             ];
+            // Inline stiller: Tailwind dinamik hex sınıflarını derlemediği için kullanılıyor.
+            $topBarBrandStyle = [
+                'instagram' => 'background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);color:#fff;',
+                'youtube'   => 'background:#FF0000;color:#fff;',
+                'tiktok'    => 'background:#010101;color:#fff;',
+                'facebook'  => 'background:#1877F2;color:#fff;',
+                'x'         => 'background:#ffffff;color:#0f172a;',
+                'linkedin'  => 'background:#0A66C2;color:#fff;',
+                'whatsapp'  => 'background:#25D366;color:#fff;',
+                'telegram'  => 'background:#26A5E4;color:#fff;',
+                'website'   => 'background:#ffffff;color:#155e75;',
+            ];
         @endphp
 
         <div class="mx-auto max-w-7xl px-3 py-2 md:hidden">
@@ -114,17 +126,18 @@
                 @endif
             </div>
             <div class="flex items-center justify-between gap-2">
-                <div class="no-scrollbar flex items-center gap-0.5 overflow-x-auto pr-1">
+                <div class="no-scrollbar flex items-center gap-1.5 overflow-x-auto pr-1">
                     @foreach ($topBarSocialLinks as $social)
                         <a
                             href="{{ $social['url'] }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
+                            class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm transition duration-200 hover:-translate-y-0.5 hover:brightness-110"
+                            style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
                             title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                             aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                         >
-                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3" />
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                         </a>
                     @endforeach
                 </div>
@@ -162,11 +175,12 @@
                         href="{{ $social['url'] }}"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-7 w-7 items-center justify-center rounded-full text-cyan-100/90 transition hover:bg-white/10 hover:text-white"
+                        class="inline-flex h-8 w-8 items-center justify-center rounded-full shadow-sm transition duration-200 hover:-translate-y-0.5 hover:brightness-110"
+                        style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
                         title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                         aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                     >
-                        <x-social-brand-icon :platform="$social['platform']" icon-class="h-3.5 w-3.5" />
+                        <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                     </a>
                 @endforeach
                 <a href="{{ route('donations') }}" class="ml-2 rounded-full bg-white/15 px-3 py-1.5 font-medium text-cyan-50 transition hover:bg-white/25">{{ __('app.nav.donate') }}</a>

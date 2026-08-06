@@ -106,7 +106,8 @@
                         </span>
                         <div class="min-w-0">
                             <p class="text-[10px] font-semibold uppercase tracking-wide text-cyan-100/80">{{ __('app.chad_live.hijri') }}</p>
-                            <p class="chad-live-value mt-0.5 truncate text-sm font-bold leading-snug tracking-tight text-white md:text-base" x-text="hijri"></p>
+                            <p class="chad-live-value mt-0.5 text-sm font-bold leading-snug tracking-tight text-white md:text-base" x-text="hijri"></p>
+                            <p class="mt-0.5 truncate text-sm font-semibold leading-snug tracking-tight text-white/95 md:text-[15px]" x-text="gregorian" x-show="gregorian && gregorian !== '--'"></p>
                         </div>
                     </div>
                 </article>

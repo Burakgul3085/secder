@@ -1,6 +1,6 @@
 import { configureCachePrefix, getCachedValue, isExpired, setCache } from './cache';
 import { fetchAladhanData, localizeHijri, localizePrayer, resolveNextPrayer } from './prayer';
-import { configureTimezone, formatLocalTime, getLocalDateKey } from './time';
+import { configureTimezone, formatGregorianDate, formatLocalTime, getLocalDateKey } from './time';
 import { fetchWeather } from './weather';
 
 const TTL = {
@@ -32,6 +32,7 @@ document.addEventListener('alpine:init', () => {
         weatherError: false,
         localTime: '--',
         hijri: '--',
+        gregorian: '--',
         prayerName: '--',
         prayerTime: '--',
         timeTick: false,
@@ -109,6 +110,11 @@ document.addEventListener('alpine:init', () => {
                 this._tickTimer = window.setTimeout(() => {
                     this.timeTick = false;
                 }, 280);
+            }
+
+            const gregorian = formatGregorianDate(this.locale);
+            if (gregorian !== this.gregorian) {
+                this.gregorian = gregorian;
             }
 
             // Dakika değişince sıradaki namazı canlı çizelgeden yeniden hesapla.
