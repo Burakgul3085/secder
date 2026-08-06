@@ -213,9 +213,9 @@
                     {{-- Logo altın tonuyla uyumlu slogan; tam metin tek satırda görünür.
                          Sayfa kaydırılınca header'ı inceltmek için gizlenir. --}}
                     <span
-                        class="mt-1 hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.08em] text-[#C5A059] lg:block xl:text-[11px]"
+                        class="mt-1.5 hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.18em] text-[#C5A059] lg:block xl:text-[11px] xl:tracking-[0.2em]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059"
+                        style="color:#C5A059; letter-spacing:0.18em;"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
