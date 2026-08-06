@@ -19,7 +19,7 @@ return [
         'donate'            => 'أرقام حساباتنا',
         'donate_short'      => 'الحسابات',
         'zakat_calculate'   => 'حساب الزكاة',
-        'zakat_short'       => 'زكاة',
+        'zakat_short'       => 'حساب الزكاة',
         'volunteer'         => 'كن متطوعاً',
         'volunteer_short'   => 'تطوع',
         'quick_contact'     => 'لوحة التواصل السريع',

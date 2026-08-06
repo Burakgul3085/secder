@@ -19,7 +19,7 @@ return [
         'donate'            => 'Hesap Numaralarımız',
         'donate_short'      => 'Hesaplar',
         'zakat_calculate'   => 'Zekât Hesapla',
-        'zakat_short'       => 'Zekât',
+        'zakat_short'       => 'Zekât Hesapla',
         'volunteer'         => 'Gönüllü Ol',
         'volunteer_short'   => 'Gönüllü',
         'quick_contact'     => 'Hızlı iletişim paneli',

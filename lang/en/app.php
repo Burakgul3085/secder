@@ -19,7 +19,7 @@ return [
         'donate'            => 'Our Account Numbers',
         'donate_short'      => 'Accounts',
         'zakat_calculate'   => 'Calculate Zakat',
-        'zakat_short'       => 'Zakat',
+        'zakat_short'       => 'Calculate Zakat',
         'volunteer'         => 'Volunteer',
         'volunteer_short'   => 'Volunteer',
         'quick_contact'     => 'Quick contact panel',

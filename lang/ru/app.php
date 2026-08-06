@@ -19,7 +19,7 @@ return [
         'donate'            => 'Наши номера счетов',
         'donate_short'      => 'Счета',
         'zakat_calculate'   => 'Рассчитать закят',
-        'zakat_short'       => 'Закят',
+        'zakat_short'       => 'Рассчитать закят',
         'volunteer'         => 'Стать волонтёром',
         'volunteer_short'   => 'Волонтёр',
         'quick_contact'     => 'Панель быстрой связи',
