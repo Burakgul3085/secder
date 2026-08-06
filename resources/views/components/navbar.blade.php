@@ -193,8 +193,8 @@
         class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
         :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
     >
-        {{-- Marka kilidi: logo + dernek adı + slogan --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5 sm:gap-3">
+        {{-- Marka kilidi: logo + dernek adı + slogan (shrink-0: menü sloganın üstüne binmesin) --}}
+        <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-2 sm:gap-2.5 md:mr-2 lg:mr-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -207,15 +207,14 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="min-w-0 leading-tight">
-                <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
+            <span class="shrink-0 leading-snug">
+                <span class="block font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.15rem] lg:text-[1.3rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
-                    {{-- Logo altın tonuyla uyumlu slogan; tam metin tek satırda görünür.
-                         Sayfa kaydırılınca header'ı inceltmek için gizlenir. --}}
+                    {{-- Küçük punto + dengeli aralık: tek satırda tam görünür, menüyle çakışmaz. --}}
                     <span
-                        class="mt-1.5 hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.18em] text-[#C5A059] lg:block xl:text-[11px] xl:tracking-[0.2em]"
-                        :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; letter-spacing:0.18em;"
+                        class="mt-1 hidden whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.11em] text-[#C5A059] lg:inline-block xl:text-[9.5px] xl:tracking-[0.13em]"
+                        :class="scrolled ? 'lg:hidden' : 'lg:inline-block'"
+                        style="color:#C5A059; letter-spacing:0.11em;"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
@@ -286,7 +285,7 @@
                 ->whereNotNull('parent_id')
                 ->groupBy('parent_id');
         @endphp
-        <nav class="hidden items-center gap-0.5 md:flex lg:gap-1">
+        <nav class="hidden min-w-0 flex-1 items-center justify-end gap-0.5 md:flex lg:gap-1">
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
