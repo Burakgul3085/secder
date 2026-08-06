@@ -233,7 +233,7 @@
                     <span
                         class="secder-brand-tagline mt-1 hidden whitespace-nowrap lg:block"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059 !important; font-size:10px !important; font-weight:600 !important; letter-spacing:0.02em !important; line-height:1.2 !important;"
+                        style="color:#C5A059 !important; font-size:12px !important; font-weight:600 !important; letter-spacing:0.02em !important; line-height:1.2 !important;"
                         title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
