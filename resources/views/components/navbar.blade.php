@@ -194,7 +194,7 @@
         :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
     >
         {{-- Marka kilidi: logo + dernek adı + slogan --}}
-        <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-2.5 sm:gap-3">
+        <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5 sm:gap-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -207,14 +207,14 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="leading-tight">
-                <span class="block font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.2rem] lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
+            <span class="min-w-0 leading-tight">
+                <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
-                    {{-- Altın slogan: punto/aralık küçültüldü; metin kırılmadan tam görünür. Menüye dokunulmaz. --}}
+                    {{-- Yalnızca sarı slogan: punto ve harf aralığı küçültüldü --}}
                     <span
-                        class="mt-1.5 hidden whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.05em] text-[#C5A059] lg:block xl:text-[10px]"
+                        class="mt-1.5 hidden whitespace-nowrap text-[8px] font-semibold uppercase tracking-[0.04em] text-[#C5A059] lg:block xl:text-[9px]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; letter-spacing:0.05em;"
+                        style="color:#C5A059; letter-spacing:0.04em;"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
