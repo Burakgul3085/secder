@@ -19,11 +19,9 @@
     ];
     $currentFlag = $flagMap[$currentLocale] ?? $flagMap['tr'];
 
-    /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir. */
+    /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir.
+       Alan boşsa slogan satırı hiç basılmaz. */
     $brandTagline = trim((string) ($siteSettings->header_tagline ?? ''));
-    if ($brandTagline === '') {
-        $brandTagline = 'SECDE EDEN BİR NESİL İÇİN';
-    }
     if (mb_strlen($brandTagline) > 80) {
         $brandTagline = mb_substr($brandTagline, 0, 80);
     }
@@ -192,11 +190,11 @@
     </div>
 
     <div
-        class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
+        class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
         :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
     >
-        {{-- Marka: z-20 + bg ile menü taşsa bile slogan/ad üstüne binmez --}}
-        <a href="{{ route('home') }}" class="group relative z-20 flex shrink-0 items-center gap-2 bg-white pr-2 sm:gap-2.5 sm:pr-3">
+        {{-- Marka kilidi: logo + dernek adı + slogan --}}
+        <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5 sm:gap-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -209,14 +207,17 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="flex min-w-0 flex-col justify-center leading-snug">
-                <span class="block font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.1rem] lg:text-[1.25rem]">{{ $siteSettings->site_title }}</span>
-                {{-- Slogan SECDER altında; kaydırınca gizlenir. Menü üstüne binemez (marka z-20). --}}
-                <span
-                    class="mt-1 block whitespace-nowrap text-[9px] font-semibold uppercase tracking-wide text-[#C5A059] sm:text-[10px]"
-                    x-show="!scrolled"
-                    style="color:#C5A059;"
-                >{{ $brandTagline }}</span>
+            <span class="min-w-0 leading-tight">
+                <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
+                @if($brandTagline !== '')
+                    {{-- Logo altın tonuyla uyumlu slogan; tam metin tek satırda görünür.
+                         Sayfa kaydırılınca header'ı inceltmek için gizlenir. --}}
+                    <span
+                        class="mt-1.5 hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.18em] text-[#C5A059] lg:block xl:text-[11px] xl:tracking-[0.2em]"
+                        :class="scrolled ? 'lg:hidden' : 'lg:block'"
+                        style="color:#C5A059; letter-spacing:0.18em;"
+                    >{{ $brandTagline }}</span>
+                @endif
             </span>
         </a>
 
@@ -285,8 +286,7 @@
                 ->whereNotNull('parent_id')
                 ->groupBy('parent_id');
         @endphp
-        {{-- min-w-0 + overflow: taşma markanın (z-20) altına kalır / yatay kayar --}}
-        <nav class="no-scrollbar relative z-10 ml-auto hidden min-w-0 flex-1 items-center justify-end gap-0.5 overflow-x-auto md:flex lg:gap-1">
+        <nav class="hidden items-center gap-0.5 md:flex lg:gap-1">
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
