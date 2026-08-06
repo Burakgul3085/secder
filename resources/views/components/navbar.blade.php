@@ -43,8 +43,8 @@
         return $currentPath === $path || str_starts_with($currentPath, $path . '/');
     };
 
-    /* Masaüstü menü: orta alanda yayılmış, dengeli boyut */
-    $navLinkBase = 'whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold transition';
+    /* Masaüstü menü: marka ile sağ aksiyonlar arası alana yayılır */
+    $navLinkBase = 'whitespace-nowrap rounded-md px-3 py-2 font-semibold transition';
     $navLinkIdle = 'text-slate-800 hover:bg-slate-100 hover:text-cyan-700';
     $navLinkActive = 'bg-cyan-50 text-cyan-800';
 @endphp
@@ -292,10 +292,10 @@
             <a href="{{ route('zakat.index') }}" class="inline-flex h-8 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300" title="{{ __('app.nav.zakat_calculate') }}">{{ __('app.nav.zakat_short') }}</a>
         </div>
 
-        {{-- ORTA: Menü — boş alanı eşit yayar (sıkışık kalmaz) --}}
+        {{-- ORTA: Menü — marka ile kamera arası alana yayılır; sadece bu blok --}}
         <nav
-            class="hidden min-w-0 flex-1 items-center md:flex"
-            style="justify-content:space-evenly; padding-left:0.75rem; padding-right:0.75rem;"
+            class="hidden min-w-0 items-center md:flex"
+            style="flex:1 1 0%; min-width:0; justify-content:space-between; align-items:center; padding:0 0.5rem; font-size:15px;"
         >
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
