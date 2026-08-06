@@ -21,8 +21,8 @@
 
     /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir.
        Alan boşsa slogan satırı hiç basılmaz. */
+    /* Admin'de yazıldığı gibi gösterilir (büyük harfe çevrilmez, sondaki ... silinmez). */
     $brandTagline = trim((string) ($siteSettings->header_tagline ?? ''));
-    $brandTagline = rtrim($brandTagline, ".… \t\n\r\0\x0B");
     if (mb_strlen($brandTagline) > 80) {
         $brandTagline = mb_substr($brandTagline, 0, 80);
     }
@@ -227,7 +227,7 @@
                 <span class="block whitespace-nowrap font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.15rem] lg:text-[1.25rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
-                        class="mt-0.5 hidden whitespace-nowrap text-[7.5px] font-semibold uppercase tracking-tight text-[#C5A059] lg:block xl:text-[8.5px]"
+                        class="mt-0.5 hidden whitespace-nowrap text-[7.5px] font-semibold tracking-tight text-[#C5A059] lg:block xl:text-[8.5px]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
                         style="color:#C5A059; letter-spacing:0.01em;"
                         title="{{ $brandTagline }}"
