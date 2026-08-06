@@ -42,8 +42,8 @@
         return $currentPath === $path || str_starts_with($currentPath, $path . '/');
     };
 
-    /* Masaüstü menü bağlantıları için ortak sınıflar */
-    $navLinkBase = 'whitespace-nowrap rounded-lg px-2.5 py-2 text-[14px] font-semibold transition lg:px-3 lg:text-[15px]';
+    /* Masaüstü menü: kompakt kurumsal boyutlar — sabit düzen, kayma yok */
+    $navLinkBase = 'whitespace-nowrap rounded-md px-2 py-1.5 text-[12.5px] font-semibold transition xl:px-2.5 xl:text-[13.5px]';
     $navLinkIdle = 'text-slate-800 hover:bg-slate-100 hover:text-cyan-700';
     $navLinkActive = 'bg-cyan-50 text-cyan-800';
 @endphp
@@ -189,43 +189,59 @@
         </div>
     </div>
 
+    @php
+        $excludedMainLabels = ['ana sayfa', 'anasayfa', 'iletişim', 'iletisim', 'bağış', 'bagis', 'bağış yap', 'bagis yap', 'bağış hesapları', 'bagis hesaplari', 'medyada biz'];
+        $headerTopItems = $menuItems
+            ->whereNull('parent_id')
+            ->filter(function ($item) use ($excludedMainLabels) {
+                $label = mb_strtolower(trim((string) $item->label));
+                return ! in_array($label, $excludedMainLabels, true);
+            })
+            ->values();
+        $headerChildren = $menuItems
+            ->whereNotNull('parent_id')
+            ->groupBy('parent_id');
+    @endphp
+
+    {{-- Sabit kurumsal header: [Marka] | [Menü] | [Aksiyonlar] — kayma yok, yalnızca boyut dengesi --}}
     <div
-        class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
-        :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
+        class="mx-auto flex max-w-7xl items-center gap-3 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-4 md:px-6"
+        :class="scrolled ? 'md:py-1.5' : 'md:py-2'"
     >
-        {{-- Marka kilidi: logo + dernek adı + slogan --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2.5 sm:gap-3">
+        {{-- SOL: Marka (sabit genişlik, asla sıkışmaz) --}}
+        <a href="{{ route('home') }}" class="group flex w-[230px] shrink-0 items-center gap-2 overflow-hidden lg:w-[255px] lg:gap-2.5 xl:w-[275px]">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
                     src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}"
                     alt="{{ $siteSettings->site_title }}"
-                    class="relative h-10 w-10 rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300 sm:h-11 sm:w-11"
-                    :class="scrolled ? 'md:h-10 md:w-10' : 'md:h-12 md:w-12'"
+                    class="relative h-10 w-10 rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300"
+                    :class="scrolled ? 'md:h-9 md:w-9' : 'md:h-11 md:w-11'"
                 >
             </span>
 
-            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
+            <span class="hidden h-8 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="min-w-0 leading-tight">
-                <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
+            <span class="min-w-0 flex-1 leading-tight">
+                <span class="block truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.05rem] lg:text-[1.15rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
-                    {{-- Yalnızca sarı slogan: küçültüldü ve taşarsa "..." ile sığdırıldı (başka hiçbir şey değiştirilmedi) --}}
                     <span
-                        class="mt-1.5 hidden max-w-full truncate text-[7px] font-semibold uppercase tracking-[0.02em] text-[#C5A059] lg:block xl:text-[8px]"
+                        class="mt-0.5 hidden whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.03em] text-[#C5A059] lg:block xl:text-[9.5px]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; letter-spacing:0.02em;"
+                        style="color:#C5A059; letter-spacing:0.03em;"
+                        title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
         </a>
 
-        <div class="flex shrink-0 items-center gap-1 sm:gap-1.5 md:hidden">
+        {{-- Mobil hızlı aksiyonlar (masaüstünde gizli) --}}
+        <div class="ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 md:hidden">
             <div class="relative" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                 <button
                     type="button"
                     @click="mobileLangOpen = !mobileLangOpen"
-                    class="inline-flex h-10 items-center gap-1 rounded-xl border border-slate-200 bg-white px-2 text-[10px] font-bold uppercase text-slate-700 shadow-sm"
+                    class="inline-flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-[10px] font-bold uppercase text-slate-700 shadow-sm"
                     aria-label="{{ __('app.nav.lang_selector') }}"
                 >
                     <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-4 w-5 rounded object-cover">
@@ -251,7 +267,7 @@
             <button
                 type="button"
                 @click="contactOpen = true"
-                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300/60 hover:bg-cyan-50/80"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300/60 hover:bg-cyan-50/80"
                 :aria-expanded="contactOpen"
                 aria-label="{{ __('app.nav.quick_contact') }}"
             >
@@ -262,30 +278,17 @@
                     <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
                 </span>
             </button>
-            <a href="{{ route('donations') }}" class="inline-flex h-9 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:px-3 sm:text-[11px]">
+            <a href="{{ route('donations') }}" class="inline-flex h-8 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110">
                 <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
                     <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
                 </svg>
                 {{ __('app.nav.donate_short') }}
             </a>
-            <a href="{{ route('volunteer') }}" class="hidden h-9 items-center rounded-full border border-cyan-200 bg-white px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 sm:inline-flex sm:px-3 sm:text-[11px]">{{ __('app.nav.volunteer_short') }}</a>
-            <a href="{{ route('zakat.index') }}" class="inline-flex h-9 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 sm:px-3 sm:text-[11px]" title="{{ __('app.nav.zakat_calculate') }}">{{ __('app.nav.zakat_short') }}</a>
+            <a href="{{ route('zakat.index') }}" class="inline-flex h-8 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300" title="{{ __('app.nav.zakat_calculate') }}">{{ __('app.nav.zakat_short') }}</a>
         </div>
 
-        @php
-            $excludedMainLabels = ['ana sayfa', 'anasayfa', 'iletişim', 'iletisim', 'bağış', 'bagis', 'bağış yap', 'bagis yap', 'bağış hesapları', 'bagis hesaplari', 'medyada biz'];
-            $headerTopItems = $menuItems
-                ->whereNull('parent_id')
-                ->filter(function ($item) use ($excludedMainLabels) {
-                    $label = mb_strtolower(trim((string) $item->label));
-                    return ! in_array($label, $excludedMainLabels, true);
-                })
-                ->values();
-            $headerChildren = $menuItems
-                ->whereNotNull('parent_id')
-                ->groupBy('parent_id');
-        @endphp
-        <nav class="hidden items-center gap-0.5 md:flex lg:gap-1">
+        {{-- ORTA: Menü bağlantıları (sabit sağa yaslı alan, taşmaz) --}}
+        <nav class="hidden min-w-0 flex-1 items-center justify-end gap-0.5 md:flex">
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
@@ -300,11 +303,11 @@
                     <div class="relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                         <button
                             type="button"
-                            class="inline-flex items-center gap-1 {{ $navLinkBase }} {{ $isActiveItem ? $navLinkActive : $navLinkIdle }}"
+                            class="inline-flex items-center gap-0.5 {{ $navLinkBase }} {{ $isActiveItem ? $navLinkActive : $navLinkIdle }}"
                             :aria-expanded="open"
                         >
                             <span>{{ $itemLabel }}</span>
-                            <svg class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2">
+                            <svg class="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
                             </svg>
                         </button>
@@ -312,14 +315,14 @@
                         <div
                             x-show="open"
                             x-cloak
-                            class="absolute left-0 top-full z-50 min-w-[240px] pt-2"
+                            class="absolute left-0 top-full z-50 min-w-[220px] pt-2"
                         >
                             <div class="rounded-xl border border-slate-200 bg-white py-2 shadow-xl">
                                 @foreach($children as $child)
                                     <a
                                         href="{{ $child->url }}"
                                         target="{{ $child->open_in_new_tab ? '_blank' : '_self' }}"
-                                        class="block border-b border-slate-100 px-4 py-2.5 text-[15px] font-medium transition last:border-b-0 hover:bg-slate-50 hover:text-cyan-700 {{ $navIsActive($child->url) ? 'bg-cyan-50/70 text-cyan-800' : 'text-slate-700' }}"
+                                        class="block border-b border-slate-100 px-4 py-2.5 text-sm font-medium transition last:border-b-0 hover:bg-slate-50 hover:text-cyan-700 {{ $navIsActive($child->url) ? 'bg-cyan-50/70 text-cyan-800' : 'text-slate-700' }}"
                                     >{{ navMenuLabel($child->label) }}</a>
                                 @endforeach
                             </div>
@@ -333,106 +336,99 @@
                     >{{ $itemLabel }}</a>
                 @endif
             @empty
-                <span class="rounded-xl bg-slate-100 px-4 py-2 text-sm text-slate-500">{{ __('app.nav.menu_empty') }}</span>
+                <span class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs text-slate-500">{{ __('app.nav.menu_empty') }}</span>
             @endforelse
 
-            <a href="{{ route('news.index') }}" class="{{ $navLinkBase }} {{ request()->routeIs('news.*') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.news') }}</a>
+            <a href="{{ route('news.index') }}" class="{{ $navLinkBase }} {{ request()->routeIs('news.*') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.news_short') }}</a>
 
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
+        </nav>
 
-            <div class="ml-1 flex shrink-0 items-center gap-1 pl-1 lg:gap-1.5">
-                {{-- Galeri / Kamera ikonu --}}
-                <a
-                    href="{{ route('gallery') }}"
-                    title="{{ __('app.nav.gallery_title') }}"
-                    aria-label="{{ __('app.nav.gallery_title') }}"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50/90 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 hover:text-cyan-700 lg:h-10 lg:w-10 lg:rounded-2xl"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                    </svg>
-                </a>
+        {{-- SAĞ: Aksiyonlar (sabit, shrink-0 — sola kaymaz) --}}
+        <div class="hidden shrink-0 items-center gap-1 md:flex xl:gap-1.5">
+            <a
+                href="{{ route('gallery') }}"
+                title="{{ __('app.nav.gallery_title') }}"
+                aria-label="{{ __('app.nav.gallery_title') }}"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/90 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 hover:text-cyan-700 xl:h-9 xl:w-9"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                </svg>
+            </a>
+            <button
+                type="button"
+                @click="contactOpen = true"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/90 text-slate-700 shadow-sm transition hover:border-cyan-200 hover:bg-cyan-50/90 xl:h-9 xl:w-9"
+                :aria-expanded="contactOpen"
+                aria-label="{{ __('app.nav.quick_contact') }}"
+            >
+                <span class="grid grid-cols-2 gap-0.5" aria-hidden="true">
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                </span>
+            </button>
+            <a
+                href="{{ route('donations') }}"
+                class="group/donate inline-flex h-8 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:brightness-110 xl:h-9 xl:px-3 xl:text-[11px]"
+            >
+                <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 transition-transform duration-300 group-hover/donate:scale-110" aria-hidden="true">
+                    <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
+                </svg>
+                {{ __('app.nav.donate_short') }}
+            </a>
+
+            <div class="relative" x-data="{ langOpen: false }" @click.outside="langOpen = false">
                 <button
                     type="button"
-                    @click="contactOpen = true"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50/90 text-slate-700 shadow-sm transition hover:border-cyan-200 hover:bg-cyan-50/90 lg:h-10 lg:w-10 lg:rounded-2xl"
-                    :aria-expanded="contactOpen"
-                    aria-label="{{ __('app.nav.quick_contact') }}"
+                    @click="langOpen = !langOpen"
+                    class="inline-flex h-8 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50/90 px-1.5 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 xl:h-9 xl:px-2"
+                    aria-label="{{ __('app.nav.lang_selector') }}"
                 >
-                    <span class="grid grid-cols-2 gap-0.5" aria-hidden="true">
-                        <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
-                        <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
-                        <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
-                        <span class="h-2 w-2 rounded-sm bg-cyan-700/90"></span>
-                    </span>
+                    <img
+                        src="{{ $currentFlag }}"
+                        alt="{{ strtoupper($currentLocale) }}"
+                        class="h-4 w-6 rounded object-cover shadow-sm"
+                    >
+                    <span class="text-[10px] font-bold text-slate-600 xl:text-xs">{{ strtoupper($currentLocale) }}</span>
+                    <svg class="h-3 w-3 text-slate-400" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4"/></svg>
                 </button>
-                {{-- Ana çağrı butonu: kurumsal gradyan + kalp ikonu --}}
-                <a
-                    href="{{ route('donations') }}"
-                    class="group/donate inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-3 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:shadow-md hover:shadow-cyan-900/20 hover:brightness-110 lg:h-10 lg:px-4 lg:text-xs"
-                >
-                    <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 transition-transform duration-300 group-hover/donate:scale-110" aria-hidden="true">
-                        <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
-                    </svg>
-                    {{ __('app.nav.donate') }}
-                </a>
 
-                {{-- Dil Seçici --}}
                 <div
-                    class="relative"
-                    x-data="{ langOpen: false }"
-                    @click.outside="langOpen = false"
+                    x-show="langOpen"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
                 >
-                    <button
-                        type="button"
-                        @click="langOpen = !langOpen"
-                        class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50/90 px-2 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 lg:h-10 lg:rounded-2xl lg:px-2.5"
-                        aria-label="{{ __('app.nav.lang_selector') }}"
+                    @foreach($langList as $lang)
+                    <a
+                        href="{{ route('locale.switch', $lang['code']) }}"
+                        class="flex w-full items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition last:border-0 hover:bg-cyan-50 {{ $currentLocale === $lang['code'] ? 'bg-cyan-50' : '' }}"
                     >
-                        <img
-                            src="{{ $currentFlag }}"
-                            alt="{{ strtoupper($currentLocale) }}"
-                            class="h-5 w-7 rounded object-cover shadow-sm"
-                        >
-                        <span class="text-xs font-bold text-slate-600">{{ strtoupper($currentLocale) }}</span>
-                        <svg class="h-3 w-3 text-slate-400" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4"/></svg>
-                    </button>
-
-                    <div
-                        x-show="langOpen"
-                        x-cloak
-                        x-transition:enter="transition ease-out duration-150"
-                        x-transition:enter-start="opacity-0 scale-95"
-                        x-transition:enter-end="opacity-100 scale-100"
-                        x-transition:leave="transition ease-in duration-100"
-                        x-transition:leave-start="opacity-100 scale-100"
-                        x-transition:leave-end="opacity-0 scale-95"
-                        class="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
-                    >
-                        @foreach($langList as $lang)
-                        <a
-                            href="{{ route('locale.switch', $lang['code']) }}"
-                            class="flex w-full items-center gap-3 border-b border-slate-100 px-4 py-3 text-left transition last:border-0 hover:bg-cyan-50 {{ $currentLocale === $lang['code'] ? 'bg-cyan-50' : '' }}"
-                        >
-                            <img src="{{ $lang['flag'] }}" alt="{{ strtoupper($lang['code']) }}" class="h-5 w-7 rounded object-cover shadow-sm">
-                            <span class="flex-1 text-sm font-semibold text-slate-700">{{ $lang['label'] }}</span>
-                            <span class="text-xs font-bold text-slate-400">{{ strtoupper($lang['code']) }}</span>
-                        </a>
-                        @endforeach
-                    </div>
+                        <img src="{{ $lang['flag'] }}" alt="{{ strtoupper($lang['code']) }}" class="h-5 w-7 rounded object-cover shadow-sm">
+                        <span class="flex-1 text-sm font-semibold text-slate-700">{{ $lang['label'] }}</span>
+                        <span class="text-xs font-bold text-slate-400">{{ strtoupper($lang['code']) }}</span>
+                    </a>
+                    @endforeach
                 </div>
-
-                <a
-                    href="{{ route('zakat.index') }}"
-                    class="inline-flex h-9 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-100 lg:h-10 lg:px-3.5 lg:text-xs"
-                    title="{{ __('app.nav.zakat_calculate') }}"
-                >
-                    {{-- Kısa etiket: marka alanındaki slogana yer bırakır, tam adı title'da --}}
-                    {{ __('app.nav.zakat_short') }}
-                </a>
             </div>
-        </nav>
+
+            <a
+                href="{{ route('zakat.index') }}"
+                class="inline-flex h-8 items-center rounded-full border border-cyan-200 bg-cyan-50 px-2.5 text-[10px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-100 xl:h-9 xl:px-3 xl:text-[11px]"
+                title="{{ __('app.nav.zakat_calculate') }}"
+            >
+                {{ __('app.nav.zakat_short') }}
+            </a>
+        </div>
     </div>
 
     <div class="border-t border-slate-100 bg-white/95 md:hidden">
