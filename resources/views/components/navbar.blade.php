@@ -226,7 +226,7 @@
             <span class="leading-snug">
                 <span
                     class="block whitespace-nowrap font-serif tracking-tight text-slate-950 transition duration-300 group-hover:text-cyan-900"
-                    style="font-size:1.45rem; font-weight:800; color:#020617;"
+                    style="font-size:1.55rem; font-weight:800; color:#020617;"
                 >{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
