@@ -295,7 +295,7 @@
         {{-- ORTA: Menü — marka ile kamera arası alana yayılır; sadece bu blok --}}
         <nav
             class="hidden min-w-0 items-center md:flex"
-            style="flex:1 1 0%; min-width:0; justify-content:space-between; align-items:center; padding:0 0.5rem; font-size:15px;"
+            style="flex:1 1 0%; min-width:0; justify-content:space-between; align-items:center; padding:0 0.15rem 0 0.5rem; font-size:15px;"
         >
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
@@ -352,8 +352,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât --}}
-        <div class="hidden shrink-0 items-center gap-1.5 md:flex xl:gap-2" style="margin-left:0.75rem;">
+        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât (İletişim'e yaklaştırıldı, aralık sıkı) --}}
+        <div class="hidden shrink-0 items-center md:flex" style="margin-left:0.2rem; gap:0.35rem;">
             <a
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"
