@@ -30,7 +30,7 @@ class SettingForm
                                 ->label('Header Sloganı')
                                 ->maxLength(80)
                                 ->placeholder('Örn: Secde Eden Bir Nesil İçin')
-                                ->helperText('Üst menüde logo ve dernek adının altında küçük büyük harflerle görünür. Boş bırakılırsa slogan satırı gizlenir. En fazla 80 karakter, tek satır önerilir.'),
+                                ->helperText('Üst menüde logo ve dernek adının altında yazdığınız gibi görünür. Boş bırakılırsa slogan satırı gizlenir. En fazla 80 karakter, tek satır önerilir.'),
                             Textarea::make('site_description')
                                 ->label('Kısa Açıklama')
                                 ->rows(3)
