@@ -19,9 +19,11 @@
     ];
     $currentFlag = $flagMap[$currentLocale] ?? $flagMap['tr'];
 
-    /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir.
-       Alan boşsa slogan satırı hiç basılmaz. */
+    /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir. */
     $brandTagline = trim((string) ($siteSettings->header_tagline ?? ''));
+    if ($brandTagline === '') {
+        $brandTagline = 'SECDE EDEN BİR NESİL İÇİN';
+    }
     if (mb_strlen($brandTagline) > 80) {
         $brandTagline = mb_substr($brandTagline, 0, 80);
     }
@@ -190,11 +192,11 @@
     </div>
 
     <div
-        class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
+        class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 transition-all duration-300 sm:px-4 md:gap-3 md:px-6"
         :class="scrolled ? 'md:py-1.5' : 'md:py-2.5'"
     >
-        {{-- Marka kilidi: logo + dernek adı + slogan (shrink-0: menü sloganın üstüne binmesin) --}}
-        <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-2 sm:gap-2.5 md:mr-2 lg:mr-3">
+        {{-- Marka: z-20 + bg ile menü taşsa bile slogan/ad üstüne binmez --}}
+        <a href="{{ route('home') }}" class="group relative z-20 flex shrink-0 items-center gap-2 bg-white pr-2 sm:gap-2.5 sm:pr-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -207,16 +209,14 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="shrink-0 leading-snug">
-                <span class="block font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.15rem] lg:text-[1.3rem]">{{ $siteSettings->site_title }}</span>
-                @if($brandTagline !== '')
-                    {{-- Küçük punto + dengeli aralık: tek satırda tam görünür, menüyle çakışmaz. --}}
-                    <span
-                        class="mt-1 hidden whitespace-nowrap text-[8.5px] font-semibold uppercase tracking-[0.11em] text-[#C5A059] lg:inline-block xl:text-[9.5px] xl:tracking-[0.13em]"
-                        :class="scrolled ? 'lg:hidden' : 'lg:inline-block'"
-                        style="color:#C5A059; letter-spacing:0.11em;"
-                    >{{ $brandTagline }}</span>
-                @endif
+            <span class="flex min-w-0 flex-col justify-center leading-snug">
+                <span class="block font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.1rem] lg:text-[1.25rem]">{{ $siteSettings->site_title }}</span>
+                {{-- Slogan SECDER altında; kaydırınca gizlenir. Menü üstüne binemez (marka z-20). --}}
+                <span
+                    class="mt-1 block whitespace-nowrap text-[9px] font-semibold uppercase tracking-wide text-[#C5A059] sm:text-[10px]"
+                    x-show="!scrolled"
+                    style="color:#C5A059;"
+                >{{ $brandTagline }}</span>
             </span>
         </a>
 
@@ -285,7 +285,8 @@
                 ->whereNotNull('parent_id')
                 ->groupBy('parent_id');
         @endphp
-        <nav class="hidden min-w-0 flex-1 items-center justify-end gap-0.5 md:flex lg:gap-1">
+        {{-- min-w-0 + overflow: taşma markanın (z-20) altına kalır / yatay kayar --}}
+        <nav class="no-scrollbar relative z-10 ml-auto hidden min-w-0 flex-1 items-center justify-end gap-0.5 overflow-x-auto md:flex lg:gap-1">
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
 
             @forelse($headerTopItems as $item)
