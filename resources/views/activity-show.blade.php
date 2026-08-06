@@ -47,8 +47,8 @@
                 </div>
 
                 @php
-                    $galleryImages = collect($activity->gallery_images ?? [])->filter()->values();
-                    $galleryVideos = collect($activity->gallery_videos ?? [])->filter()->values();
+                    $galleryImages = collect($activity->galleryImagePaths())->filter()->values();
+                    $galleryVideos = collect($activity->galleryVideoPaths())->filter()->values();
                 @endphp
                 @if ($galleryImages->isNotEmpty() || $galleryVideos->isNotEmpty())
                     <div class="mt-10" x-data="{ previewOpen: false, previewType: null, previewSrc: '' }">

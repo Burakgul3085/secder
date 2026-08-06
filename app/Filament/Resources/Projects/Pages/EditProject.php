@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Pages\BaseEditRecord;
+use App\Support\MediaGallerySync;
 use Filament\Actions\DeleteAction;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -24,7 +25,20 @@ class EditProject extends BaseEditRecord
         $data['detail_item_3_title_i18n'] = $this->withTrFallback($data['detail_item_3_title_i18n'] ?? [], $data['detail_item_3_title'] ?? null);
         $data['detail_item_3_text_i18n'] = $this->withTrFallback($data['detail_item_3_text_i18n'] ?? [], $data['detail_item_3_text'] ?? null);
 
+        $data['gallery_images'] = $this->getRecord()->galleryImagePaths();
+        $data['gallery_videos'] = $this->getRecord()->galleryVideoPaths();
+
         return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        $record = $this->getRecord()->refresh();
+        app(MediaGallerySync::class)->syncForProject(
+            $record,
+            (array) ($record->gallery_images ?? []),
+            (array) ($record->gallery_videos ?? []),
+        );
     }
 
     protected function mutateFormDataBeforeSave(array $data): array

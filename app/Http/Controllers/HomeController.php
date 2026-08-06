@@ -14,6 +14,7 @@ use App\Models\Testimonial;
 use App\Models\VolunteerApplication;
 use App\Support\DonationQrService;
 use App\Support\Mailer;
+use App\Support\MediaGallerySync;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -141,24 +142,21 @@ class HomeController extends Controller
 
     public function gallery(Request $request): View
     {
-        $query = Project::query()->active()->orderBy('sort_order');
+        $sync = app(MediaGallerySync::class);
+        $activitySlug = $request->input('activity');
+        $albumSlug = $request->input('album');
 
-        if ($request->filled('activity')) {
-            $query->where('slug', $request->activity);
-        }
-
-        $projects = $query->get()->filter(function ($project) {
-            return ! empty($project->gallery_images) || ! empty($project->gallery_videos);
-        });
-
-        $allProjects = Project::query()->active()->orderBy('sort_order')->get()->filter(function ($project) {
-            return ! empty($project->gallery_images) || ! empty($project->gallery_videos);
-        });
+        $allSections = $sync->gallerySections();
+        $sections = $sync->gallerySections(
+            activitySlug: filled($activitySlug) ? (string) $activitySlug : null,
+            albumSlug: filled($albumSlug) ? (string) $albumSlug : null,
+        );
 
         return view('galeri', [
-            'projects'    => $projects,
-            'allProjects' => $allProjects,
-            'activeSlug'  => $request->input('activity', ''),
+            'sections' => $sections,
+            'allSections' => $allSections,
+            'activeActivitySlug' => (string) ($activitySlug ?? ''),
+            'activeAlbumSlug' => (string) ($albumSlug ?? ''),
         ]);
     }
 

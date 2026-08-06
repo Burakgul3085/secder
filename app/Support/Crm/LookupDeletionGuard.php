@@ -72,7 +72,8 @@ class LookupDeletionGuard
         return filled($project->cover_image)
             || filled($project->description)
             || filled($project->content)
-            || (is_array($project->gallery_images) && count($project->gallery_images) > 0);
+            || (is_array($project->gallery_images) && count($project->gallery_images) > 0)
+            || $project->mediaItems()->exists();
     }
 
     public function deleteWarning(Model $record): string

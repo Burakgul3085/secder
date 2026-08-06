@@ -68,6 +68,57 @@ class Project extends Model
         return $this->hasMany(Donation::class);
     }
 
+    public function mediaItems(): HasMany
+    {
+        return $this->hasMany(MediaItem::class)->orderBy('sort_order')->orderBy('id');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function galleryImagePaths(): array
+    {
+        $paths = $this->mediaItems()
+            ->where('type', MediaItem::TYPE_IMAGE)
+            ->pluck('path')
+            ->filter()
+            ->map(fn ($path) => ltrim((string) $path, '/'))
+            ->values()
+            ->all();
+
+        if ($paths !== []) {
+            return $paths;
+        }
+
+        return array_values(array_filter(array_map(
+            fn ($path) => ltrim((string) $path, '/'),
+            (array) ($this->gallery_images ?? [])
+        )));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function galleryVideoPaths(): array
+    {
+        $paths = $this->mediaItems()
+            ->where('type', MediaItem::TYPE_VIDEO)
+            ->pluck('path')
+            ->filter()
+            ->map(fn ($path) => ltrim((string) $path, '/'))
+            ->values()
+            ->all();
+
+        if ($paths !== []) {
+            return $paths;
+        }
+
+        return array_values(array_filter(array_map(
+            fn ($path) => ltrim((string) $path, '/'),
+            (array) ($this->gallery_videos ?? [])
+        )));
+    }
+
     public function getLocalized(string $field, ?string $fallback = null): ?string
     {
         $locale = app()->getLocale();

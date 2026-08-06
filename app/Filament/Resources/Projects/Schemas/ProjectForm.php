@@ -105,15 +105,17 @@ class ProjectForm
                 ->reorderable()
                 ->image()
                 ->imageEditor()
-                ->helperText('Birden fazla fotoğraf ekleyebilirsiniz.'),
+                ->maxSize(204800)
+                ->helperText('Birden fazla fotoğraf ekleyebilirsiniz. Medya menüsünden başka başlıklara taşıyabilirsiniz.'),
             FileUpload::make('gallery_videos')
                 ->label('Faaliyet Galeri Videolari')
                 ->disk('public')
                 ->directory('projects/gallery-videos')
                 ->multiple()
                 ->reorderable()
-                ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/quicktime'])
-                ->helperText('MP4/WEBM/MOV formatinda video ekleyebilirsiniz.'),
+                ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/quicktime', 'video/x-matroska', 'video/x-msvideo'])
+                ->maxSize(2097152)
+                ->helperText('MP4/WEBM/MOV/MKV — en fazla 2 GB. Büyük dosyalarda yükleme birkaç dakika sürebilir.'),
             Select::make('status')->label('Durum')->options([
                 'devam-ediyor' => 'Devam Ediyor',
                 'tamamlandi' => 'Tamamlandı',

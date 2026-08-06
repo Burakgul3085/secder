@@ -33,8 +33,8 @@
 
             {{-- İstatistik rozetleri --}}
             @php
-                $totalImages = $allProjects->sum(fn($p) => count(is_array($p->gallery_images) ? $p->gallery_images : []));
-                $totalVideos = $allProjects->sum(fn($p) => count(is_array($p->gallery_videos) ? $p->gallery_videos : []));
+                $totalImages = $allSections->sum(fn ($s) => count($s['images'] ?? []));
+                $totalVideos = $allSections->sum(fn ($s) => count($s['videos'] ?? []));
             @endphp
             <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;">
                 <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);color:#fff;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;backdrop-filter:blur(4px);">
@@ -47,7 +47,7 @@
                 </span>
                 <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);color:#fff;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;backdrop-filter:blur(4px);">
                     <svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
-                    {{ $allProjects->count() }} {{ __('app.gallery.stat_activity') }}
+                    {{ $allSections->count() }} {{ __('app.gallery.stat_activity') }}
                 </span>
             </div>
         </div>
@@ -60,26 +60,35 @@
         <div style="max-width:1280px;margin:0 auto;padding:36px 24px 64px;">
 
             {{-- Filtre şeridi --}}
-            @if($allProjects->isNotEmpty())
+            @if($allSections->isNotEmpty())
             <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px 20px;margin-bottom:32px;box-shadow:0 1px 4px rgba(0,0,0,0.05);">
                 <p style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px 0;">{{ __('app.gallery.filter_label') }}</p>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    @php $isAllActive = $activeActivitySlug === '' && $activeAlbumSlug === ''; @endphp
                     <a href="{{ route('gallery') }}"
                        style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;
-                              {{ $activeSlug === '' ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
+                              {{ $isAllActive ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
                     >{{ __('app.gallery.filter_all') }}</a>
-                    @foreach($allProjects as $proj)
-                    <a href="{{ route('gallery', ['activity' => $proj->slug]) }}"
-                       style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;
-                              {{ $activeSlug === $proj->slug ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
-                    >{{ $proj->getLocalized('title', $proj->title) }}</a>
+                    @foreach($allSections as $filterSection)
+                        @php
+                            $filterUrl = $filterSection['kind'] === 'album'
+                                ? route('gallery', ['album' => $filterSection['slug']])
+                                : route('gallery', ['activity' => $filterSection['slug']]);
+                            $isActive = $filterSection['kind'] === 'album'
+                                ? $activeAlbumSlug === $filterSection['slug']
+                                : $activeActivitySlug === $filterSection['slug'];
+                        @endphp
+                        <a href="{{ $filterUrl }}"
+                           style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:600;text-decoration:none;transition:all .2s;
+                                  {{ $isActive ? 'background:#4d5c83;color:#fff;box-shadow:0 2px 8px rgba(77,92,131,0.32);' : 'background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;' }}"
+                        >{{ $filterSection['title'] }}</a>
                     @endforeach
                 </div>
             </div>
             @endif
 
             {{-- Medya yok --}}
-            @if($projects->isEmpty())
+            @if($sections->isEmpty())
             <div style="text-align:center;padding:80px 24px;">
                 <div style="width:72px;height:72px;border-radius:50%;background:#e8edf6;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
                     <svg style="width:34px;height:34px;color:#4d5c83;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -93,18 +102,17 @@
             </div>
 
             @else
-                @foreach($projects as $project)
+                @foreach($sections as $section)
                     @php
-                        $images = is_array($project->gallery_images) ? array_values(array_filter($project->gallery_images)) : [];
-                        $videos = is_array($project->gallery_videos) ? array_values(array_filter($project->gallery_videos)) : [];
-                        $projectTitle = $project->getLocalized('title', $project->title);
+                        $images = array_values($section['images'] ?? []);
+                        $videos = array_values($section['videos'] ?? []);
+                        $sectionTitle = $section['title'];
+                        $sectionKey = $section['key'];
                     @endphp
                     @if(count($images) > 0 || count($videos) > 0)
 
-                    {{-- Faaliyet bölümü --}}
                     <div style="background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:28px;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,0.04);">
 
-                        {{-- Bölüm başlığı --}}
                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #f1f5f9;">
                             <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4d5c83,#5f6f9b);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <svg style="width:20px;height:20px;color:#fff;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -113,7 +121,7 @@
                                 </svg>
                             </div>
                             <div style="flex:1;min-width:0;">
-                                <h2 style="font-size:1.15rem;font-weight:800;color:#0f172a;margin:0;line-height:1.3;">{{ $projectTitle }}</h2>
+                                <h2 style="font-size:1.15rem;font-weight:800;color:#0f172a;margin:0;line-height:1.3;">{{ $sectionTitle }}</h2>
                                 <div style="display:flex;gap:12px;margin-top:4px;">
                                     @if(count($images) > 0)
                                     <span style="font-size:12px;color:#4d5c83;font-weight:600;display:inline-flex;align-items:center;gap:4px;">
@@ -129,16 +137,17 @@
                                     @endif
                                 </div>
                             </div>
-                            <a href="{{ route('activities.show', $project->slug) }}"
+                            @if(!empty($section['detail_url']))
+                            <a href="{{ $section['detail_url'] }}"
                                style="flex-shrink:0;font-size:12px;font-weight:600;color:#4d5c83;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border:1px solid #d1dbec;border-radius:999px;transition:all .2s;"
                                onmouseover="this.style.background='#f5f7fb'" onmouseout="this.style.background='transparent'"
                             >
                                 {{ __('app.gallery.activity_page') }}
                                 <svg style="width:12px;height:12px;" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
                             </a>
+                            @endif
                         </div>
 
-                        {{-- Fotoğraf grid --}}
                         @if(count($images) > 0)
                         <div style="margin-bottom:{{ count($videos) > 0 ? '24px' : '0' }};">
                             <p style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px;">{{ __('app.gallery.photos_heading') }}</p>
@@ -146,14 +155,14 @@
                                 @foreach($images as $index => $image)
                                 <a href="{{ asset('storage/' . $image) }}"
                                    class="glightbox"
-                                   data-gallery="photos-{{ $project->slug }}"
-                                   data-title="{{ $projectTitle }} — {{ $index + 1 }}"
+                                   data-gallery="photos-{{ $sectionKey }}"
+                                   data-title="{{ $sectionTitle }} — {{ $index + 1 }}"
                                    style="display:block;position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:#e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,0.08);transition:transform .2s,box-shadow .2s;"
                                    onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)'"
                                    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 1px 4px rgba(0,0,0,0.08)'"
                                 >
                                     <img src="{{ asset('storage/' . $image) }}"
-                                         alt="{{ $projectTitle }} {{ __('app.gallery.photo_count') }} {{ $index + 1 }}"
+                                         alt="{{ $sectionTitle }} {{ __('app.gallery.photo_count') }} {{ $index + 1 }}"
                                          style="width:100%;height:100%;object-fit:cover;display:block;"
                                          loading="lazy">
                                     <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.4) 0%,transparent 50%);opacity:0;transition:opacity .2s;"
@@ -168,13 +177,12 @@
                         </div>
                         @endif
 
-                        {{-- Video grid --}}
                         @if(count($videos) > 0)
                         <div>
                             <p style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase;margin:0 0 12px;">{{ __('app.gallery.videos_heading') }}</p>
                             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;">
                                 @foreach($videos as $index => $video)
-                                @php $videoLabel = $projectTitle . ' — ' . __('app.gallery.video_label') . ' ' . ($index + 1); @endphp
+                                @php $videoLabel = $sectionTitle . ' — ' . __('app.gallery.video_label') . ' ' . ($index + 1); @endphp
                                 <div
                                     onclick="openVideoModal('{{ asset('storage/' . $video) }}', '{{ addslashes($videoLabel) }}')"
                                     style="border-radius:14px;overflow:hidden;background:#0f172a;box-shadow:0 2px 12px rgba(0,0,0,0.12);cursor:pointer;transition:transform .2s,box-shadow .2s;"
@@ -187,7 +195,6 @@
                                             preload="metadata"
                                             src="{{ asset('storage/' . $video) }}#t=0.5"
                                         ></video>
-                                        {{-- Oynat butonu overlay --}}
                                         <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);transition:background .2s;">
                                             <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:transform .2s;">
                                                 <svg style="width:22px;height:22px;color:#4d5c83;margin-left:3px;" fill="currentColor" viewBox="0 0 24 24">
@@ -209,7 +216,7 @@
                         </div>
                         @endif
 
-                    </div>{{-- /faaliyet bölümü --}}
+                    </div>
                     @endif
                 @endforeach
             @endif

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Support\MediaGallerySync;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -10,6 +11,16 @@ use Illuminate\Support\Str;
 class CreateProject extends CreateRecord
 {
     protected static string $resource = ProjectResource::class;
+
+    protected function afterCreate(): void
+    {
+        $record = $this->getRecord();
+        app(MediaGallerySync::class)->syncForProject(
+            $record,
+            (array) ($record->gallery_images ?? []),
+            (array) ($record->gallery_videos ?? []),
+        );
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
