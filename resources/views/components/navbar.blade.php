@@ -223,16 +223,17 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
-            <span class="leading-snug">
+            <span class="leading-none">
+                {{-- Inline + !important: sunucuda eski CSS/Tailwind override etmesin diye --}}
                 <span
-                    class="block whitespace-nowrap font-serif tracking-tight text-slate-950 transition duration-300 group-hover:text-cyan-900"
-                    style="font-size:1.55rem; font-weight:800; color:#020617;"
+                    class="secder-brand-title block whitespace-nowrap"
+                    style="font-family:Georgia,'Times New Roman',Times,serif !important; font-size:32px !important; font-weight:900 !important; color:#000000 !important; line-height:1.05 !important; letter-spacing:-0.02em !important;"
                 >{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
-                        class="mt-0.5 hidden whitespace-nowrap font-medium text-[#C5A059] lg:block"
+                        class="secder-brand-tagline mt-1 hidden whitespace-nowrap lg:block"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; font-size:9px; letter-spacing:0.01em; line-height:1.2;"
+                        style="color:#C5A059 !important; font-size:10px !important; font-weight:600 !important; letter-spacing:0.02em !important; line-height:1.2 !important;"
                         title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
