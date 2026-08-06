@@ -20,10 +20,10 @@
     $currentFlag = $flagMap[$currentLocale] ?? $flagMap['tr'];
 
     /* Logo yanındaki kurumsal slogan: Genel Ayarlar » Header Sloganı alanından gelir.
-       Alan boşsa slogan satırı hiç basılmaz; tek satırda kalması için uzunluk sınırlanır. */
+       Alan boşsa slogan satırı hiç basılmaz. */
     $brandTagline = trim((string) ($siteSettings->header_tagline ?? ''));
-    if (mb_strlen($brandTagline) > 42) {
-        $brandTagline = mb_substr($brandTagline, 0, 42) . '…';
+    if (mb_strlen($brandTagline) > 80) {
+        $brandTagline = mb_substr($brandTagline, 0, 80);
     }
 
     /* Menüde bulunduğumuz sayfayı işaretlemek için yol karşılaştırması */
@@ -210,12 +210,12 @@
             <span class="min-w-0 leading-tight">
                 <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
-                    {{-- Slogan yalnızca menüye yer bırakan geniş ekranlarda görünür;
-                         taşmayı önlemek için tek satır ve sınırlı genişliktedir.
-                         Sayfa kaydırılınca header'ı daha da inceltmek için gizlenir. --}}
+                    {{-- Logo altın tonuyla uyumlu slogan; tam metin tek satırda görünür.
+                         Sayfa kaydırılınca header'ı inceltmek için gizlenir. --}}
                     <span
-                        class="mt-1 hidden max-w-[260px] truncate text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-700/90 min-[1340px]:block"
-                        :class="scrolled ? 'min-[1340px]:hidden' : 'min-[1340px]:block'"
+                        class="mt-1 hidden whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.08em] text-[#C5A059] lg:block xl:text-[11px]"
+                        :class="scrolled ? 'lg:hidden' : 'lg:block'"
+                        style="color:#C5A059"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
