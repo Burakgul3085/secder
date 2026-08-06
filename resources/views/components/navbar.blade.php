@@ -224,12 +224,15 @@
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent md:block" aria-hidden="true"></span>
 
             <span class="leading-snug">
-                <span class="block whitespace-nowrap font-serif text-[16px] font-extrabold tracking-tight text-slate-950 transition duration-300 group-hover:text-cyan-900 md:text-[1.3rem] lg:text-[1.45rem]">{{ $siteSettings->site_title }}</span>
+                <span
+                    class="block whitespace-nowrap font-serif tracking-tight text-slate-950 transition duration-300 group-hover:text-cyan-900"
+                    style="font-size:1.45rem; font-weight:800; color:#020617;"
+                >{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
-                        class="mt-0.5 hidden whitespace-nowrap text-[6px] font-medium tracking-tight text-[#C5A059] lg:block xl:text-[7px]"
+                        class="mt-0.5 hidden whitespace-nowrap font-medium text-[#C5A059] lg:block"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; letter-spacing:0.01em;"
+                        style="color:#C5A059; font-size:9px; letter-spacing:0.01em; line-height:1.2;"
                         title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
@@ -345,8 +348,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât (ml ile İletişim'den ayrılır) --}}
-        <div class="ml-2 hidden shrink-0 items-center gap-1.5 md:flex xl:ml-3 xl:gap-2">
+        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât (İletişim'den belirgin boşluk) --}}
+        <div class="hidden shrink-0 items-center gap-1.5 md:flex xl:gap-2" style="margin-left:1.5rem;">
             <a
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"
