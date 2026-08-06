@@ -210,11 +210,11 @@
             <span class="min-w-0 leading-tight">
                 <span class="block max-w-[130px] truncate font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 sm:max-w-[170px] md:max-w-[180px] md:text-[1.2rem] lg:max-w-none lg:text-[1.35rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
-                    {{-- Yalnızca sarı slogan: punto ve harf aralığı küçültüldü --}}
+                    {{-- Yalnızca sarı slogan: küçültüldü ve taşarsa "..." ile sığdırıldı (başka hiçbir şey değiştirilmedi) --}}
                     <span
-                        class="mt-1.5 hidden whitespace-nowrap text-[8px] font-semibold uppercase tracking-[0.04em] text-[#C5A059] lg:block xl:text-[9px]"
+                        class="mt-1.5 hidden max-w-full truncate text-[7px] font-semibold uppercase tracking-[0.02em] text-[#C5A059] lg:block xl:text-[8px]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
-                        style="color:#C5A059; letter-spacing:0.04em;"
+                        style="color:#C5A059; letter-spacing:0.02em;"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
