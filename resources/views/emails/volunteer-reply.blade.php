@@ -1,10 +1,14 @@
 @php
+    use App\Support\MailTemplate;
+
     $mailTitle = $subject;
-    $mailGreeting = 'Merhaba ' . $application->first_name . ' ' . $application->last_name . ',';
+    $mailEyebrow = 'Gönüllü Başvurusu';
+    $mailPreheader = 'Gönüllülük başvurunuza SECDER yanıtı hazır.';
+    $mailGreeting = MailTemplate::greeting($application->first_name, $application->last_name);
     $mailIntro = 'Gönüllülük başvurunuza yanıtımız aşağıdadır.';
     $mailContentHtml = nl2br(e($body));
-    $mailFooterNote = 'Saygılarımızla, ' . $siteTitle;
+    $mailContentBoxed = true;
+    $mailShowSignature = true;
 @endphp
 
 @include('emails._layout')
-

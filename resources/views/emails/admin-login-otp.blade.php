@@ -1,9 +1,11 @@
 @php
+    use App\Support\MailTemplate;
+
     $spacedCode = implode(' ', str_split((string) $code));
     $mailContentHtml = '
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:8px 0 4px; border:1px solid #e2e8f0; background:#f8fafc;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:4px 0;">
             <tr>
-                <td style="padding:18px 16px; text-align:center;">
+                <td style="padding:18px 16px; text-align:center; background:#f8fafc; border:1px solid #e2e8f0;">
                     <div style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#94a3b8; margin-bottom:12px;">
                         Doğrulama Kodunuz
                     </div>
@@ -24,8 +26,14 @@
 @include('emails._layout', [
     'mailTitle' => 'Yönetim Paneli Giriş Doğrulama',
     'mailEyebrow' => 'Güvenli Giriş',
-    'mailGreeting' => 'Merhaba ' . ($user->name ?: 'Yönetici') . ',',
+    'mailPreheader' => 'Yönetim paneli giriş doğrulama kodunuz hazır.',
+    'mailGreeting' => MailTemplate::greeting($user->name ?: 'Yönetici'),
     'mailIntro' => 'Yönetim paneli girişinizi tamamlamak için aşağıdaki 4 haneli doğrulama kodunu kullanın.',
     'mailContentHtml' => $mailContentHtml,
-    'mailFooterNote' => 'Bu işlemi siz başlatmadıysanız bu e-postayı dikkate almayın. Kodunuzu kimseyle paylaşmayın.',
+    'mailContentBoxed' => false,
+    'mailShowSignature' => true,
+    'mailFooterNote' => null,
+    'mailAutoNote' => 'Bu işlemi siz başlatmadıysanız bu e-postayı dikkate almayın. Kodunuzu kimseyle paylaşmayın.',
+    'mailPrimaryUrl' => null,
+    'mailSecondaryUrl' => null,
 ])
