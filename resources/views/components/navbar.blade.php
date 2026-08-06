@@ -227,7 +227,7 @@
                 <span class="block whitespace-nowrap font-serif text-[15px] font-semibold tracking-tight text-slate-900 transition duration-300 group-hover:text-cyan-800 md:text-[1.15rem] lg:text-[1.25rem]">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
-                        class="mt-0.5 hidden whitespace-nowrap text-[6.5px] font-semibold uppercase tracking-tight text-[#C5A059] lg:block xl:text-[7.5px]"
+                        class="mt-0.5 hidden whitespace-nowrap text-[7.5px] font-semibold uppercase tracking-tight text-[#C5A059] lg:block xl:text-[8.5px]"
                         :class="scrolled ? 'lg:hidden' : 'lg:block'"
                         style="color:#C5A059; letter-spacing:0.01em;"
                         title="{{ $brandTagline }}"
@@ -365,9 +365,12 @@
                 :aria-expanded="contactOpen"
                 aria-label="{{ __('app.nav.quick_contact') }}"
             >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-                </svg>
+                <span class="grid grid-cols-2 gap-0.5" aria-hidden="true">
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                    <span class="h-1.5 w-1.5 rounded-sm bg-cyan-700/90"></span>
+                </span>
             </button>
             <a
                 href="{{ route('donations') }}"
