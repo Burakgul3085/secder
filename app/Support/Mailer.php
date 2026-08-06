@@ -46,8 +46,9 @@ class Mailer
         $mail->Body = $htmlBody;
         $mail->AltBody = strip_tags($htmlBody);
 
+        /* Logo artık şablonda public URL ile gider; CID yedek (eski istemciler) olarak kalır. */
         if ($settings->logo) {
-            $logoPath = storage_path('app/public/' . $settings->logo);
+            $logoPath = storage_path('app/public/' . ltrim((string) $settings->logo, '/'));
             if (is_file($logoPath)) {
                 $mail->addEmbeddedImage($logoPath, 'bkd-logo');
             }

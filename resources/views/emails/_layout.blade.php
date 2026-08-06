@@ -4,8 +4,14 @@
     $sitePhone = $settings->phone ?: '-';
     $siteEmail = $settings->email ?: env('PHPMAILER_FROM_ADDRESS', '-');
     $websiteUrl = $settings->website_url ?: config('app.url');
-    $logoUrl = $settings->logo ? asset('storage/' . $settings->logo) : asset('images/default-logo.svg');
-    $logoSrc = $settings->logo ? 'cid:bkd-logo' : $logoUrl;
+    /* E-posta istemcilerinde CID bazen gömülmez / kırılır.
+       Bu yüzden her zaman site üzerinden mutlak HTTPS logo URL kullanılır. */
+    $appBase = rtrim((string) ($settings->website_url ?: config('app.url')), '/');
+    if ($settings->logo) {
+        $logoSrc = $appBase . '/storage/' . ltrim((string) $settings->logo, '/');
+    } else {
+        $logoSrc = $appBase . '/images/default-logo.svg';
+    }
     $socialLinks = [
         'Instagram' => $settings->instagram_url,
         'YouTube' => $settings->youtube_url,
