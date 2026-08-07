@@ -20,6 +20,7 @@
         'telegram'  => 'background:#26A5E4;color:#fff;border-color:transparent;',
         'website'   => 'background:#ffffff;color:#155e75;border-color:transparent;',
     ];
+    $panelNavLink = 'flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/10';
 @endphp
 
 <template x-teleport="body">
@@ -48,14 +49,18 @@
             x-transition:leave="transform transition ease-in duration-200"
             x-transition:leave-start="translate-y-0 opacity-100"
             x-transition:leave-end="-translate-y-full opacity-0"
-            class="absolute left-0 right-0 top-0 z-10 max-h-[min(100vh,880px)] overflow-y-auto border-b border-cyan-800/30 bg-gradient-to-b from-cyan-950 via-cyan-900 to-slate-900 text-white shadow-2xl"
+            class="absolute left-0 right-0 top-0 z-10 max-h-[min(100vh,920px)] overflow-y-auto border-b border-cyan-800/30 bg-gradient-to-b from-cyan-950 via-cyan-900 to-slate-900 text-white shadow-2xl"
         >
             <div class="mx-auto max-w-7xl px-4 pb-10 pt-4 md:px-6 md:pb-12 md:pt-6">
-                <div class="mb-6 flex items-start justify-end">
+                <div class="mb-5 flex items-center justify-between gap-3">
+                    <div class="lg:hidden">
+                        <p class="text-lg font-semibold text-white">{{ __('app.panel.menu_heading') }}</p>
+                        <p class="text-xs text-cyan-100/80">{{ __('app.panel.menu_subtitle') }}</p>
+                    </div>
                     <button
                         type="button"
                         @click="contactOpen = false"
-                        class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
+                        class="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
                         aria-label="{{ __('app.panel.close') }}"
                     >
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -63,6 +68,87 @@
                         </svg>
                     </button>
                 </div>
+
+                {{-- Telefon / tablet: sayfa menüsü --}}
+                <div class="mb-8 space-y-2 lg:hidden">
+                    <a href="{{ route('home') }}" @click="contactOpen = false" class="{{ $panelNavLink }} {{ request()->routeIs('home') ? 'border-cyan-300/40 bg-white/10' : '' }}">
+                        <span>{{ __('app.nav.home') }}</span>
+                        <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                    </a>
+
+                    @foreach($headerTopItems as $item)
+                        @php
+                            $children = $headerChildren->get($item->id, collect());
+                            $itemLabel = navMenuLabel($item->label);
+                        @endphp
+                        @if ($children->isNotEmpty())
+                            <details class="group overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                                <summary class="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-white">
+                                    <span class="inline-flex w-full items-center justify-between gap-2">
+                                        {{ $itemLabel }}
+                                        <svg class="h-4 w-4 text-cyan-200/70 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 8l4 4 4-4" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="border-t border-white/10 bg-black/10 py-1">
+                                    @foreach($children as $child)
+                                        <a
+                                            href="{{ $child->url }}"
+                                            target="{{ $child->open_in_new_tab ? '_blank' : '_self' }}"
+                                            @click="contactOpen = false"
+                                            class="block px-4 py-2.5 text-sm font-medium text-cyan-50/95 transition hover:bg-white/10 hover:text-white"
+                                        >{{ navMenuLabel($child->label) }}</a>
+                                    @endforeach
+                                </div>
+                            </details>
+                        @else
+                            <a
+                                href="{{ $item->url }}"
+                                target="{{ $item->open_in_new_tab ? '_blank' : '_self' }}"
+                                @click="contactOpen = false"
+                                class="{{ $panelNavLink }}"
+                            >
+                                <span>{{ $itemLabel }}</span>
+                                <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                            </a>
+                        @endif
+                    @endforeach
+
+                    <a href="{{ route('news.index') }}" @click="contactOpen = false" class="{{ $panelNavLink }} {{ request()->routeIs('news.*') ? 'border-cyan-300/40 bg-white/10' : '' }}">
+                        <span>{{ __('app.nav.news_short') }}</span>
+                        <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                    </a>
+                    <a href="{{ route('gallery') }}" @click="contactOpen = false" class="{{ $panelNavLink }} {{ request()->routeIs('gallery') ? 'border-cyan-300/40 bg-white/10' : '' }}">
+                        <span>{{ __('app.nav.gallery') }}</span>
+                        <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                    </a>
+                    <a href="{{ route('contact') }}" @click="contactOpen = false" class="{{ $panelNavLink }} {{ request()->routeIs('contact') ? 'border-cyan-300/40 bg-white/10' : '' }}">
+                        <span>{{ __('app.nav.contact') }}</span>
+                        <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                    </a>
+                    <a href="{{ route('zakat.index') }}" @click="contactOpen = false" class="{{ $panelNavLink }} {{ request()->routeIs('zakat.*') ? 'border-cyan-300/40 bg-white/10' : '' }}">
+                        <span>{{ __('app.nav.zakat_short') }}</span>
+                        <svg class="h-4 w-4 text-cyan-200/70" fill="none" viewBox="0 0 20 20" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7l6 6-6 6"/></svg>
+                    </a>
+
+                    <div class="pt-2">
+                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-wider text-cyan-100/70">{{ __('app.panel.actions_heading') }}</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <a
+                                href="{{ route('donations') }}"
+                                @click="contactOpen = false"
+                                class="inline-flex items-center justify-center rounded-xl bg-white px-3 py-3 text-center text-xs font-bold uppercase tracking-wide text-cyan-900 shadow-sm"
+                            >{{ __('app.nav.donate') }}</a>
+                            <a
+                                href="{{ route('volunteer') }}"
+                                @click="contactOpen = false"
+                                class="inline-flex items-center justify-center rounded-xl border border-white/25 bg-white/10 px-3 py-3 text-center text-xs font-bold uppercase tracking-wide text-white"
+                            >{{ __('app.nav.volunteer') }}</a>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid gap-10 md:grid-cols-2 md:gap-12">
                     <div>
                         <h2 class="text-xl font-semibold text-white md:text-2xl">{{ __('app.panel.contact_heading') }}</h2>

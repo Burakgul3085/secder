@@ -18,14 +18,17 @@ return [
         'gallery_title'     => 'Media Gallery',
         'donate'            => 'Our Account Numbers',
         'donate_short'      => 'Our Accounts',
+        'donate_mobile'     => 'Accounts',
         'zakat_calculate'   => 'Calculate Zakat',
         'zakat_short'       => 'Calculate Zakat',
         'volunteer'         => 'Volunteer',
         'volunteer_short'   => 'Volunteer',
         'quick_contact'     => 'Quick contact panel',
+        'menu_open'         => 'Menu',
         'menu_empty'        => 'No menu items added yet',
         'lang_selector'     => 'Language selector',
         'website_aria'      => 'Website',
+        'address_open'      => 'Address and contact',
     ],
 
     /*
@@ -576,6 +579,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'panel' => [
+        'menu_heading'        => 'Menu',
+        'menu_subtitle'       => 'Pages and quick access',
         'contact_heading'     => 'Get in Touch',
         'contact_subtitle'    => 'The information below is managed from the admin panel.',
         'label_email'         => 'Email',
@@ -588,6 +593,7 @@ return [
         'social_empty'        => 'Social media links will appear here once added in the admin panel.',
         'close'               => 'Close panel',
         'website_label'       => 'Website',
+        'actions_heading'     => 'Quick actions',
     ],
 
     /*

@@ -18,14 +18,17 @@ return [
         'gallery_title'     => 'Medya Galerisi',
         'donate'            => 'Hesap Numaralarımız',
         'donate_short'      => 'Hesap Numaralarımız',
+        'donate_mobile'     => 'Hesaplar',
         'zakat_calculate'   => 'Zekât Hesapla',
         'zakat_short'       => 'Zekât Hesapla',
         'volunteer'         => 'Gönüllü Ol',
         'volunteer_short'   => 'Gönüllü',
         'quick_contact'     => 'Hızlı iletişim paneli',
+        'menu_open'         => 'Menü',
         'menu_empty'        => 'Menü henüz eklenmedi',
         'lang_selector'     => 'Dil seçici',
         'website_aria'      => 'Web sitesi',
+        'address_open'      => 'Adres ve iletişim',
     ],
 
     /*
@@ -613,6 +616,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'panel' => [
+        'menu_heading'        => 'Menü',
+        'menu_subtitle'       => 'Sayfalar ve hızlı erişim',
         'contact_heading'     => 'İletişime geçin',
         'contact_subtitle'    => 'Aşağıdaki bilgiler yönetim panelinden yönetilir.',
         'label_email'         => 'E-posta',
@@ -625,6 +630,7 @@ return [
         'social_empty'        => 'Sosyal medya bağlantıları yönetim panelinde eklenince burada görünecektir.',
         'close'               => 'Paneli kapat',
         'website_label'       => 'Web sitesi',
+        'actions_heading'     => 'Hızlı işlemler',
     ],
 
     /*
