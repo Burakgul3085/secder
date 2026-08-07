@@ -172,36 +172,19 @@
     }
 }
 
-/* Marka başlığı */
+/* Marka başlığı — telefonda küçük; yalnızca geniş masaüstünde 2rem */
 .secder-brand-title {
     font-family: Georgia, 'Times New Roman', Times, serif !important;
     font-weight: 900 !important;
     color: #000000 !important;
     line-height: 1.05 !important;
     letter-spacing: -0.02em !important;
-    font-size: 2rem !important; /* masaüstü varsayılan */
+    font-size: 1.25rem !important;
 }
 
-/* Telefon / tablet header markası — tüm iPhone’larda okunaklı */
-.secder-brand-title--phone {
-    font-size: 1.25rem !important; /* 20px — SE */
-}
-
-@media (min-width: 390px) {
-    .secder-brand-title--phone {
-        font-size: 1.35rem !important; /* XR / 12–14 Pro */
-    }
-}
-
-@media (min-width: 430px) {
-    .secder-brand-title--phone {
-        font-size: 1.45rem !important; /* Pro Max */
-    }
-}
-
-@media (min-width: 640px) {
-    .secder-brand-title--phone {
-        font-size: 1.6rem !important; /* tablet portrait */
+@media (min-width: 1280px) {
+    .secder-brand-title {
+        font-size: 2rem !important;
     }
 }
 
@@ -213,52 +196,86 @@
     font-size: 0.75rem !important;
 }
 
-/* Telefon header: logo, ikonlar, hesap CTA */
+/*
+ * Telefon / tablet header (&lt;1280px):
+ * iPhone SE görünümü tüm telefonlarda aynı — taşma / üst üste binme yok.
+ */
+.secder-phone-header {
+    width: 100%;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.secder-phone-header__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.secder-phone-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    flex: 1 1 0%;
+    overflow: hidden;
+}
+
+.secder-phone-header__brand-text {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.secder-phone-header .secder-brand-title,
+.secder-phone-header .secder-brand-title--phone {
+    display: block;
+    font-size: 1.25rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.secder-phone-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex: 0 0 auto;
+}
+
 .secder-phone-logo {
     width: 2.25rem;
     height: 2.25rem;
-}
-
-@media (min-width: 390px) {
-    .secder-phone-logo {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
+    flex-shrink: 0;
 }
 
 .secder-phone-iconbtn {
     width: 2.25rem;
     height: 2.25rem;
-}
-
-@media (min-width: 390px) {
-    .secder-phone-iconbtn {
-        width: 2.375rem;
-        height: 2.375rem;
-    }
+    flex-shrink: 0;
 }
 
 .secder-phone-donate {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
     min-height: 2.5rem;
+    margin-top: 0.625rem;
     padding: 0.55rem 1rem;
-    font-size: 0.8125rem; /* 13px — SE’de tam metin */
+    font-size: 0.875rem;
+    font-weight: 700;
     letter-spacing: 0.01em;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
-@media (min-width: 390px) {
-    .secder-phone-donate {
-        min-height: 2.625rem;
-        font-size: 0.875rem; /* 14px */
-    }
-}
-
-@media (min-width: 430px) {
-    .secder-phone-donate {
-        font-size: 0.9375rem; /* 15px */
-    }
-}
-
-/* Üst bar sosyal ikonları — eşit ölçü, sıkışmaz */
+/* Üst bar sosyal ikonları */
 .secder-topbar-icon {
     width: 1.5rem;
     height: 1.5rem;
@@ -278,18 +295,6 @@
     .secder-topbar-icon__svg {
         width: 0.8125rem;
         height: 0.8125rem;
-    }
-}
-
-@media (min-width: 430px) {
-    .secder-topbar-icon {
-        width: 1.75rem;
-        height: 1.75rem;
-    }
-
-    .secder-topbar-icon__svg {
-        width: 0.875rem;
-        height: 0.875rem;
     }
 }
 

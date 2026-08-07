@@ -210,15 +210,25 @@
     @endphp
 
     {{-- ============================================================
-         TELEFON / TABLET (&lt;1280px) — kurumsal 2 satır:
-         1) Logo + SECDER | Dil · Galeri · Menü
-         2) Tam genişlik Hesap Numaraları
-         SE / XR / 12–16 Pro hepsinde taşma yok.
+         TELEFON / TABLET (&lt;1280px) — SE ile aynı kurumsal düzen:
+         tüm iPhone’larda (SE / XR / 12–16 Pro) özdeş davranış.
          ============================================================ --}}
-    <div class="xl:hidden">
-        <div class="secder-phone-header mx-auto max-w-7xl px-3 pt-2.5 pb-2.5">
-            <div class="flex items-center justify-between gap-3">
-                <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2">
+    <div class="xl:hidden" style="width:100%;">
+        {{-- Build olmadan da çalışsın diye kritik kurallar burada --}}
+        <style>
+            .secder-phone-header { width: 100% !important; max-width: 80rem; margin: 0 auto; box-sizing: border-box; padding: 0.625rem 0.75rem 0.625rem; }
+            .secder-phone-header__row { display: flex !important; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%; }
+            .secder-phone-header__brand { display: flex !important; align-items: center; gap: 0.5rem; min-width: 0; flex: 1 1 0%; overflow: hidden; }
+            .secder-phone-header__brand-text { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+            .secder-phone-header .secder-brand-title { display: block; font-size: 1.25rem !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+            .secder-phone-header__actions { display: flex !important; align-items: center; gap: 0.375rem; flex: 0 0 auto; }
+            .secder-phone-logo { width: 2.25rem !important; height: 2.25rem !important; flex-shrink: 0; }
+            .secder-phone-iconbtn { width: 2.25rem !important; height: 2.25rem !important; flex-shrink: 0; display: inline-flex !important; align-items: center; justify-content: center; }
+            .secder-phone-donate { display: flex !important; width: 100% !important; align-items: center; justify-content: center; min-height: 2.5rem; margin-top: 0.625rem; padding: 0.55rem 1rem; font-size: 0.875rem; font-weight: 700; white-space: nowrap; box-sizing: border-box; }
+        </style>
+        <div class="secder-phone-header">
+            <div class="secder-phone-header__row">
+                <a href="{{ route('home') }}" class="secder-phone-header__brand group">
                     <span class="relative shrink-0">
                         <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/40 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                         <img
@@ -227,17 +237,17 @@
                             class="secder-phone-logo relative rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80"
                         >
                     </span>
-                    <span class="min-w-0 leading-none">
-                        <span class="secder-brand-title secder-brand-title--phone block whitespace-nowrap">{{ $siteSettings->site_title }}</span>
+                    <span class="secder-phone-header__brand-text leading-none">
+                        <span class="secder-brand-title secder-brand-title--phone">{{ $siteSettings->site_title }}</span>
                     </span>
                 </a>
 
-                <div class="flex shrink-0 items-center gap-1.5 min-[400px]:gap-2">
+                <div class="secder-phone-header__actions">
                     <div class="relative" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                         <button
                             type="button"
                             @click="mobileLangOpen = !mobileLangOpen"
-                            class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm"
+                            class="secder-phone-iconbtn rounded-lg border border-slate-200 bg-white shadow-sm"
                             aria-label="{{ __('app.nav.lang_selector') }}"
                         >
                             <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-3.5 w-5 rounded object-cover">
@@ -264,7 +274,7 @@
                         href="{{ route('gallery') }}"
                         title="{{ __('app.nav.gallery_title') }}"
                         aria-label="{{ __('app.nav.gallery_title') }}"
-                        class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700"
+                        class="secder-phone-iconbtn rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -275,7 +285,7 @@
                     <button
                         type="button"
                         @click="contactOpen = true"
-                        class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
+                        class="secder-phone-iconbtn rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
                         :aria-expanded="contactOpen"
                         aria-label="{{ __('app.nav.menu_open') }}"
                     >
@@ -288,7 +298,7 @@
 
             <a
                 href="{{ route('donations') }}"
-                class="secder-phone-donate mt-2.5 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 font-bold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110"
+                class="secder-phone-donate rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110"
                 title="{{ __('app.nav.donate_mobile') }}"
             >
                 {{ __('app.nav.donate_mobile') }}
