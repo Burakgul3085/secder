@@ -215,8 +215,8 @@
         class="mx-auto flex max-w-7xl items-center gap-2 px-2.5 py-2 transition-all duration-300 sm:gap-3 sm:px-4 lg:gap-4 lg:px-6"
         :class="scrolled ? 'lg:py-1.5' : 'lg:py-2'"
     >
-        {{-- SOL: Telefonda yalnız logo (alan açılır, aksiyonlar sola kayar); sm+ SECDER yazısı --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3" title="{{ $siteSettings->site_title }}">
+        {{-- SOL: Logo + SECDER + slogan --}}
+        <a href="{{ route('home') }}" class="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -229,7 +229,7 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent lg:block" aria-hidden="true"></span>
 
-            <span class="hidden min-w-0 leading-none sm:block">
+            <span class="min-w-0 leading-none">
                 <span class="secder-brand-title block truncate whitespace-nowrap">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span

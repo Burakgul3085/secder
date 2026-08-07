@@ -179,7 +179,7 @@
     color: #000000 !important;
     line-height: 1.05 !important;
     letter-spacing: -0.02em !important;
-    font-size: 1.25rem !important; /* ~20px phone */
+    font-size: 1.05rem !important; /* telefonda SECDER + hesap butonu yan yana sığsın */
 }
 
 @media (min-width: 640px) {
