@@ -118,18 +118,18 @@
                     @endif
                 </div>
 
-                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-center gap-1.5 overflow-x-auto px-1">
+                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-end gap-2 overflow-x-auto py-0.5 pl-1 pr-0.5 sm:justify-center sm:gap-2.5">
                     @foreach ($topBarSocialLinks as $social)
                         <a
                             href="{{ $social['url'] }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110"
+                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
                             style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
                             title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                             aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                         >
-                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3.5 w-3.5" />
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         </a>
                     @endforeach
                 </div>
