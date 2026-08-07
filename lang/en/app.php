@@ -19,6 +19,8 @@ return [
         'donate'            => 'Our Account Numbers',
         'donate_short'      => 'Our Accounts',
         'donate_mobile'     => 'Our Account Numbers',
+        'donate_mobile_l1'  => 'Account',
+        'donate_mobile_l2'  => 'Numbers',
         'zakat_calculate'   => 'Calculate Zakat',
         'zakat_short'       => 'Calculate Zakat',
         'volunteer'         => 'Volunteer',

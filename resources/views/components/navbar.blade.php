@@ -242,6 +242,35 @@
         </a>
 
         {{-- Telefon / tablet: Dil · Galeri · Menü · Hesap Numaralarımız --}}
+        {{-- Inline CSS: npm build olmadan da telefonda punto/taşma düzelir --}}
+        <style>
+            @media (max-width: 639.98px) {
+                a.secder-donate-chip {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 0.2rem !important;
+                    flex-shrink: 0 !important;
+                    max-width: 4.5rem !important;
+                    min-height: 2rem !important;
+                    padding: 0.2rem 0.35rem !important;
+                    border-radius: 9999px !important;
+                }
+                a.secder-donate-chip .secder-donate-chip__label {
+                    display: block !important;
+                    font-size: 7px !important;
+                    font-weight: 700 !important;
+                    line-height: 1.05 !important;
+                    letter-spacing: -0.03em !important;
+                    text-transform: uppercase !important;
+                    text-align: center !important;
+                }
+                a.secder-donate-chip .secder-donate-chip__icon {
+                    width: 0.65rem !important;
+                    height: 0.65rem !important;
+                    flex-shrink: 0 !important;
+                }
+            }
+        </style>
         <div class="ml-auto flex min-w-0 shrink items-center gap-1 lg:hidden">
             <div class="relative shrink-0" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                 <button
@@ -293,16 +322,18 @@
             </button>
             <a
                 href="{{ route('donations') }}"
-                class="inline-flex min-h-8 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2 py-1 text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:min-h-0 sm:max-w-[9.5rem] sm:gap-1.5 sm:px-2.5 md:max-w-none"
+                class="secder-donate-chip bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110"
                 title="{{ __('app.nav.donate_mobile') }}"
+                aria-label="{{ __('app.nav.donate_mobile') }}"
             >
-                <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="currentColor" class="secder-donate-chip__icon" aria-hidden="true">
                     <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
                 </svg>
-                {{-- Telefon: küçük punto + satır kırılır; tablet: biraz küçük tek satıra yakın --}}
-                <span class="text-center text-[8px] font-bold uppercase leading-[1.05] tracking-tight sm:text-[9px] sm:leading-tight md:text-[10px] md:leading-none">
-                    {{ __('app.nav.donate_mobile') }}
+                {{-- Telefon: 2 satır + 7px (CSS); tablet+: tek satır --}}
+                <span class="secder-donate-chip__label sm:hidden">
+                    {{ __('app.nav.donate_mobile_l1') }}<br>{{ __('app.nav.donate_mobile_l2') }}
                 </span>
+                <span class="secder-donate-chip__label hidden sm:inline">{{ __('app.nav.donate_mobile') }}</span>
             </a>
         </div>
 

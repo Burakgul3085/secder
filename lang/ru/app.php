@@ -19,6 +19,8 @@ return [
         'donate'            => 'Наши номера счетов',
         'donate_short'      => 'Счета',
         'donate_mobile'     => 'Наши номера счетов',
+        'donate_mobile_l1'  => 'Номера',
+        'donate_mobile_l2'  => 'счетов',
         'zakat_calculate'   => 'Рассчитать закят',
         'zakat_short'       => 'Рассчитать закят',
         'volunteer'         => 'Стать волонтёром',

@@ -19,6 +19,8 @@ return [
         'donate'            => 'أرقام حساباتنا',
         'donate_short'      => 'الحسابات',
         'donate_mobile'     => 'أرقام حساباتنا',
+        'donate_mobile_l1'  => 'أرقام',
+        'donate_mobile_l2'  => 'حساباتنا',
         'zakat_calculate'   => 'حساب الزكاة',
         'zakat_short'       => 'حساب الزكاة',
         'volunteer'         => 'كن متطوعاً',
