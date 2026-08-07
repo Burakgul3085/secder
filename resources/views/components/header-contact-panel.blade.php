@@ -28,7 +28,7 @@
         x-show="contactOpen"
         x-cloak
         @keydown.escape.window="contactOpen = false"
-        class="fixed inset-0 z-[100]"
+        class="fixed inset-0 z-[10050]"
     >
         <div
             x-show="contactOpen"
@@ -49,25 +49,26 @@
             x-transition:leave="transform transition ease-in duration-200"
             x-transition:leave-start="translate-y-0 opacity-100"
             x-transition:leave-end="-translate-y-full opacity-0"
-            class="absolute left-0 right-0 top-0 z-10 max-h-[min(100vh,920px)] overflow-y-auto border-b border-cyan-800/30 bg-gradient-to-b from-cyan-950 via-cyan-900 to-slate-900 text-white shadow-2xl"
+            class="absolute inset-x-0 top-0 z-10 flex h-[100dvh] max-h-[100dvh] flex-col border-b border-cyan-800/30 bg-gradient-to-b from-cyan-950 via-cyan-900 to-slate-900 text-white shadow-2xl lg:h-auto lg:max-h-[min(100dvh,920px)]"
         >
-            <div class="mx-auto max-w-7xl px-4 pb-10 pt-4 md:px-6 md:pb-12 md:pt-6">
-                <div class="mb-5 flex items-center justify-between gap-3">
-                    <div class="lg:hidden">
-                        <p class="text-lg font-semibold text-white">{{ __('app.panel.menu_heading') }}</p>
-                        <p class="text-xs text-cyan-100/80">{{ __('app.panel.menu_subtitle') }}</p>
-                    </div>
-                    <button
-                        type="button"
-                        @click="contactOpen = false"
-                        class="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
-                        aria-label="{{ __('app.panel.close') }}"
-                    >
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-3 md:px-6">
+                <div class="lg:hidden">
+                    <p class="text-lg font-semibold text-white">{{ __('app.panel.menu_heading') }}</p>
+                    <p class="text-xs text-cyan-100/80">{{ __('app.panel.menu_subtitle') }}</p>
                 </div>
+                <button
+                    type="button"
+                    @click="contactOpen = false"
+                    class="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
+                    aria-label="{{ __('app.panel.close') }}"
+                >
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mx-auto w-full max-w-7xl flex-1 overflow-y-auto overscroll-contain px-4 pb-28 pt-4 md:px-6 md:pb-12 md:pt-6" style="-webkit-overflow-scrolling:touch;">
 
                 {{-- Telefon / tablet: sayfa menüsü --}}
                 <div class="mb-8 space-y-2 lg:hidden">

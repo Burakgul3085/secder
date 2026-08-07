@@ -73,6 +73,7 @@
             this.scrolled = window.scrollY > 140;
             this.$watch('contactOpen', (v) => {
                 document.documentElement.classList.toggle('overflow-hidden', v);
+                document.body.classList.toggle('secder-menu-open', v);
             });
         }
     }"
@@ -105,26 +106,37 @@
             ];
         @endphp
 
-        {{-- Telefon / tablet: kaydırmasız, sabit kurumsal üst şerit --}}
+        {{-- Telefon / tablet: telefon | sosyal | e-posta + adres --}}
         <div class="lg:hidden">
-            <div class="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-1.5 text-[11px]">
-                <div class="flex min-w-0 flex-1 items-center gap-2.5">
+            <div class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
+                <div class="flex min-w-0 shrink-0 items-center">
                     @if(!empty($siteSettings->phone))
-                        <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex min-w-0 items-center gap-1 font-semibold text-cyan-50 transition hover:text-white">
+                        <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex items-center gap-1 font-semibold text-cyan-50 transition hover:text-white">
                             <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0"><path d="M2 3.75A1.75 1.75 0 0 1 3.75 2h2.31c.83 0 1.54.58 1.7 1.39l.39 1.98a1.75 1.75 0 0 1-.5 1.57l-1.1 1.1a13.13 13.13 0 0 0 5.4 5.4l1.1-1.1a1.75 1.75 0 0 1 1.57-.5l1.98.4A1.75 1.75 0 0 1 18 13.94v2.31A1.75 1.75 0 0 1 16.25 18h-.75C8.6 18 2 11.4 2 3.75Z" /></svg>
-                            <span class="truncate">{{ $siteSettings->phone }}</span>
-                        </a>
-                    @endif
-                    @if(!empty($siteSettings->email))
-                        <a href="mailto:{{ $siteSettings->email }}" class="hidden min-w-0 items-center gap-1 text-cyan-100/90 transition hover:text-white sm:inline-flex">
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
-                            <span class="max-w-[140px] truncate">{{ $siteSettings->email }}</span>
+                            <span>{{ $siteSettings->phone }}</span>
                         </a>
                     @endif
                 </div>
+
+                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-center gap-1.5 overflow-x-auto px-1">
+                    @foreach ($topBarSocialLinks as $social)
+                        <a
+                            href="{{ $social['url'] }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110"
+                            style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
+                            title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                            aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                        >
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3.5 w-3.5" />
+                        </a>
+                    @endforeach
+                </div>
+
                 <div class="flex shrink-0 items-center gap-1.5">
                     @if(!empty($siteSettings->email))
-                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:hidden" aria-label="{{ $siteSettings->email }}">
+                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20" aria-label="{{ $siteSettings->email }}">
                             <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
                         </a>
                     @endif

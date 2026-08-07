@@ -208,6 +208,14 @@
     }
 }
 
+/* Menü açıkken yüzen WhatsApp / yukarı butonu paneli kapatmasın */
+body.secder-menu-open .wa-float,
+body.secder-menu-open .back-to-top {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
 @keyframes about-orb-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
