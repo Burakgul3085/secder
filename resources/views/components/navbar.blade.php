@@ -84,7 +84,7 @@
 >
     <div
         class="overflow-hidden border-b border-cyan-800/60 bg-cyan-900 text-cyan-50 transition-all duration-300"
-        :class="scrolled ? 'max-h-0 border-b-0 py-0 opacity-0 pointer-events-none' : 'max-h-14 opacity-100 lg:max-h-24'"
+        :class="scrolled ? 'max-h-0 border-b-0 py-0 opacity-0 pointer-events-none' : 'max-h-14 opacity-100 xl:max-h-24'"
     >
         @php
             $topBarSocialLinks = $siteSettings->activeSocialLinks();
@@ -106,9 +106,9 @@
             ];
         @endphp
 
-        {{-- Telefon / tablet (iPad Pro dahil &lt;1280px): telefon | sosyal + e-posta + adres --}}
+        {{-- Telefon / tablet (&lt;1280px): telefon | sosyal | e-posta | adres --}}
         <div class="xl:hidden">
-            <div class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
+            <div class="secder-topbar-mobile mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
                 <div class="flex shrink-0 items-center">
                     @if(!empty($siteSettings->phone))
                         <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex items-center gap-1 font-semibold text-cyan-50 transition hover:text-white">
@@ -118,37 +118,38 @@
                     @endif
                 </div>
 
-                {{-- justify-end taşınca ilk ikonları kesiyordu; soldan başlar, gerekirse kayar --}}
-                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-start gap-2 overflow-x-auto overscroll-x-contain py-0.5 sm:justify-end sm:gap-2.5">
-                    @foreach ($topBarSocialLinks as $social)
-                        <a
-                            href="{{ $social['url'] }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
-                            style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
-                            title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
-                            aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
-                        >
-                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                        </a>
-                    @endforeach
-                    @if(!empty($siteSettings->email))
-                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7" aria-label="{{ $siteSettings->email }}">
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 sm:h-3.5 sm:w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
-                        </a>
-                    @endif
-                    @if(!empty($siteSettings->address))
-                        <button
-                            type="button"
-                            @click="contactOpen = true"
-                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7"
-                            title="{{ $siteSettings->address }}"
-                            aria-label="{{ __('app.nav.address_open') }}"
-                        >
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 sm:h-3.5 sm:w-3.5"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
-                        </button>
-                    @endif
+                <div class="flex min-w-0 flex-1 justify-end overflow-hidden">
+                    <div class="no-scrollbar flex items-center gap-1.5 overflow-x-auto overscroll-x-contain py-0.5 min-[400px]:gap-2">
+                        @foreach ($topBarSocialLinks as $social)
+                            <a
+                                href="{{ $social['url'] }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="secder-topbar-icon inline-flex shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110"
+                                style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
+                                title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                                aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
+                            >
+                                <x-social-brand-icon :platform="$social['platform']" icon-class="secder-topbar-icon__svg" />
+                            </a>
+                        @endforeach
+                        @if(!empty($siteSettings->email))
+                            <a href="mailto:{{ $siteSettings->email }}" class="secder-topbar-icon inline-flex shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20" aria-label="{{ $siteSettings->email }}">
+                                <svg viewBox="0 0 20 20" fill="currentColor" class="secder-topbar-icon__svg"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
+                            </a>
+                        @endif
+                        @if(!empty($siteSettings->address))
+                            <button
+                                type="button"
+                                @click="contactOpen = true"
+                                class="secder-topbar-icon inline-flex shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20"
+                                title="{{ $siteSettings->address }}"
+                                aria-label="{{ __('app.nav.address_open') }}"
+                            >
+                                <svg viewBox="0 0 20 20" fill="currentColor" class="secder-topbar-icon__svg"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
+                            </button>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -208,100 +209,125 @@
             ->groupBy('parent_id');
     @endphp
 
-    {{-- Kurumsal header: [Marka SOL] [Menü ORTA] [Aksiyonlar SAĞ] --}}
+    {{-- ============================================================
+         TELEFON / TABLET (&lt;1280px) — kurumsal 2 satır:
+         1) Logo + SECDER | Dil · Galeri · Menü
+         2) Tam genişlik Hesap Numaraları
+         SE / XR / 12–16 Pro hepsinde taşma yok.
+         ============================================================ --}}
+    <div class="xl:hidden">
+        <div class="secder-phone-header mx-auto max-w-7xl px-3 pt-2.5 pb-2.5">
+            <div class="flex items-center justify-between gap-3">
+                <a href="{{ route('home') }}" class="group flex min-w-0 items-center gap-2">
+                    <span class="relative shrink-0">
+                        <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/40 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
+                        <img
+                            src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}"
+                            alt="{{ $siteSettings->site_title }}"
+                            class="secder-phone-logo relative rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80"
+                        >
+                    </span>
+                    <span class="min-w-0 leading-none">
+                        <span class="secder-brand-title secder-brand-title--phone block whitespace-nowrap">{{ $siteSettings->site_title }}</span>
+                    </span>
+                </a>
+
+                <div class="flex shrink-0 items-center gap-1.5 min-[400px]:gap-2">
+                    <div class="relative" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
+                        <button
+                            type="button"
+                            @click="mobileLangOpen = !mobileLangOpen"
+                            class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm"
+                            aria-label="{{ __('app.nav.lang_selector') }}"
+                        >
+                            <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-3.5 w-5 rounded object-cover">
+                        </button>
+                        <div
+                            x-show="mobileLangOpen"
+                            x-cloak
+                            class="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
+                        >
+                            @foreach($langList as $lang)
+                                <a
+                                    href="{{ route('locale.switch', $lang['code']) }}"
+                                    class="flex items-center gap-2 border-b border-slate-100 px-3 py-2.5 text-xs font-semibold text-slate-700 last:border-0 hover:bg-cyan-50 {{ $currentLocale === $lang['code'] ? 'bg-cyan-50' : '' }}"
+                                >
+                                    <img src="{{ $lang['flag'] }}" alt="{{ strtoupper($lang['code']) }}" class="h-4 w-5 rounded object-cover">
+                                    <span class="flex-1">{{ $lang['label'] }}</span>
+                                    <span class="text-[10px] uppercase text-slate-400">{{ $lang['code'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <a
+                        href="{{ route('gallery') }}"
+                        title="{{ __('app.nav.gallery_title') }}"
+                        aria-label="{{ __('app.nav.gallery_title') }}"
+                        class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                        </svg>
+                    </a>
+
+                    <button
+                        type="button"
+                        @click="contactOpen = true"
+                        class="secder-phone-iconbtn inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
+                        :aria-expanded="contactOpen"
+                        aria-label="{{ __('app.nav.menu_open') }}"
+                    >
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <a
+                href="{{ route('donations') }}"
+                class="secder-phone-donate mt-2.5 flex w-full items-center justify-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 font-bold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110"
+                title="{{ __('app.nav.donate_mobile') }}"
+            >
+                {{ __('app.nav.donate_mobile') }}
+            </a>
+        </div>
+    </div>
+
+    {{-- ============================================================
+         MASAÜSTÜ (≥1280px): [Marka] [Menü] [Aksiyonlar]
+         ============================================================ --}}
     <div
-        class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 transition-all duration-300 sm:gap-3 sm:px-4 xl:gap-4 xl:px-6"
+        class="mx-auto hidden max-w-7xl items-center gap-4 px-6 py-2 transition-all duration-300 xl:flex"
         :class="scrolled ? 'xl:py-1.5' : 'xl:py-2'"
     >
-        {{-- SOL: Logo + SECDER — dar ekranda kısalsın, sağ aksiyonların üstüne binmesin --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden sm:gap-2 xl:flex-none xl:gap-3">
+        <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
                     src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}"
                     alt="{{ $siteSettings->site_title }}"
-                    class="relative h-9 w-9 rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300 sm:h-10 sm:w-10"
-                    :class="scrolled ? 'xl:h-9 xl:w-9' : 'xl:h-11 xl:w-11'"
+                    class="relative rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300"
+                    :class="scrolled ? 'h-9 w-9' : 'h-11 w-11'"
                 >
             </span>
-
-            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent xl:block" aria-hidden="true"></span>
-
-            <span class="min-w-0 flex-1 overflow-hidden leading-none xl:flex-none">
-                <span class="secder-brand-title block truncate whitespace-nowrap">{{ $siteSettings->site_title }}</span>
+            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent" aria-hidden="true"></span>
+            <span class="min-w-0 leading-none">
+                <span class="secder-brand-title block whitespace-nowrap">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
-                        class="secder-brand-tagline mt-0.5 hidden truncate whitespace-nowrap sm:block sm:mt-1"
-                        :class="scrolled ? 'xl:hidden' : ''"
+                        class="secder-brand-tagline mt-1 block truncate whitespace-nowrap"
+                        :class="scrolled ? 'hidden' : ''"
                         title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
         </a>
 
-        {{-- Telefon / tablet: aksiyonlar asla ezilmesin (shrink-0) --}}
-        <div class="flex shrink-0 items-center gap-1 sm:gap-1.5 xl:hidden">
-            <div class="relative shrink-0" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
-                <button
-                    type="button"
-                    @click="mobileLangOpen = !mobileLangOpen"
-                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm sm:h-9 sm:w-9"
-                    aria-label="{{ __('app.nav.lang_selector') }}"
-                >
-                    <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-3.5 w-5 rounded object-cover sm:h-4">
-                </button>
-                <div
-                    x-show="mobileLangOpen"
-                    x-cloak
-                    class="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl"
-                >
-                    @foreach($langList as $lang)
-                        <a
-                            href="{{ route('locale.switch', $lang['code']) }}"
-                            class="flex items-center gap-2 border-b border-slate-100 px-3 py-2.5 text-xs font-semibold text-slate-700 last:border-0 hover:bg-cyan-50 {{ $currentLocale === $lang['code'] ? 'bg-cyan-50' : '' }}"
-                        >
-                            <img src="{{ $lang['flag'] }}" alt="{{ strtoupper($lang['code']) }}" class="h-4 w-5 rounded object-cover">
-                            <span class="flex-1">{{ $lang['label'] }}</span>
-                            <span class="text-[10px] uppercase text-slate-400">{{ $lang['code'] }}</span>
-                        </a>
-                    @endforeach
-                </div>
-            </div>
-            <a
-                href="{{ route('gallery') }}"
-                title="{{ __('app.nav.gallery_title') }}"
-                aria-label="{{ __('app.nav.gallery_title') }}"
-                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 sm:h-9 sm:w-9"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-[18px] sm:w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                </svg>
-            </a>
-            <button
-                type="button"
-                @click="contactOpen = true"
-                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 sm:h-9 sm:w-9"
-                :aria-expanded="contactOpen"
-                aria-label="{{ __('app.nav.menu_open') }}"
-            >
-                <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-                </svg>
-            </button>
-            <a
-                href="{{ route('donations') }}"
-                class="inline-flex h-8 shrink-0 items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-semibold leading-none text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:px-3 sm:text-[11px] sm:font-bold"
-                title="{{ __('app.nav.donate_mobile') }}"
-                aria-label="{{ __('app.nav.donate_mobile') }}"
-            >
-                <span class="whitespace-nowrap">{{ __('app.nav.donate_mobile') }}</span>
-            </a>
-        </div>
-
-        {{-- ORTA: Menü — yalnızca geniş masaüstü (≥1280px) --}}
         <nav
-            class="hidden min-w-0 items-center xl:flex"
+            class="flex min-w-0 items-center"
             style="flex:1 1 0%; min-width:0; justify-content:space-between; align-items:center; padding:0 0.15rem 0 0.5rem; font-size:15px;"
         >
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
@@ -359,8 +385,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesap Numaraları | dil | Zekât — ≥1280px --}}
-        <div class="hidden shrink-0 items-center xl:flex" style="margin-left:0.2rem; gap:0.35rem;">
+        {{-- SAĞ: Kamera | panel | Hesap Numaraları | dil | Zekât --}}
+        <div class="flex shrink-0 items-center" style="margin-left:0.2rem; gap:0.35rem;">
             <a
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"

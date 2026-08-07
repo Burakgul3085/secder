@@ -172,25 +172,36 @@
     }
 }
 
-/* Marka başlığı: telefonda sık, masaüstünde mevcut büyük görünüm */
+/* Marka başlığı */
 .secder-brand-title {
     font-family: Georgia, 'Times New Roman', Times, serif !important;
     font-weight: 900 !important;
     color: #000000 !important;
     line-height: 1.05 !important;
     letter-spacing: -0.02em !important;
-    font-size: 1.05rem !important; /* telefonda SECDER + hesap butonu yan yana sığsın */
+    font-size: 2rem !important; /* masaüstü varsayılan */
 }
 
-@media (min-width: 640px) {
-    .secder-brand-title {
-        font-size: 1.5rem !important; /* tablet */
+/* Telefon / tablet header markası — tüm iPhone’larda okunaklı */
+.secder-brand-title--phone {
+    font-size: 1.25rem !important; /* 20px — SE */
+}
+
+@media (min-width: 390px) {
+    .secder-brand-title--phone {
+        font-size: 1.35rem !important; /* XR / 12–14 Pro */
     }
 }
 
-@media (min-width: 1280px) {
-    .secder-brand-title {
-        font-size: 2rem !important; /* 32px geniş masaüstü */
+@media (min-width: 430px) {
+    .secder-brand-title--phone {
+        font-size: 1.45rem !important; /* Pro Max */
+    }
+}
+
+@media (min-width: 640px) {
+    .secder-brand-title--phone {
+        font-size: 1.6rem !important; /* tablet portrait */
     }
 }
 
@@ -199,12 +210,86 @@
     font-weight: 600 !important;
     letter-spacing: 0.02em !important;
     line-height: 1.2 !important;
-    font-size: 0.6875rem !important;
+    font-size: 0.75rem !important;
 }
 
-@media (min-width: 1280px) {
-    .secder-brand-tagline {
-        font-size: 0.75rem !important;
+/* Telefon header: logo, ikonlar, hesap CTA */
+.secder-phone-logo {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+@media (min-width: 390px) {
+    .secder-phone-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+.secder-phone-iconbtn {
+    width: 2.25rem;
+    height: 2.25rem;
+}
+
+@media (min-width: 390px) {
+    .secder-phone-iconbtn {
+        width: 2.375rem;
+        height: 2.375rem;
+    }
+}
+
+.secder-phone-donate {
+    min-height: 2.5rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.8125rem; /* 13px — SE’de tam metin */
+    letter-spacing: 0.01em;
+}
+
+@media (min-width: 390px) {
+    .secder-phone-donate {
+        min-height: 2.625rem;
+        font-size: 0.875rem; /* 14px */
+    }
+}
+
+@media (min-width: 430px) {
+    .secder-phone-donate {
+        font-size: 0.9375rem; /* 15px */
+    }
+}
+
+/* Üst bar sosyal ikonları — eşit ölçü, sıkışmaz */
+.secder-topbar-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.secder-topbar-icon__svg {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+@media (min-width: 390px) {
+    .secder-topbar-icon {
+        width: 1.625rem;
+        height: 1.625rem;
+    }
+
+    .secder-topbar-icon__svg {
+        width: 0.8125rem;
+        height: 0.8125rem;
+    }
+}
+
+@media (min-width: 430px) {
+    .secder-topbar-icon {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+
+    .secder-topbar-icon__svg {
+        width: 0.875rem;
+        height: 0.875rem;
     }
 }
 
