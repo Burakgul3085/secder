@@ -172,6 +172,42 @@
     }
 }
 
+/* Marka başlığı: telefonda sık, masaüstünde mevcut büyük görünüm */
+.secder-brand-title {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.02em !important;
+    font-size: 1.25rem !important; /* ~20px phone */
+}
+
+@media (min-width: 640px) {
+    .secder-brand-title {
+        font-size: 1.5rem !important; /* tablet */
+    }
+}
+
+@media (min-width: 1024px) {
+    .secder-brand-title {
+        font-size: 2rem !important; /* 32px desktop */
+    }
+}
+
+.secder-brand-tagline {
+    color: #C5A059 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    line-height: 1.2 !important;
+    font-size: 0.6875rem !important;
+}
+
+@media (min-width: 1024px) {
+    .secder-brand-tagline {
+        font-size: 0.75rem !important;
+    }
+}
+
 @keyframes about-orb-float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
