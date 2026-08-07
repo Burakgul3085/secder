@@ -18,7 +18,7 @@ return [
         'gallery_title'     => 'Medya Galerisi',
         'donate'            => 'Hesap Numaralarımız',
         'donate_short'      => 'Hesap Numaralarımız',
-        'donate_mobile'     => 'Hesap Numaralarımız',
+        'donate_mobile'     => 'Hesap Numaraları',
         'zakat_calculate'   => 'Zekât Hesapla',
         'zakat_short'       => 'Zekât Hesapla',
         'volunteer'         => 'Gönüllü Ol',

@@ -293,14 +293,11 @@
             </button>
             <a
                 href="{{ route('donations') }}"
-                class="inline-flex h-8 min-w-0 shrink items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2 font-semibold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:gap-1.5 sm:px-3 sm:font-bold"
+                class="inline-flex h-8 min-w-0 shrink items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 font-semibold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:px-3 sm:font-bold"
                 style="font-size:10px;line-height:1.15;"
-                title="{{ __('app.nav.donate') }}"
-                aria-label="{{ __('app.nav.donate') }}"
+                title="{{ __('app.nav.donate_mobile') }}"
+                aria-label="{{ __('app.nav.donate_mobile') }}"
             >
-                <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0" aria-hidden="true">
-                    <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
-                </svg>
                 <span class="truncate whitespace-nowrap sm:text-xs">{{ __('app.nav.donate_mobile') }}</span>
             </a>
         </div>
