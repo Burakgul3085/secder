@@ -106,9 +106,9 @@
             ];
         @endphp
 
-        {{-- Telefon / tablet (iPad Pro dahil &lt;1280px): telefon | sosyal | e-posta + adres --}}
+        {{-- Telefon / tablet (iPad Pro dahil &lt;1280px): telefon | sosyal + e-posta + adres --}}
         <div class="xl:hidden">
-            <div class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
+            <div class="mx-auto flex max-w-7xl items-center gap-1.5 px-2.5 py-1.5 text-[11px] sm:gap-2 sm:px-3">
                 <div class="flex min-w-0 shrink-0 items-center">
                     @if(!empty($siteSettings->phone))
                         <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex items-center gap-1 font-semibold text-cyan-50 transition hover:text-white">
@@ -118,37 +118,35 @@
                     @endif
                 </div>
 
-                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-end gap-2 overflow-x-auto py-0.5 pl-1 pr-0.5 sm:justify-center sm:gap-2.5">
+                {{-- Tek sıra: eşit boşluk; SE’de sığar, gerekirse yatay kayar (scrollbar gizli) --}}
+                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-end gap-2 overflow-x-auto overscroll-x-contain py-0.5 sm:gap-2.5 sm:justify-center">
                     @foreach ($topBarSocialLinks as $social)
                         <a
                             href="{{ $social['url'] }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
+                            class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
                             style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
                             title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                             aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                         >
-                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />
                         </a>
                     @endforeach
-                </div>
-
-                <div class="flex shrink-0 items-center gap-1.5">
                     @if(!empty($siteSettings->email))
-                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20" aria-label="{{ $siteSettings->email }}">
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
+                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7" aria-label="{{ $siteSettings->email }}">
+                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
                         </a>
                     @endif
                     @if(!empty($siteSettings->address))
                         <button
                             type="button"
                             @click="contactOpen = true"
-                            class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20"
+                            class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7"
                             title="{{ $siteSettings->address }}"
                             aria-label="{{ __('app.nav.address_open') }}"
                         >
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
+                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
                         </button>
                     @endif
                 </div>
