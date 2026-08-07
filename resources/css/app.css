@@ -172,61 +172,6 @@
     }
 }
 
-/* Telefon hesap butonu: taşmayı önle (Tailwind JIT’e bağlı kalmadan) */
-.secder-donate-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.2rem;
-    flex-shrink: 0;
-    max-width: 4.6rem;
-    min-height: 2rem;
-    padding: 0.2rem 0.35rem;
-    border-radius: 9999px;
-}
-
-.secder-donate-chip__label {
-    display: block;
-    font-size: 7px !important;
-    font-weight: 700 !important;
-    line-height: 1.05 !important;
-    letter-spacing: -0.03em !important;
-    text-transform: uppercase;
-    text-align: center;
-}
-
-.secder-donate-chip__icon {
-    width: 0.65rem;
-    height: 0.65rem;
-    flex-shrink: 0;
-}
-
-@media (min-width: 640px) {
-    .secder-donate-chip {
-        max-width: none;
-        min-height: 2.25rem;
-        gap: 0.35rem;
-        padding: 0.25rem 0.6rem;
-    }
-
-    .secder-donate-chip__label {
-        font-size: 9px !important;
-        line-height: 1 !important;
-        letter-spacing: -0.02em !important;
-        white-space: nowrap;
-    }
-
-    .secder-donate-chip__icon {
-        width: 0.875rem;
-        height: 0.875rem;
-    }
-}
-
-@media (min-width: 768px) {
-    .secder-donate-chip__label {
-        font-size: 10px !important;
-    }
-}
-
 /* Marka başlığı: telefonda sık, masaüstünde mevcut büyük görünüm */
 .secder-brand-title {
     font-family: Georgia, 'Times New Roman', Times, serif !important;
