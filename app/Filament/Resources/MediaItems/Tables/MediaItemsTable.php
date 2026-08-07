@@ -11,11 +11,11 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\HtmlString;
 
 class MediaItemsTable
 {
@@ -26,12 +26,12 @@ class MediaItemsTable
         return $table
             ->defaultSort('updated_at', 'desc')
             ->columns([
-                ImageColumn::make('path')
+                TextColumn::make('preview')
                     ->label('Önizleme')
-                    ->disk('public')
-                    ->square()
-                    ->getStateUsing(fn (MediaItem $record): ?string => $record->isImage() ? $record->path : null)
-                    ->defaultImageUrl(url('/images/default-logo.svg')),
+                    ->html()
+                    ->state(fn (MediaItem $record): HtmlString => self::previewHtml($record))
+                    ->width('120px')
+                    ->extraCellAttributes(['class' => 'fi-ta-preview-cell']),
                 TextColumn::make('type')
                     ->label('Tip')
                     ->badge()
@@ -45,11 +45,13 @@ class MediaItemsTable
                             $q->whereHas('project', fn ($p) => $p->where('title', 'like', "%{$search}%"))
                                 ->orWhereHas('album', fn ($a) => $a->where('title', 'like', "%{$search}%"));
                         });
-                    }),
+                    })
+                    ->wrap(),
                 TextColumn::make('path')
                     ->label('Dosya')
-                    ->limit(40)
-                    ->toggleable(),
+                    ->limit(36)
+                    ->tooltip(fn (MediaItem $record): string => (string) $record->path)
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->label('Güncelleme')
                     ->dateTime('d.m.Y H:i')
@@ -77,6 +79,8 @@ class MediaItemsTable
                 Action::make('move')
                     ->label('Taşı')
                     ->icon('heroicon-o-arrows-right-left')
+                    ->modalHeading(fn (MediaItem $record): string => 'Medya taşı: ' . $record->ownerLabel())
+                    ->modalDescription(fn (MediaItem $record): HtmlString => self::previewHtml($record, large: true))
                     ->form([
                         Select::make('destination')
                             ->label('Hedef başlık')
@@ -128,5 +132,33 @@ class MediaItemsTable
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private static function previewHtml(MediaItem $record, bool $large = false): HtmlString
+    {
+        $url = e($record->url());
+        $w = $large ? '220px' : '88px';
+        $h = $large ? '140px' : '64px';
+
+        if ($record->isImage()) {
+            return new HtmlString(
+                '<img src="' . $url . '" alt="Önizleme" loading="lazy" decoding="async" '
+                . 'style="width:' . $w . ';height:' . $h . ';object-fit:cover;border-radius:10px;'
+                . 'display:block;background:#e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.08);" />'
+            );
+        }
+
+        return new HtmlString(
+            '<div style="position:relative;width:' . $w . ';height:' . $h . ';border-radius:10px;overflow:hidden;'
+            . 'background:#0f172a;box-shadow:0 1px 4px rgba(0,0,0,.12);">'
+            . '<video src="' . $url . '#t=0.8" muted preload="metadata" playsinline '
+            . 'style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"></video>'
+            . '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;'
+            . 'background:rgba(0,0,0,.28);">'
+            . '<span style="width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.92);'
+            . 'display:inline-flex;align-items:center;justify-content:center;color:#334155;font-size:12px;'
+            . 'font-weight:700;padding-left:2px;">▶</span>'
+            . '</div></div>'
+        );
     }
 }
