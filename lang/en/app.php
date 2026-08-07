@@ -17,7 +17,7 @@ return [
         'gallery'           => 'Gallery',
         'gallery_title'     => 'Media Gallery',
         'donate'            => 'Our Account Numbers',
-        'donate_short'      => 'Our Accounts',
+        'donate_short'      => 'Account Numbers',
         'donate_mobile'     => 'Account Numbers',
         'zakat_calculate'   => 'Calculate Zakat',
         'zakat_short'       => 'Calculate Zakat',

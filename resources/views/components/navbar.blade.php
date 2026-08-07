@@ -106,8 +106,8 @@
             ];
         @endphp
 
-        {{-- Telefon / tablet: telefon | sosyal | e-posta + adres --}}
-        <div class="lg:hidden">
+        {{-- Telefon / tablet (iPad Pro dahil &lt;1280px): telefon | sosyal | e-posta + adres --}}
+        <div class="xl:hidden">
             <div class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
                 <div class="flex min-w-0 shrink-0 items-center">
                     @if(!empty($siteSettings->phone))
@@ -155,7 +155,7 @@
             </div>
         </div>
 
-        <div class="mx-auto hidden max-w-7xl items-center justify-between gap-3 px-4 py-1.5 text-xs lg:flex lg:px-6">
+        <div class="mx-auto hidden max-w-7xl items-center justify-between gap-3 px-4 py-1.5 text-xs xl:flex xl:px-6">
             <div class="flex flex-wrap items-center gap-x-5 gap-y-1">
                 @if(!empty($siteSettings->email))
                     <span class="inline-flex items-center gap-1.5">
@@ -227,7 +227,7 @@
                 >
             </span>
 
-            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent lg:block" aria-hidden="true"></span>
+            <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent xl:block" aria-hidden="true"></span>
 
             <span class="min-w-0 leading-none">
                 <span class="secder-brand-title block truncate whitespace-nowrap">{{ $siteSettings->site_title }}</span>
@@ -241,8 +241,8 @@
             </span>
         </a>
 
-        {{-- Telefon / tablet: Dil · Galeri · Menü · Hesap Numaralarımız --}}
-        <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5 lg:hidden">
+        {{-- Telefon / tablet (&lt;1280px, iPad Pro dahil): Dil · Galeri · Menü · Hesap Numaraları --}}
+        <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5 xl:hidden">
             <div class="relative shrink-0" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                 <button
                     type="button"
@@ -302,9 +302,9 @@
             </a>
         </div>
 
-        {{-- ORTA: Menü — yalnızca büyük ekran --}}
+        {{-- ORTA: Menü — yalnızca geniş masaüstü (≥1280px) --}}
         <nav
-            class="hidden min-w-0 items-center lg:flex"
+            class="hidden min-w-0 items-center xl:flex"
             style="flex:1 1 0%; min-width:0; justify-content:space-between; align-items:center; padding:0 0.15rem 0 0.5rem; font-size:15px;"
         >
             <a href="{{ route('home') }}" class="{{ $navLinkBase }} {{ request()->routeIs('home') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.home') }}</a>
@@ -362,8 +362,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesaplarımız | dil | Zekât — yalnızca büyük ekran --}}
-        <div class="hidden shrink-0 items-center lg:flex" style="margin-left:0.2rem; gap:0.35rem;">
+        {{-- SAĞ: Kamera | panel | Hesap Numaraları | dil | Zekât — ≥1280px --}}
+        <div class="hidden shrink-0 items-center xl:flex" style="margin-left:0.2rem; gap:0.35rem;">
             <a
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"
@@ -388,11 +388,8 @@
             </button>
             <a
                 href="{{ route('donations') }}"
-                class="group/donate inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-3 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:brightness-110 xl:px-3.5"
+                class="inline-flex h-9 items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-3 text-[11px] font-bold text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:brightness-110 xl:px-3.5"
             >
-                <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 transition-transform duration-300 group-hover/donate:scale-110" aria-hidden="true">
-                    <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
-                </svg>
                 {{ __('app.nav.donate_short') }}
             </a>
 
