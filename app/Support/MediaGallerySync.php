@@ -5,6 +5,8 @@ namespace App\Support;
 use App\Models\MediaAlbum;
 use App\Models\MediaItem;
 use App\Models\Project;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -232,7 +234,212 @@ class MediaGallerySync
         return $options;
     }
 
+    public const GALLERY_PER_PAGE = 12;
+
     /**
+     * Başlık kartları için hafif özet — tüm dosya yollarını yüklemez.
+     *
+     * @return Collection<int, array<string, mixed>>
+     */
+    public function gallerySummaries(): Collection
+    {
+        $sections = collect();
+
+        $projects = Project::query()
+            ->active()
+            ->withCount([
+                'mediaItems as images_count' => fn ($q) => $q->where('type', MediaItem::TYPE_IMAGE),
+                'mediaItems as videos_count' => fn ($q) => $q->where('type', MediaItem::TYPE_VIDEO),
+            ])
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->get();
+
+        foreach ($projects as $project) {
+            $imageCount = (int) $project->images_count;
+            $videoCount = (int) $project->videos_count;
+
+            if ($imageCount === 0 && is_array($project->gallery_images)) {
+                $imageCount = count(array_filter($project->gallery_images));
+            }
+            if ($videoCount === 0 && is_array($project->gallery_videos)) {
+                $videoCount = count(array_filter($project->gallery_videos));
+            }
+
+            if ($imageCount === 0 && $videoCount === 0) {
+                continue;
+            }
+
+            $sections->push([
+                'key' => 'project:' . $project->id,
+                'kind' => 'project',
+                'id' => $project->id,
+                'slug' => $project->slug,
+                'title' => $project->getLocalized('title', $project->title),
+                'image_count' => $imageCount,
+                'video_count' => $videoCount,
+                'detail_url' => route('activities.show', $project->slug),
+                'filter_param' => 'activity',
+                'sort_order' => (int) $project->sort_order,
+            ]);
+        }
+
+        $albums = MediaAlbum::query()
+            ->active()
+            ->withCount([
+                'mediaItems as images_count' => fn ($q) => $q->where('type', MediaItem::TYPE_IMAGE),
+                'mediaItems as videos_count' => fn ($q) => $q->where('type', MediaItem::TYPE_VIDEO),
+            ])
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->get();
+
+        foreach ($albums as $album) {
+            $imageCount = (int) $album->images_count;
+            $videoCount = (int) $album->videos_count;
+
+            if ($imageCount === 0 && $videoCount === 0) {
+                continue;
+            }
+
+            $sections->push([
+                'key' => 'album:' . $album->id,
+                'kind' => 'album',
+                'id' => $album->id,
+                'slug' => $album->slug,
+                'title' => $album->title,
+                'image_count' => $imageCount,
+                'video_count' => $videoCount,
+                'detail_url' => null,
+                'filter_param' => 'album',
+                'sort_order' => (int) $album->sort_order,
+            ]);
+        }
+
+        return $sections->sortBy([
+            ['sort_order', 'asc'],
+            ['title', 'asc'],
+        ])->values();
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function findGallerySection(?string $activitySlug, ?string $albumSlug): ?array
+    {
+        if (! filled($activitySlug) && ! filled($albumSlug)) {
+            return null;
+        }
+
+        return $this->gallerySummaries()->first(function (array $section) use ($activitySlug, $albumSlug) {
+            if (filled($activitySlug) && $section['kind'] === 'project') {
+                return $section['slug'] === $activitySlug;
+            }
+            if (filled($albumSlug) && $section['kind'] === 'album') {
+                return $section['slug'] === $albumSlug;
+            }
+
+            return false;
+        });
+    }
+
+    public function paginateSectionImages(array $section, int $perPage = self::GALLERY_PER_PAGE): LengthAwarePaginator
+    {
+        return $this->paginateSectionMedia($section, MediaItem::TYPE_IMAGE, 'photo_page', $perPage);
+    }
+
+    public function paginateSectionVideos(array $section, int $perPage = self::GALLERY_PER_PAGE): LengthAwarePaginator
+    {
+        return $this->paginateSectionMedia($section, MediaItem::TYPE_VIDEO, 'video_page', $perPage);
+    }
+
+    private function paginateSectionMedia(
+        array $section,
+        string $type,
+        string $pageName,
+        int $perPage,
+    ): LengthAwarePaginator {
+        $kind = $section['kind'] ?? '';
+        $id = (int) ($section['id'] ?? 0);
+
+        $query = MediaItem::query()
+            ->where('type', $type)
+            ->orderBy('sort_order')
+            ->orderBy('id');
+
+        if ($kind === 'project') {
+            $query->where('project_id', $id);
+        } elseif ($kind === 'album') {
+            $query->where('media_album_id', $id);
+        } else {
+            return $this->emptyPaginator($pageName, $perPage);
+        }
+
+        $count = (clone $query)->count();
+
+        if ($count > 0) {
+            return $query
+                ->paginate($perPage, ['path', 'type', 'title', 'sort_order', 'id'], $pageName)
+                ->withQueryString();
+        }
+
+        // Eski JSON yedek (yalnızca faaliyetler)
+        if ($kind === 'project') {
+            $project = Project::query()->find($id);
+            if ($project) {
+                $fallback = $type === MediaItem::TYPE_IMAGE
+                    ? ($project->gallery_images ?? [])
+                    : ($project->gallery_videos ?? []);
+                $paths = array_values(array_filter(array_map(
+                    fn ($path) => ltrim((string) $path, '/'),
+                    is_array($fallback) ? $fallback : []
+                )));
+
+                return $this->paginatePathArray($paths, $perPage, $pageName);
+            }
+        }
+
+        return $this->emptyPaginator($pageName, $perPage);
+    }
+
+    /**
+     * @param  array<int, string>  $paths
+     */
+    private function paginatePathArray(array $paths, int $perPage, string $pageName): LengthAwarePaginator
+    {
+        $page = max(1, (int) Paginator::resolveCurrentPage($pageName));
+        $total = count($paths);
+        $slice = array_values(array_slice($paths, ($page - 1) * $perPage, $perPage));
+
+        $items = collect($slice)->map(fn (string $path) => (object) [
+            'path' => $path,
+            'type' => str_contains($pageName, 'video') ? MediaItem::TYPE_VIDEO : MediaItem::TYPE_IMAGE,
+            'title' => null,
+        ]);
+
+        return (new Paginator(
+            $items,
+            $total,
+            $perPage,
+            $page,
+            [
+                'path' => request()->url(),
+                'pageName' => $pageName,
+            ]
+        ))->withQueryString();
+    }
+
+    private function emptyPaginator(string $pageName, int $perPage): LengthAwarePaginator
+    {
+        return (new Paginator(collect(), 0, $perPage, 1, [
+            'path' => request()->url(),
+            'pageName' => $pageName,
+        ]))->withQueryString();
+    }
+
+    /**
+     * @deprecated Tam yükleme — yalnızca geriye dönük uyumluluk için.
+     *
      * @return Collection<int, array<string, mixed>>
      */
     public function gallerySections(?string $activitySlug = null, ?string $albumSlug = null): Collection

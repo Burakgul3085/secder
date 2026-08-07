@@ -143,20 +143,41 @@ class HomeController extends Controller
     public function gallery(Request $request): View
     {
         $sync = app(MediaGallerySync::class);
-        $activitySlug = $request->input('activity');
-        $albumSlug = $request->input('album');
+        $activitySlug = filled($request->input('activity')) ? (string) $request->input('activity') : null;
+        $albumSlug = filled($request->input('album')) ? (string) $request->input('album') : null;
 
-        $allSections = $sync->gallerySections();
-        $sections = $sync->gallerySections(
-            activitySlug: filled($activitySlug) ? (string) $activitySlug : null,
-            albumSlug: filled($albumSlug) ? (string) $albumSlug : null,
-        );
+        $allSections = $sync->gallerySummaries();
+
+        $activeSection = null;
+        if ($activitySlug || $albumSlug) {
+            $activeSection = $allSections->first(function (array $section) use ($activitySlug, $albumSlug) {
+                if ($activitySlug && ($section['kind'] ?? '') === 'project') {
+                    return ($section['slug'] ?? '') === $activitySlug;
+                }
+                if ($albumSlug && ($section['kind'] ?? '') === 'album') {
+                    return ($section['slug'] ?? '') === $albumSlug;
+                }
+
+                return false;
+            });
+        }
+
+        $images = null;
+        $videos = null;
+
+        if ($activeSection) {
+            $images = $sync->paginateSectionImages($activeSection);
+            $videos = $sync->paginateSectionVideos($activeSection);
+        }
 
         return view('galeri', [
-            'sections' => $sections,
             'allSections' => $allSections,
+            'activeSection' => $activeSection,
+            'images' => $images,
+            'videos' => $videos,
             'activeActivitySlug' => (string) ($activitySlug ?? ''),
             'activeAlbumSlug' => (string) ($albumSlug ?? ''),
+            'perPage' => MediaGallerySync::GALLERY_PER_PAGE,
         ]);
     }
 
