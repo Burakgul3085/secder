@@ -108,8 +108,8 @@
 
         {{-- Telefon / tablet (iPad Pro dahil &lt;1280px): telefon | sosyal + e-posta + adres --}}
         <div class="xl:hidden">
-            <div class="mx-auto flex max-w-7xl items-center gap-1.5 px-2.5 py-1.5 text-[11px] sm:gap-2 sm:px-3">
-                <div class="flex min-w-0 shrink-0 items-center">
+            <div class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-1.5 text-[11px]">
+                <div class="flex shrink-0 items-center">
                     @if(!empty($siteSettings->phone))
                         <a href="tel:{{ preg_replace('/\s+/', '', $siteSettings->phone) }}" class="inline-flex items-center gap-1 font-semibold text-cyan-50 transition hover:text-white">
                             <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0"><path d="M2 3.75A1.75 1.75 0 0 1 3.75 2h2.31c.83 0 1.54.58 1.7 1.39l.39 1.98a1.75 1.75 0 0 1-.5 1.57l-1.1 1.1a13.13 13.13 0 0 0 5.4 5.4l1.1-1.1a1.75 1.75 0 0 1 1.57-.5l1.98.4A1.75 1.75 0 0 1 18 13.94v2.31A1.75 1.75 0 0 1 16.25 18h-.75C8.6 18 2 11.4 2 3.75Z" /></svg>
@@ -118,35 +118,35 @@
                     @endif
                 </div>
 
-                {{-- Tek sıra: eşit boşluk; SE’de sığar, gerekirse yatay kayar (scrollbar gizli) --}}
-                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-end gap-2 overflow-x-auto overscroll-x-contain py-0.5 sm:gap-2.5 sm:justify-center">
+                {{-- justify-end taşınca ilk ikonları kesiyordu; soldan başlar, gerekirse kayar --}}
+                <div class="no-scrollbar flex min-w-0 flex-1 items-center justify-start gap-2 overflow-x-auto overscroll-x-contain py-0.5 sm:justify-end sm:gap-2.5">
                     @foreach ($topBarSocialLinks as $social)
                         <a
                             href="{{ $social['url'] }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
+                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full shadow-sm transition hover:brightness-110 sm:h-7 sm:w-7"
                             style="{{ $topBarBrandStyle[$social['platform']] ?? 'background:rgba(255,255,255,.2);color:#fff;' }}"
                             title="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                             aria-label="{{ $topBarAria[$social['platform']] ?? $social['platform'] }}"
                         >
-                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5" />
+                            <x-social-brand-icon :platform="$social['platform']" icon-class="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         </a>
                     @endforeach
                     @if(!empty($siteSettings->email))
-                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7" aria-label="{{ $siteSettings->email }}">
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
+                        <a href="mailto:{{ $siteSettings->email }}" class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7" aria-label="{{ $siteSettings->email }}">
+                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 sm:h-3.5 sm:w-3.5"><path d="M2.94 5.5A2 2 0 0 1 4.8 4h10.4a2 2 0 0 1 1.86 1.5L10 9.88 2.94 5.5Z" /><path d="M2.8 7.25V14a2 2 0 0 0 2 2h10.4a2 2 0 0 0 2-2V7.25l-6.69 4.15a1 1 0 0 1-1.02 0L2.8 7.25Z" /></svg>
                         </a>
                     @endif
                     @if(!empty($siteSettings->address))
                         <button
                             type="button"
                             @click="contactOpen = true"
-                            class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7"
+                            class="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-cyan-50 transition hover:bg-white/20 sm:h-7 sm:w-7"
                             title="{{ $siteSettings->address }}"
                             aria-label="{{ __('app.nav.address_open') }}"
                         >
-                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-2.5 w-2.5 sm:h-3.5 sm:w-3.5"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
+                            <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 sm:h-3.5 sm:w-3.5"><path fill-rule="evenodd" d="M10 2.5a5.5 5.5 0 0 0-5.5 5.5c0 4.3 4.65 8.76 5.03 9.12a.7.7 0 0 0 .94 0c.38-.36 5.03-4.82 5.03-9.12A5.5 5.5 0 0 0 10 2.5Zm0 7.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" /></svg>
                         </button>
                     @endif
                 </div>
@@ -208,39 +208,39 @@
             ->groupBy('parent_id');
     @endphp
 
-    {{-- Kurumsal header: [Marka SOL] [Menü ORTA] [Aksiyonlar SAĞ] — lg ve üzeri masaüstü --}}
+    {{-- Kurumsal header: [Marka SOL] [Menü ORTA] [Aksiyonlar SAĞ] --}}
     <div
-        class="mx-auto flex max-w-7xl items-center gap-2 px-2.5 py-2 transition-all duration-300 sm:gap-3 sm:px-4 lg:gap-4 lg:px-6"
-        :class="scrolled ? 'lg:py-1.5' : 'lg:py-2'"
+        class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 transition-all duration-300 sm:gap-3 sm:px-4 xl:gap-4 xl:px-6"
+        :class="scrolled ? 'xl:py-1.5' : 'xl:py-2'"
     >
-        {{-- SOL: Logo + SECDER + slogan --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+        {{-- SOL: Logo + SECDER — dar ekranda kısalsın, sağ aksiyonların üstüne binmesin --}}
+        <a href="{{ route('home') }}" class="group flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden sm:gap-2 xl:flex-none xl:gap-3">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
                     src="{{ $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : asset('images/default-logo.svg') }}"
                     alt="{{ $siteSettings->site_title }}"
                     class="relative h-9 w-9 rounded-full bg-white object-cover shadow-sm ring-1 ring-slate-200/80 transition-all duration-300 group-hover:ring-cyan-300 sm:h-10 sm:w-10"
-                    :class="scrolled ? 'lg:h-9 lg:w-9' : 'lg:h-11 lg:w-11'"
+                    :class="scrolled ? 'xl:h-9 xl:w-9' : 'xl:h-11 xl:w-11'"
                 >
             </span>
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent xl:block" aria-hidden="true"></span>
 
-            <span class="min-w-0 leading-none">
+            <span class="min-w-0 flex-1 overflow-hidden leading-none xl:flex-none">
                 <span class="secder-brand-title block truncate whitespace-nowrap">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
                         class="secder-brand-tagline mt-0.5 hidden truncate whitespace-nowrap sm:block sm:mt-1"
-                        :class="scrolled ? 'lg:hidden' : ''"
+                        :class="scrolled ? 'xl:hidden' : ''"
                         title="{{ $brandTagline }}"
                     >{{ $brandTagline }}</span>
                 @endif
             </span>
         </a>
 
-        {{-- Telefon / tablet (&lt;1280px, iPad Pro dahil): Dil · Galeri · Menü · Hesap Numaraları --}}
-        <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5 xl:hidden">
+        {{-- Telefon / tablet: aksiyonlar asla ezilmesin (shrink-0) --}}
+        <div class="flex shrink-0 items-center gap-1 sm:gap-1.5 xl:hidden">
             <div class="relative shrink-0" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                 <button
                     type="button"
@@ -291,12 +291,11 @@
             </button>
             <a
                 href="{{ route('donations') }}"
-                class="inline-flex h-8 min-w-0 shrink items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 font-semibold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:px-3 sm:font-bold"
-                style="font-size:10px;line-height:1.15;"
+                class="inline-flex h-8 shrink-0 items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[10px] font-semibold leading-none text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:px-3 sm:text-[11px] sm:font-bold"
                 title="{{ __('app.nav.donate_mobile') }}"
                 aria-label="{{ __('app.nav.donate_mobile') }}"
             >
-                <span class="truncate whitespace-nowrap sm:text-xs">{{ __('app.nav.donate_mobile') }}</span>
+                <span class="whitespace-nowrap">{{ __('app.nav.donate_mobile') }}</span>
             </a>
         </div>
 
