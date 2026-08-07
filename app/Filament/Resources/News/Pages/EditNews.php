@@ -13,7 +13,7 @@ class EditNews extends BaseEditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
-        $locales = ['tr', 'en', 'ar', 'ru'];
+        $locales = ['tr', 'en', 'ar'];
 
         $withTrFallback = static function ($translations, ?string $legacyValue = null) use ($locales): array {
             $translations = is_array($translations) ? $translations : [];
@@ -40,7 +40,7 @@ class EditNews extends BaseEditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        $locales = ['tr', 'en', 'ar', 'ru'];
+        $locales = ['tr', 'en', 'ar'];
 
         $normalizeLocaleArray = static function ($value) use ($locales): array {
             $value = is_array($value) ? $value : [];

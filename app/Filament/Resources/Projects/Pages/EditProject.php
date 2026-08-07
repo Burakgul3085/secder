@@ -80,7 +80,7 @@ class EditProject extends BaseEditRecord
     private function normalizeLocaleArray(array $value): array
     {
         return collect($value)
-            ->only(['tr', 'en', 'ar', 'ru'])
+            ->only(['tr', 'en', 'ar'])
             ->map(fn ($v) => is_string($v) ? trim($v) : $v)
             ->all();
     }

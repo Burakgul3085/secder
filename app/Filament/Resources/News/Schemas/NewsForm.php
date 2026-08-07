@@ -52,16 +52,6 @@ class NewsForm
                                 RichEditor::make('content_i18n.ar')->label('المحتوى (AR)'),
                             ]),
                         ]),
-                    Tab::make('RU')
-                        ->schema([
-                            Grid::make(1)->schema([
-                                TextInput::make('title_i18n.ru')->label('Заголовок (RU)'),
-                                Textarea::make('summary_i18n.ru')
-                                    ->label('Краткое описание (RU)')
-                                    ->rows(3),
-                                RichEditor::make('content_i18n.ru')->label('Содержимое (RU)'),
-                            ]),
-                        ]),
                 ]),
             FileUpload::make('cover_image')
                 ->label('Haber kapak görseli')

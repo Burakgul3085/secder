@@ -63,16 +63,7 @@ class PageForm
                                 ->toolbarButtons($richToolbar)
                                 ->columnSpanFull(),
                         ]),
-                    ]),
-                    Tab::make('RU')->schema([
-                        Grid::make(1)->schema([
-                            TextInput::make('title_i18n.ru')->label('Заголовок (RU)'),
-                            RichEditor::make('content_i18n.ru')
-                                ->label('Содержимое (RU)')
-                                ->toolbarButtons($richToolbar)
-                                ->columnSpanFull(),
-                        ]),
-                    ]),
+                    ])
                 ]),
 
             TextInput::make('slug')
@@ -96,11 +87,7 @@ class PageForm
                         Tab::make('AR')->schema([
                             TextInput::make('title_i18n.ar')->label('العنوان (AR)')->maxLength(120),
                             Textarea::make('description_i18n.ar')->label('الوصف (AR)')->rows(4)->maxLength(2000)->columnSpanFull(),
-                        ]),
-                        Tab::make('RU')->schema([
-                            TextInput::make('title_i18n.ru')->label('Заголовок (RU)')->maxLength(120),
-                            Textarea::make('description_i18n.ru')->label('Описание (RU)')->rows(4)->maxLength(2000)->columnSpanFull(),
-                        ]),
+                        ])
                     ])->columnSpanFull(),
                     FileUpload::make('image')
                         ->label('Görsel')
@@ -142,10 +129,7 @@ class PageForm
                         ]),
                         Tab::make('AR')->schema([
                             TextInput::make('page_meta.signature_title_i18n.ar')->label('المؤسسة / اللقب (AR)')->maxLength(190),
-                        ]),
-                        Tab::make('RU')->schema([
-                            TextInput::make('page_meta.signature_title_i18n.ru')->label('Организация / Титул (RU)')->maxLength(190),
-                        ]),
+                        ])
                     ])->columnSpanFull(),
                 ])
                 ->columns(2)
@@ -181,11 +165,7 @@ class PageForm
                         Tab::make('AR')->schema([
                             RichEditor::make('page_meta.vision_text_i18n.ar')->label('الرؤية (AR)')->toolbarButtons($richToolbar)->columnSpanFull(),
                             RichEditor::make('page_meta.mission_text_i18n.ar')->label('المهمة (AR)')->toolbarButtons($richToolbar)->columnSpanFull(),
-                        ]),
-                        Tab::make('RU')->schema([
-                            RichEditor::make('page_meta.vision_text_i18n.ru')->label('Видение (RU)')->toolbarButtons($richToolbar)->columnSpanFull(),
-                            RichEditor::make('page_meta.mission_text_i18n.ru')->label('Миссия (RU)')->toolbarButtons($richToolbar)->columnSpanFull(),
-                        ]),
+                        ])
                     ])->columnSpanFull(),
                 ])
                 ->columnSpanFull()
@@ -202,10 +182,7 @@ class PageForm
                         ]),
                         Tab::make('AR')->schema([
                             TextInput::make('page_meta.document_title_i18n.ar')->label('عنوان المستند (AR)')->maxLength(150),
-                        ]),
-                        Tab::make('RU')->schema([
-                            TextInput::make('page_meta.document_title_i18n.ru')->label('Название документа (RU)')->maxLength(150),
-                        ]),
+                        ])
                     ])->columnSpanFull(),
                     FileUpload::make('page_meta.document_file')
                         ->label('Belge Dosyası (PDF/JPG/PNG/DOC/DOCX)')
@@ -241,10 +218,7 @@ class PageForm
                                 ]),
                                 Tab::make('AR')->schema([
                                     TextInput::make('section_title_i18n.ar')->label('عنوان القسم (AR)')->maxLength(120),
-                                ]),
-                                Tab::make('RU')->schema([
-                                    TextInput::make('section_title_i18n.ru')->label('Заголовок раздела (RU)')->maxLength(120),
-                                ]),
+                                ])
                             ])->columnSpanFull(),
                             Repeater::make('members')
                                 ->label('Bölüm Üyeleri')
@@ -259,10 +233,7 @@ class PageForm
                                         ]),
                                         Tab::make('AR')->schema([
                                             TextInput::make('role_i18n.ar')->label('المسمى (AR)')->maxLength(140),
-                                        ]),
-                                        Tab::make('RU')->schema([
-                                            TextInput::make('role_i18n.ru')->label('Должность (RU)')->maxLength(140),
-                                        ]),
+                                        ])
                                     ])->columnSpanFull(),
                                     FileUpload::make('photo')
                                         ->label('Fotoğraf (Opsiyonel)')
@@ -319,10 +290,7 @@ class PageForm
                                 ]),
                                 Tab::make('AR')->schema([
                                     TextInput::make('title_i18n.ar')->label('عنوان الملف (AR)')->maxLength(120),
-                                ]),
-                                Tab::make('RU')->schema([
-                                    TextInput::make('title_i18n.ru')->label('Название файла (RU)')->maxLength(120),
-                                ]),
+                                ])
                             ])->columnSpanFull(),
                             FileUpload::make('logo')
                                 ->label('Kartta Görünecek Logo / Görsel')

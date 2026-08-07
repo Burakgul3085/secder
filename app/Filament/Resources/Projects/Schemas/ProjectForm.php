@@ -20,7 +20,6 @@ class ProjectForm
             'tr' => 'Turkce',
             'en' => 'English',
             'ar' => 'Arabic',
-            'ru' => 'Russian',
         ];
 
         $translationTabs = [];

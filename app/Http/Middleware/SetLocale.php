@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    private const ALLOWED = ['tr', 'en', 'ar', 'ru'];
+    private const ALLOWED = ['tr', 'en', 'ar'];
     private const DEFAULT  = 'tr';
     private const COOKIE   = 'bkd_locale';
 

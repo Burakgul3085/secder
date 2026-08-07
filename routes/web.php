@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 // Dil değiştirme rotası
 Route::get('/locale/{lang}', function (string $lang) {
-    $allowed = ['tr', 'en', 'ar', 'ru'];
+    $allowed = ['tr', 'en', 'ar'];
     if (! in_array($lang, $allowed, true)) {
         $lang = 'tr';
     }

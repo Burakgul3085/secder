@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class Page extends Model
 {
-    public const LOCALES = ['tr', 'en', 'ar', 'ru'];
+    public const LOCALES = ['tr', 'en', 'ar'];
 
     protected $fillable = [
         'title',

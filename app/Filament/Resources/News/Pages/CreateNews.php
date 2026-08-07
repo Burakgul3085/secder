@@ -12,7 +12,7 @@ class CreateNews extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $locales = ['tr', 'en', 'ar', 'ru'];
+        $locales = ['tr', 'en', 'ar'];
 
         $normalizeLocaleArray = static function ($value) use ($locales): array {
             $value = is_array($value) ? $value : [];

@@ -9,13 +9,11 @@
         ['code' => 'tr', 'flag' => 'https://flagcdn.com/w40/tr.png', 'label' => 'Türkçe'],
         ['code' => 'en', 'flag' => 'https://flagcdn.com/w40/gb.png', 'label' => 'English'],
         ['code' => 'ar', 'flag' => 'https://flagcdn.com/w40/sa.png', 'label' => 'العربية'],
-        ['code' => 'ru', 'flag' => 'https://flagcdn.com/w40/ru.png', 'label' => 'Русский'],
     ];
     $flagMap = [
         'tr' => 'https://flagcdn.com/w40/tr.png',
         'en' => 'https://flagcdn.com/w40/gb.png',
         'ar' => 'https://flagcdn.com/w40/sa.png',
-        'ru' => 'https://flagcdn.com/w40/ru.png',
     ];
     $currentFlag = $flagMap[$currentLocale] ?? $flagMap['tr'];
 

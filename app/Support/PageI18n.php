@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 
 class PageI18n
 {
-    public const LOCALES = ['tr', 'en', 'ar', 'ru'];
+    public const LOCALES = ['tr', 'en', 'ar'];
 
     public static function withTrFallback($translations, ?string $legacyValue = null): array
     {
