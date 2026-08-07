@@ -212,11 +212,11 @@
 
     {{-- Kurumsal header: [Marka SOL] [Menü ORTA] [Aksiyonlar SAĞ] — lg ve üzeri masaüstü --}}
     <div
-        class="mx-auto flex max-w-7xl items-center gap-2 px-3 py-2 transition-all duration-300 sm:gap-3 sm:px-4 lg:gap-4 lg:px-6"
+        class="mx-auto flex max-w-7xl items-center gap-2 px-2.5 py-2 transition-all duration-300 sm:gap-3 sm:px-4 lg:gap-4 lg:px-6"
         :class="scrolled ? 'lg:py-1.5' : 'lg:py-2'"
     >
-        {{-- SOL: Logo + SECDER + slogan --}}
-        <a href="{{ route('home') }}" class="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
+        {{-- SOL: Telefonda yalnız logo (alan açılır, aksiyonlar sola kayar); sm+ SECDER yazısı --}}
+        <a href="{{ route('home') }}" class="group flex min-w-0 shrink-0 items-center gap-2 sm:gap-3" title="{{ $siteSettings->site_title }}">
             <span class="relative shrink-0">
                 <span class="pointer-events-none absolute -inset-1 rounded-full bg-cyan-200/50 opacity-0 blur-[6px] transition duration-300 group-hover:opacity-100" aria-hidden="true"></span>
                 <img
@@ -229,7 +229,7 @@
 
             <span class="hidden h-9 w-px shrink-0 bg-gradient-to-b from-transparent via-slate-200 to-transparent lg:block" aria-hidden="true"></span>
 
-            <span class="min-w-0 leading-none">
+            <span class="hidden min-w-0 leading-none sm:block">
                 <span class="secder-brand-title block truncate whitespace-nowrap">{{ $siteSettings->site_title }}</span>
                 @if($brandTagline !== '')
                     <span
@@ -241,16 +241,16 @@
             </span>
         </a>
 
-        {{-- Telefon / tablet: Dil · Galeri · Menü · Hesaplar (kısa etiket; tam ad menüde) --}}
-        <div class="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
+        {{-- Telefon / tablet: Dil · Galeri · Menü · Hesap Numaralarımız --}}
+        <div class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1 sm:gap-1.5 lg:hidden">
             <div class="relative shrink-0" x-data="{ mobileLangOpen: false }" @click.outside="mobileLangOpen = false">
                 <button
                     type="button"
                     @click="mobileLangOpen = !mobileLangOpen"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm"
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white shadow-sm sm:h-9 sm:w-9"
                     aria-label="{{ __('app.nav.lang_selector') }}"
                 >
-                    <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-4 w-5 rounded object-cover">
+                    <img src="{{ $currentFlag }}" alt="{{ strtoupper($currentLocale) }}" class="h-3.5 w-5 rounded object-cover sm:h-4">
                 </button>
                 <div
                     x-show="mobileLangOpen"
@@ -273,9 +273,9 @@
                 href="{{ route('gallery') }}"
                 title="{{ __('app.nav.gallery_title') }}"
                 aria-label="{{ __('app.nav.gallery_title') }}"
-                class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700"
+                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 sm:h-9 sm:w-9"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-[18px] sm:w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
                 </svg>
@@ -283,25 +283,25 @@
             <button
                 type="button"
                 @click="contactOpen = true"
-                class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50"
+                class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 sm:h-9 sm:w-9"
                 :aria-expanded="contactOpen"
                 aria-label="{{ __('app.nav.menu_open') }}"
             >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
                 </svg>
             </button>
-            {{-- Kısa etiket sığar; uzun “Hesap Numaralarımız” menü panelinde --}}
             <a
                 href="{{ route('donations') }}"
-                class="inline-flex h-9 shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2.5 text-[11px] font-bold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:gap-1.5 sm:px-3 sm:text-xs"
+                class="inline-flex h-8 min-w-0 shrink items-center gap-1 rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-2 font-semibold text-white shadow-sm ring-1 ring-inset ring-white/15 transition hover:brightness-110 sm:h-9 sm:gap-1.5 sm:px-3 sm:font-bold"
+                style="font-size:10px;line-height:1.15;"
                 title="{{ __('app.nav.donate') }}"
                 aria-label="{{ __('app.nav.donate') }}"
             >
                 <svg viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0" aria-hidden="true">
                     <path d="M10 17.5s-6.5-4.06-6.5-8.13A3.87 3.87 0 0 1 10 6.44a3.87 3.87 0 0 1 6.5 2.93c0 4.07-6.5 8.13-6.5 8.13Z" />
                 </svg>
-                <span class="whitespace-nowrap">{{ __('app.nav.donate_mobile') }}</span>
+                <span class="truncate whitespace-nowrap sm:text-xs">{{ __('app.nav.donate_mobile') }}</span>
             </a>
         </div>
 
