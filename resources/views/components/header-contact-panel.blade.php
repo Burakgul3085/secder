@@ -153,7 +153,6 @@
                 <div class="grid gap-10 md:grid-cols-2 md:gap-12">
                     <div>
                         <h2 class="text-xl font-semibold text-white md:text-2xl">{{ __('app.panel.contact_heading') }}</h2>
-                        <p class="mt-1 text-sm text-cyan-100/90">{{ __('app.panel.contact_subtitle') }}</p>
                         <ul class="mt-6 space-y-5">
                             @if(filled($siteSettings->email))
                                 <li class="flex gap-4">

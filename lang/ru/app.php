@@ -18,7 +18,7 @@ return [
         'gallery_title'     => 'Медиагалерея',
         'donate'            => 'Наши номера счетов',
         'donate_short'      => 'Счета',
-        'donate_mobile'     => 'Счета',
+        'donate_mobile'     => 'Наши номера счетов',
         'zakat_calculate'   => 'Рассчитать закят',
         'zakat_short'       => 'Рассчитать закят',
         'volunteer'         => 'Стать волонтёром',
