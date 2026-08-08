@@ -3,6 +3,7 @@
 use App\Http\Controllers\ZakatController;
 use App\Http\Controllers\IslamicFinanceController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\CrmDocumentController;
 use App\Http\Controllers\Crm\PosterController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\AdminOtpController;
 use App\Http\Controllers\AdminForgotPasswordController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 // Dil değiştirme rotası
 Route::get('/locale/{lang}', function (string $lang) {
