@@ -53,20 +53,20 @@
                                 $textOrder = $isLeft ? 'order-2 lg:order-3' : 'order-2 lg:order-1';
                             @endphp
 
-                            <article class="group/story relative z-10 flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_2.5rem_1fr] lg:items-start lg:gap-0 lg:px-0">
-                                {{-- Görsel sütun --}}
+                            <article class="group/story relative z-10 flex flex-col gap-5 lg:grid lg:grid-cols-[1fr_2.5rem_1fr] lg:items-stretch lg:gap-0 lg:px-0">
+                                {{-- Görsel sütun: kenardan kenara kaplama, hover zoom + ışık geçişi --}}
                                 <div class="{{ $imgOrder }}">
-                                    <div
-                                        class="h-full overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_10px_32px_rgba(15,23,42,0.07)] transition-all duration-500 ease-out group-hover/story:shadow-[0_18px_34px_rgba(14,116,144,0.14)]"
-                                    >
+                                    <div class="story-media-card h-full">
                                         @if ($imagePath)
-                                            <div class="relative h-[210px] w-full overflow-hidden bg-white/5 p-2 sm:h-[250px] lg:h-[280px]">
+                                            <div class="story-media-frame">
                                                 <img
                                                     src="{{ $imagePath }}"
                                                     alt="{{ $item['title'] }}"
-                                                    class="h-full w-full object-contain transition-transform duration-700 ease-out group-hover/story:scale-[1.02]"
+                                                    class="story-media-img"
                                                     loading="lazy"
                                                 >
+                                                <span class="story-media-overlay" aria-hidden="true"></span>
+                                                <span class="story-media-shine" aria-hidden="true"></span>
                                             </div>
                                         @else
                                             <div class="grid h-[240px] place-items-center bg-slate-100 text-sm text-slate-500 sm:h-[260px] lg:h-[280px]">
@@ -78,20 +78,12 @@
 
                                 {{-- Zaman noktası (masaüstü) --}}
                                 <div class="pointer-events-none relative z-20 hidden w-8 shrink-0 items-start justify-center pt-8 lg:flex lg:order-2" aria-hidden="true">
-                                    <span class="story-dot transition-all duration-500 group-hover/story:scale-110 group-hover/story:bg-cyan-400 group-hover/story:ring-cyan-400/35"></span>
+                                    <span class="story-dot transition-all duration-500 group-hover/story:scale-125 group-hover/story:bg-cyan-400 group-hover/story:ring-cyan-400/40"></span>
                                 </div>
 
-                                {{-- Metin kartı: sadece bu kutu hover (arka plan + metin rengi) --}}
-                                <div class="{{ $textOrder }} flex items-start">
-                                    <div
-                                        @class([
-                                            'group/storytext relative w-full rounded-2xl border border-slate-200/95 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.10)]',
-                                            'transition-all duration-500 ease-out md:p-7',
-                                            'hover:-translate-y-1',
-                                            'hover:border-cyan-300/80',
-                                            'hover:shadow-[0_18px_38px_rgba(6,120,150,0.14)]',
-                                        ])
-                                    >
+                                {{-- Metin kartı --}}
+                                <div class="{{ $textOrder }} flex items-stretch">
+                                    <div class="story-text-card group/storytext">
                                         @if ($textOnRight)
                                             <span class="story-link-line-left"></span>
                                         @else
@@ -99,23 +91,20 @@
                                         @endif
                                         @if ($textOnRight)
                                             <span
-                                                class="story-text-pointer--to-left hidden transition-colors duration-500 group-hover/storytext:border-r-cyan-100 lg:block"
+                                                class="story-text-pointer--to-left hidden transition-colors duration-500 group-hover/storytext:border-r-cyan-50 lg:block"
                                                 aria-hidden="true"
                                             ></span>
                                         @else
                                             <span
-                                                class="story-text-pointer--to-right hidden transition-colors duration-500 group-hover/storytext:border-l-cyan-100 lg:block"
+                                                class="story-text-pointer--to-right hidden transition-colors duration-500 group-hover/storytext:border-l-cyan-50 lg:block"
                                                 aria-hidden="true"
                                             ></span>
                                         @endif
-                                        <h2
-                                            class="text-lg font-bold text-cyan-900 transition-colors duration-500 group-hover/storytext:text-cyan-700 md:text-xl"
-                                        >
+                                        <div class="story-text-accent" aria-hidden="true"></div>
+                                        <h2 class="story-text-title">
                                             {{ $item['title'] }}
                                         </h2>
-                                        <p
-                                            class="mt-3 text-sm leading-relaxed text-slate-600 transition-colors duration-500 group-hover/storytext:text-cyan-800 md:text-base"
-                                        >
+                                        <p class="story-text-body">
                                             {{ $item['description'] }}
                                         </p>
                                     </div>

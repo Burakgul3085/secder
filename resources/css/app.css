@@ -86,6 +86,7 @@
     .story-link-line-left,
     .story-link-line-right {
         @apply pointer-events-none absolute top-10 hidden h-px w-8 bg-cyan-400/60 lg:block;
+        transition: background-color 0.45s ease, width 0.45s ease, opacity 0.45s ease;
     }
 
     .story-link-line-left {
@@ -94,6 +95,137 @@
 
     .story-link-line-right {
         @apply -right-8;
+    }
+
+    .group\/story:hover .story-link-line-left,
+    .group\/story:hover .story-link-line-right {
+        width: 2.25rem;
+        background-color: rgb(34 211 238 / 0.85);
+    }
+
+    /* Hikayemiz görsel kartı — kenardan kenara, kurumsal hover */
+    .story-media-card {
+        @apply relative h-full overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-900;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.1);
+        transition:
+            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.55s ease,
+            border-color 0.45s ease;
+    }
+
+    .group\/story:hover .story-media-card {
+        transform: translateY(-6px);
+        border-color: rgb(103 232 249 / 0.55);
+        box-shadow: 0 22px 44px rgba(14, 116, 144, 0.22);
+    }
+
+    .story-media-frame {
+        @apply relative h-[210px] w-full overflow-hidden sm:h-[250px] lg:h-full lg:min-h-[280px];
+        background:
+            radial-gradient(ellipse at 30% 20%, rgba(34, 211, 238, 0.18), transparent 55%),
+            linear-gradient(145deg, #0f172a 0%, #164e63 48%, #0e7490 100%);
+    }
+
+    .story-media-img {
+        @apply relative z-[1] h-full w-full object-cover object-center;
+        transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), filter 0.55s ease;
+        will-change: transform;
+    }
+
+    .group\/story:hover .story-media-img {
+        transform: scale(1.07);
+        filter: saturate(1.08) contrast(1.03);
+    }
+
+    .story-media-overlay {
+        @apply pointer-events-none absolute inset-0 z-[2];
+        background: linear-gradient(
+            160deg,
+            rgba(8, 47, 73, 0.08) 0%,
+            transparent 42%,
+            rgba(14, 116, 144, 0.22) 100%
+        );
+        opacity: 0.55;
+        transition: opacity 0.5s ease, background 0.5s ease;
+    }
+
+    .group\/story:hover .story-media-overlay {
+        opacity: 0.85;
+        background: linear-gradient(
+            160deg,
+            rgba(8, 145, 178, 0.12) 0%,
+            transparent 40%,
+            rgba(6, 78, 99, 0.35) 100%
+        );
+    }
+
+    .story-media-shine {
+        @apply pointer-events-none absolute inset-y-0 left-0 z-[3] w-1/3;
+        background: linear-gradient(
+            105deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.16) 45%,
+            transparent 70%
+        );
+        transform: translateX(-120%) skewX(-12deg);
+        transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .group\/story:hover .story-media-shine {
+        transform: translateX(320%) skewX(-12deg);
+    }
+
+    /* Hikayemiz metin kartı */
+    .story-text-card {
+        @apply relative flex w-full flex-col justify-center overflow-hidden rounded-2xl border border-slate-200/95 bg-white p-5 md:p-7;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+        transition:
+            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.55s ease,
+            border-color 0.45s ease,
+            background-color 0.45s ease;
+    }
+
+    .story-text-card:hover,
+    .group\/story:hover .story-text-card {
+        transform: translateY(-6px);
+        border-color: rgb(103 232 249 / 0.65);
+        background-color: rgb(236 254 255 / 0.92);
+        box-shadow: 0 22px 42px rgba(6, 120, 150, 0.16);
+    }
+
+    .story-text-accent {
+        @apply absolute inset-x-0 top-0 h-1;
+        background: linear-gradient(90deg, #0891b2, #22d3ee, #0e7490);
+        transform: scaleX(0.35);
+        transform-origin: left center;
+        transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .story-text-card:hover .story-text-accent,
+    .group\/story:hover .story-text-accent {
+        transform: scaleX(1);
+    }
+
+    .story-text-title {
+        @apply relative z-[1] text-lg font-bold text-cyan-900 md:text-xl;
+        transition: color 0.45s ease, letter-spacing 0.45s ease;
+    }
+
+    .story-text-card:hover .story-text-title,
+    .group\/story:hover .story-text-title {
+        color: #0e7490;
+        letter-spacing: 0.01em;
+    }
+
+    .story-text-body {
+        @apply relative z-[1] mt-3 text-sm leading-relaxed text-slate-600 md:text-base;
+        transition: color 0.45s ease;
+    }
+
+    .story-text-card:hover .story-text-body,
+    .group\/story:hover .story-text-body {
+        color: #155e75;
     }
 
     /* Makbuz doğrulama sayfası — site geneli cyan paleti, build garantili */
