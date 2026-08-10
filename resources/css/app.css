@@ -3,8 +3,22 @@
 @tailwind utilities;
 
 @layer base {
-    [x-cloak] {
-        display: none !important;
+    /* Ana sayfa hero — CLS için sabit rezerv (bileşen inline CSS ile de basar) */
+    .home-hero-frame {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background-color: #f1f5f9;
+    }
+
+    .home-hero-img {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
     }
 
     html,

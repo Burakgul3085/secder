@@ -5,108 +5,157 @@
 @php
     use App\Support\HeroImageSpec;
 
-    $firstImage = $slides[0]['image'] ?? null;
+    $hasSlides = is_array($slides) && count($slides) > 0;
+    $first = $hasSlides ? $slides[0] : null;
+    $firstImage = $first['image'] ?? null;
+    $firstMobile = $first['image_mobile'] ?? $firstImage;
+    $firstTablet = $first['image_tablet'] ?? $firstImage;
+    $firstDesktopSrcset = $first['desktop_srcset'] ?? '';
 
-    /*
-     | Çerçeve oranı = admin yükleme ölçüleri (HeroImageSpec).
-     | Sınıflar burada sabit yazılır (Tailwind tarasın).
-     | Görsel aynı oranda yüklendiyse object-cover kırpmaz / boşluk bırakmaz.
-     */
-    $heroFrame = 'relative w-full overflow-hidden bg-slate-100 aspect-[1080/1350] md:aspect-[1536/1024] lg:aspect-[1920/480]';
-    $heroImg = 'absolute inset-0 h-full w-full object-cover object-center';
+    $mobileW = HeroImageSpec::width('mobile');
+    $mobileH = HeroImageSpec::height('mobile');
 @endphp
 
-{{-- Statik fallback: Alpine.js başlamazsa (proxy, JS hata vb.) bu görünür --}}
-@if($firstImage)
-<div id="hero-static-fallback" class="{{ $heroFrame }}">
-    <picture>
-        @if(filled($slides[0]['image_mobile'] ?? null))
-            <source media="(max-width: 767px)" type="image/webp" srcset="{{ $slides[0]['image_mobile'] }}">
-        @endif
-        @if(filled($slides[0]['image_tablet'] ?? null))
-            <source media="(max-width: 1023px)" type="image/webp" srcset="{{ $slides[0]['image_tablet'] }}">
-        @endif
-        @if(filled($slides[0]['desktop_srcset'] ?? null))
-            <source type="image/webp" srcset="{{ $slides[0]['desktop_srcset'] }}" sizes="100vw">
-        @endif
-        <img
-            src="{{ $firstImage }}"
-            alt="{{ __('app.home.hero_alt') }}"
-            class="{{ $heroImg }}"
-            loading="eager"
-        >
-    </picture>
-</div>
-@endif
+{{--
+  Tek çerçeve: SSR ilk slayt + Alpine aynı kutuda.
+  Ayrı fallback kaldırıldığı için CLS (çift hero / yükseklik zıplaması) azalır.
+--}}
+<style>
+    [x-cloak] { display: none !important; }
+    .home-hero {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+    .home-hero-frame {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background-color: #f1f5f9;
+        /* Mobil: oran rezerve + uzun dikey afişin alt içeriğe baskı yapmasını sınırla */
+        height: min(70svh, calc(100vw * {{ $mobileH }} / {{ $mobileW }}));
+    }
+    @media (min-width: 768px) {
+        .home-hero-frame {
+            height: auto;
+            aspect-ratio: {{ HeroImageSpec::width('tablet') }} / {{ HeroImageSpec::height('tablet') }};
+        }
+    }
+    @media (min-width: 1024px) {
+        .home-hero-frame {
+            height: auto;
+            aspect-ratio: {{ HeroImageSpec::width('desktop') }} / {{ HeroImageSpec::height('desktop') }};
+        }
+    }
+    .home-hero-img {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+    }
+</style>
 
 <section
-    class="relative z-10 w-full max-w-[100vw] overflow-x-hidden"
+    class="home-hero"
     aria-label="{{ __('app.home.hero_carousel_aria') }}"
     translate="no"
-    x-data="homeHeroSlider({ slides: @js($slides) })"
-    x-init="$nextTick(function(){ var f=document.getElementById('hero-static-fallback'); if(f) f.remove(); })"
-    @touchstart.passive="startTouch($event)"
-    @touchend.passive="endTouch($event)"
+    @if($hasSlides)
+        x-data="homeHeroSlider({ slides: @js($slides) })"
+        @touchstart.passive="startTouch($event)"
+        @touchend.passive="endTouch($event)"
+    @endif
 >
-    <template x-if="total === 0">
+    @unless($hasSlides)
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6">
             <x-empty-state
                 :title="__('app.home.hero_empty_title')"
                 :description="__('app.home.hero_empty_desc')"
             />
         </div>
-    </template>
-
-    <div
-        x-show="total > 0"
-        x-cloak
-        class="relative w-full overflow-hidden"
-        role="region"
-        aria-roledescription="carousel"
-    >
-        <div class="{{ $heroFrame }}">
+    @else
+        <div
+            class="home-hero-frame"
+            role="region"
+            aria-roledescription="carousel"
+        >
             <picture>
-                <source media="(max-width: 767px)" type="image/webp" :srcset="current.image_mobile">
-                <source media="(max-width: 1023px)" type="image/webp" :srcset="current.image_tablet">
-                <source type="image/webp" :srcset="current.desktop_srcset" sizes="100vw">
+                @if(filled($firstMobile))
+                    <source
+                        media="(max-width: 767px)"
+                        type="image/webp"
+                        srcset="{{ $firstMobile }}"
+                        @if($hasSlides) :srcset="current.image_mobile" @endif
+                    >
+                @endif
+                @if(filled($firstTablet))
+                    <source
+                        media="(max-width: 1023px)"
+                        type="image/webp"
+                        srcset="{{ $firstTablet }}"
+                        @if($hasSlides) :srcset="current.image_tablet" @endif
+                    >
+                @endif
+                @if(filled($firstDesktopSrcset))
+                    <source
+                        type="image/webp"
+                        srcset="{{ $firstDesktopSrcset }}"
+                        sizes="100vw"
+                        @if($hasSlides) :srcset="current.desktop_srcset" @endif
+                    >
+                @endif
                 <img
-                    :src="current.image"
-                    :alt="'{{ __('app.home.hero_slide_alt') }} ' + (idx + 1)"
-                    class="{{ $heroImg }}"
+                    src="{{ $firstImage }}"
+                    @if($hasSlides)
+                        :src="current.image"
+                        :alt="'{{ __('app.home.hero_slide_alt') }} ' + (idx + 1)"
+                    @endif
+                    alt="{{ __('app.home.hero_alt') }}"
+                    class="home-hero-img"
+                    width="{{ $mobileW }}"
+                    height="{{ $mobileH }}"
+                    sizes="100vw"
                     loading="eager"
                     decoding="async"
                     fetchpriority="high"
-                />
+                >
             </picture>
 
-            <template x-if="total > 1">
-                <div class="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-1 sm:px-2 md:px-3">
-                    <button
-                        type="button"
-                        class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
-                        @click="prev()"
-                        aria-label="{{ __('app.home.hero_prev') }}"
-                    >
-                        <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
-                    <button
-                        type="button"
-                        class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
-                        @click="next()"
-                        aria-label="{{ __('app.home.hero_next') }}"
-                    >
-                        <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            </template>
+            <div
+                class="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-1 sm:px-2 md:px-3"
+                x-show="total > 1"
+                x-cloak
+            >
+                <button
+                    type="button"
+                    class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
+                    @click="prev()"
+                    aria-label="{{ __('app.home.hero_prev') }}"
+                >
+                    <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <button
+                    type="button"
+                    class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
+                    @click="next()"
+                    aria-label="{{ __('app.home.hero_next') }}"
+                >
+                    <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
 
             <div
                 class="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 md:bottom-4"
                 x-show="total > 1"
+                x-cloak
                 role="tablist"
                 aria-label="{{ __('app.home.hero_dots_aria') }}"
             >
@@ -122,5 +171,5 @@
                 </template>
             </div>
         </div>
-    </div>
+    @endunless
 </section>
