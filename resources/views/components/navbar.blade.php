@@ -376,6 +376,8 @@
 
             <a href="{{ route('news.index') }}" class="{{ $navLinkBase }} {{ request()->routeIs('news.*') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.news_short') }}</a>
 
+            <a href="{{ route('gallery') }}" class="{{ $navLinkBase }} {{ request()->routeIs('gallery') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.gallery') }}</a>
+
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
