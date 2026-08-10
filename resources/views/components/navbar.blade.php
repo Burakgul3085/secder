@@ -187,8 +187,6 @@
                         <x-social-brand-icon :platform="$social['platform']" icon-class="h-4 w-4" />
                     </a>
                 @endforeach
-                <a href="{{ route('donations') }}" class="ml-2 rounded-full bg-white/15 px-3 py-1.5 font-medium text-cyan-50 transition hover:bg-white/25">{{ __('app.nav.donate') }}</a>
-                <a href="{{ route('volunteer') }}" class="rounded-full border border-cyan-100/50 px-3 py-1.5 font-medium text-cyan-50 transition hover:bg-white/10">{{ __('app.nav.volunteer') }}</a>
             </div>
         </div>
     </div>
@@ -267,18 +265,6 @@
                             @endforeach
                         </div>
                     </div>
-
-                    <a
-                        href="{{ route('gallery') }}"
-                        title="{{ __('app.nav.gallery_title') }}"
-                        aria-label="{{ __('app.nav.gallery_title') }}"
-                        class="secder-phone-iconbtn rounded-lg border border-slate-200 bg-slate-50 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                        </svg>
-                    </a>
 
                     <button
                         type="button"
@@ -393,30 +379,8 @@
             <a href="{{ route('contact') }}" class="{{ $navLinkBase }} {{ request()->routeIs('contact') ? $navLinkActive : $navLinkIdle }}">{{ __('app.nav.contact') }}</a>
         </nav>
 
-        {{-- SAĞ: Kamera | panel | Hesap Numaraları | dil | Zekât --}}
+        {{-- SAĞ: tek ana CTA (Hesap Numaraları) + dil + menü --}}
         <div class="flex shrink-0 items-center" style="margin-left:0.2rem; gap:0.35rem;">
-            <a
-                href="{{ route('gallery') }}"
-                title="{{ __('app.nav.gallery_title') }}"
-                aria-label="{{ __('app.nav.gallery_title') }}"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/90 text-slate-600 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-50/90 hover:text-cyan-700"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-[18px] w-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                </svg>
-            </a>
-            <button
-                type="button"
-                @click="contactOpen = true"
-                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/90 text-slate-700 shadow-sm transition hover:border-cyan-200 hover:bg-cyan-50/90"
-                :aria-expanded="contactOpen"
-                aria-label="{{ __('app.nav.quick_contact') }}"
-            >
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-                </svg>
-            </button>
             <a
                 href="{{ route('donations') }}"
                 class="inline-flex h-9 items-center rounded-full bg-gradient-to-r from-cyan-600 to-cyan-800 px-3 text-[11px] font-bold text-white shadow-sm ring-1 ring-inset ring-white/15 transition duration-300 hover:brightness-110 xl:px-3.5"
@@ -464,13 +428,17 @@
                 </div>
             </div>
 
-            <a
-                href="{{ route('zakat.index') }}"
-                class="inline-flex h-9 items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 text-[11px] font-bold uppercase tracking-wide text-cyan-800 shadow-sm transition hover:border-cyan-300 hover:bg-cyan-100 xl:px-3.5"
-                title="{{ __('app.nav.zakat_calculate') }}"
+            <button
+                type="button"
+                @click="contactOpen = true"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50/90 text-slate-700 shadow-sm transition hover:border-cyan-200 hover:bg-cyan-50/90"
+                :aria-expanded="contactOpen"
+                aria-label="{{ __('app.nav.quick_contact') }}"
             >
-                {{ __('app.nav.zakat_short') }}
-            </a>
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+            </button>
         </div>
     </div>
 
