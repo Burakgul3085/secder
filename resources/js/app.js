@@ -124,6 +124,11 @@ const enablePageTransition = () => {
         }
 
         event.preventDefault();
+        try {
+            sessionStorage.setItem('secder-soft-nav', '1');
+        } catch (e) {
+            // private mode vb. — soft-nav bayrağı yoksa yeni sayfada boot splash görünür
+        }
         showTransition();
         window.setTimeout(() => {
             window.location.assign(url.href);

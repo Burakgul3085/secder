@@ -656,6 +656,7 @@ return [
     */
     'site' => [
         'default_title' => 'SECDER',
+        'loading' => 'Yükleniyor',
     ],
 
     /*
