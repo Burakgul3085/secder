@@ -302,32 +302,6 @@
                         </button>
                     @endforeach
                 </nav>
-                <form action="{{ url('/secder-crm/login') }}" method="get" target="_top" class="m-0 inline">
-                    <button
-                        type="submit"
-                        class="inline-flex h-7 items-center gap-1 rounded-full border border-slate-700 px-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400 transition hover:border-teal-500 hover:text-teal-300"
-                        title="{{ __('app.footer.crm_login') }}"
-                        aria-label="{{ __('app.footer.crm_login') }}"
-                    >
-                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path d="M2 4.75A2.75 2.75 0 0 1 4.75 2h10.5A2.75 2.75 0 0 1 18 4.75v2.5A2.75 2.75 0 0 1 15.25 10H4.75A2.75 2.75 0 0 1 2 7.25v-2.5ZM4.75 11.5A2.75 2.75 0 0 0 2 14.25v1.5A2.75 2.75 0 0 0 4.75 18.5h10.5A2.75 2.75 0 0 0 18 15.75v-1.5A2.75 2.75 0 0 0 15.25 11.5H4.75Z" />
-                        </svg>
-                        <span>{{ __('app.footer.crm_short') }}</span>
-                    </button>
-                </form>
-                <form action="{{ url('/secder-panel/login') }}" method="get" target="_top" class="m-0 inline">
-                    <button
-                        type="submit"
-                        class="inline-flex h-7 items-center gap-1 rounded-full border border-slate-700 px-2 text-[10px] font-semibold uppercase tracking-wide text-slate-400 transition hover:border-cyan-500 hover:text-cyan-300"
-                        title="{{ __('app.footer.admin_login') }}"
-                        aria-label="{{ __('app.footer.admin_login') }}"
-                    >
-                        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M10 1.75a4.25 4.25 0 0 0-4.25 4.25v1.11a2.25 2.25 0 0 0-1.75 2.19v6.2a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 16 15.5V9.3a2.25 2.25 0 0 0-1.75-2.19V6A4.25 4.25 0 0 0 10 1.75Zm2.75 5.5V6a2.75 2.75 0 1 0-5.5 0v1.25h5.5Zm-2 4.45a.75.75 0 0 0-1.5 0v1.6a.75.75 0 0 0 1.5 0v-1.6Z" clip-rule="evenodd" />
-                        </svg>
-                        <span>{{ __('app.footer.admin_short') }}</span>
-                    </button>
-                </form>
             </div>
         </div>
     </div>
