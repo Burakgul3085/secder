@@ -29,40 +29,127 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.85rem;
-            background: linear-gradient(160deg, #0f172a 0%, #164e63 55%, #0e7490 100%);
-            transition: opacity 0.4s ease, visibility 0.4s ease;
+            gap: 1.35rem;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 70% 55% at 50% 42%, rgba(34, 211, 238, 0.22), transparent 62%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(14, 116, 144, 0.35), transparent 55%),
+                radial-gradient(ellipse 45% 35% at 85% 15%, rgba(8, 145, 178, 0.2), transparent 50%),
+                linear-gradient(165deg, #0b1220 0%, #0f3a4d 48%, #0e7490 100%);
+            transition: opacity 0.45s ease, visibility 0.45s ease;
         }
         #site-boot.is-done {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
+        #site-boot__mark {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 9.5rem;
+            height: 9.5rem;
+            animation: site-boot-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @media (min-width: 768px) {
+            #site-boot__mark {
+                width: 11.5rem;
+                height: 11.5rem;
+            }
+        }
+        #site-boot__glow {
+            position: absolute;
+            inset: -18%;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(103, 232, 249, 0.45) 0%, rgba(14, 116, 144, 0.12) 48%, transparent 70%);
+            animation: site-boot-glow 1.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        #site-boot__ring {
+            position: absolute;
+            inset: -6%;
+            border-radius: 9999px;
+            border: 2px solid rgba(165, 243, 252, 0.35);
+            box-shadow:
+                0 0 0 6px rgba(34, 211, 238, 0.08),
+                0 0 40px rgba(34, 211, 238, 0.28);
+            animation: site-boot-ring 1.6s ease-in-out infinite;
+            pointer-events: none;
+        }
         #site-boot__logo {
-            width: 4.5rem;
-            height: 4.5rem;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
             border-radius: 9999px;
             object-fit: cover;
             background: #fff;
-            box-shadow: 0 12px 36px rgba(8, 47, 73, 0.35);
-            border: 2px solid rgba(255, 255, 255, 0.85);
-            animation: site-boot-pulse 1.15s ease-in-out infinite;
+            box-shadow:
+                0 18px 48px rgba(8, 47, 73, 0.45),
+                0 0 0 4px rgba(255, 255, 255, 0.92),
+                0 0 0 8px rgba(103, 232, 249, 0.22);
+            animation: site-boot-pulse 1.4s ease-in-out infinite;
         }
         #site-boot__label {
             margin: 0;
             font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.22em;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.34em;
+            text-indent: 0.34em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.82);
+            color: #ecfeff;
+            text-shadow: 0 2px 18px rgba(34, 211, 238, 0.45);
+            animation: site-boot-label 0.85s ease 0.15s both;
+        }
+        #site-boot__dots {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            margin-top: 0.15rem;
+        }
+        #site-boot__dots span {
+            width: 0.42rem;
+            height: 0.42rem;
+            border-radius: 9999px;
+            background: #67e8f9;
+            opacity: 0.35;
+            animation: site-boot-dot 1s ease-in-out infinite;
+        }
+        #site-boot__dots span:nth-child(2) { animation-delay: 0.15s; }
+        #site-boot__dots span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes site-boot-enter {
+            from { transform: scale(0.86); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         @keyframes site-boot-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.035); }
+        }
+        @keyframes site-boot-glow {
+            0%, 100% { opacity: 0.65; transform: scale(0.96); }
+            50% { opacity: 1; transform: scale(1.08); }
+        }
+        @keyframes site-boot-ring {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.04); opacity: 1; }
+        }
+        @keyframes site-boot-label {
+            from { opacity: 0; transform: translateY(8px); letter-spacing: 0.5em; }
+            to { opacity: 1; transform: translateY(0); letter-spacing: 0.34em; }
+        }
+        @keyframes site-boot-dot {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(-3px); }
         }
         @media (prefers-reduced-motion: reduce) {
-            #site-boot__logo { animation: none; }
+            #site-boot__logo,
+            #site-boot__glow,
+            #site-boot__ring,
+            #site-boot__mark,
+            #site-boot__label,
+            #site-boot__dots span { animation: none; }
             #site-boot { transition: none; }
         }
     </style>
@@ -89,16 +176,23 @@
 </head>
 <body>
     <div id="site-boot" role="status" aria-live="polite" aria-label="{{ __('app.site.loading') }}">
-        <img
-            id="site-boot__logo"
-            src="{{ $bootLogo }}"
-            alt="{{ $bootTitle }}"
-            width="72"
-            height="72"
-            decoding="async"
-            fetchpriority="high"
-        >
+        <div id="site-boot__mark">
+            <span id="site-boot__glow" aria-hidden="true"></span>
+            <span id="site-boot__ring" aria-hidden="true"></span>
+            <img
+                id="site-boot__logo"
+                src="{{ $bootLogo }}"
+                alt="{{ $bootTitle }}"
+                width="184"
+                height="184"
+                decoding="async"
+                fetchpriority="high"
+            >
+        </div>
         <p id="site-boot__label">SECDER</p>
+        <div id="site-boot__dots" aria-hidden="true">
+            <span></span><span></span><span></span>
+        </div>
     </div>
     <script>
         (function () {
