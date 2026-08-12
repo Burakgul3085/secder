@@ -49,6 +49,18 @@
             aspect-ratio: {{ HeroImageSpec::width('desktop') }} / {{ HeroImageSpec::height('desktop') }};
         }
     }
+    .home-hero-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 0.9s ease;
+        pointer-events: none;
+    }
+    .home-hero-layer.is-active {
+        z-index: 1;
+        opacity: 1;
+    }
     .home-hero-img {
         position: absolute;
         inset: 0;
@@ -57,6 +69,9 @@
         height: 100%;
         object-fit: cover;
         object-position: center center;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-hero-layer { transition: none; }
     }
 </style>
 
@@ -83,47 +98,39 @@
             role="region"
             aria-roledescription="carousel"
         >
-            <picture>
-                @if(filled($firstMobile))
-                    <source
-                        media="(max-width: 767px)"
-                        type="image/webp"
-                        srcset="{{ $firstMobile }}"
-                        @if($hasSlides) :srcset="current.image_mobile" @endif
-                    >
-                @endif
-                @if(filled($firstTablet))
-                    <source
-                        media="(max-width: 1023px)"
-                        type="image/webp"
-                        srcset="{{ $firstTablet }}"
-                        @if($hasSlides) :srcset="current.image_tablet" @endif
-                    >
-                @endif
-                @if(filled($firstDesktopSrcset))
-                    <source
-                        type="image/webp"
-                        srcset="{{ $firstDesktopSrcset }}"
-                        sizes="100vw"
-                        @if($hasSlides) :srcset="current.desktop_srcset" @endif
-                    >
-                @endif
-                <img
-                    src="{{ $firstImage }}"
-                    @if($hasSlides)
-                        :src="current.image"
-                        :alt="'{{ __('app.home.hero_slide_alt') }} ' + (idx + 1)"
-                    @endif
-                    alt="{{ __('app.home.hero_alt') }}"
-                    class="home-hero-img"
-                    width="{{ $mobileW }}"
-                    height="{{ $mobileH }}"
-                    sizes="100vw"
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority="high"
+            @foreach ($slides as $i => $slide)
+                @php
+                    $slideImage = $slide['image'] ?? $firstImage;
+                    $slideMobile = $slide['image_mobile'] ?? $slideImage;
+                    $slideTablet = $slide['image_tablet'] ?? $slideImage;
+                    $slideDesktopSrcset = $slide['desktop_srcset'] ?? '';
+                @endphp
+                <picture
+                    class="home-hero-layer {{ $i === 0 ? 'is-active' : '' }}"
+                    :class="idx === {{ $i }} ? 'is-active' : ''"
                 >
-            </picture>
+                    @if(filled($slideMobile))
+                        <source media="(max-width: 767px)" type="image/webp" srcset="{{ $slideMobile }}">
+                    @endif
+                    @if(filled($slideTablet))
+                        <source media="(max-width: 1023px)" type="image/webp" srcset="{{ $slideTablet }}">
+                    @endif
+                    @if(filled($slideDesktopSrcset))
+                        <source type="image/webp" srcset="{{ $slideDesktopSrcset }}" sizes="100vw">
+                    @endif
+                    <img
+                        src="{{ $slideImage }}"
+                        alt="{{ __('app.home.hero_slide_alt') }} {{ $i + 1 }}"
+                        class="home-hero-img"
+                        width="{{ $mobileW }}"
+                        height="{{ $mobileH }}"
+                        sizes="100vw"
+                        loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
+                        decoding="async"
+                        @if($i === 0) fetchpriority="high" @endif
+                    >
+                </picture>
+            @endforeach
 
             <div
                 class="pointer-events-none absolute inset-y-0 left-0 right-0 z-20 flex items-center justify-between px-1 sm:px-2 md:px-3"
