@@ -1,7 +1,7 @@
 @php
     use Illuminate\Support\Carbon;
 
-    $kvkkText = __('app.legal.kvkk_content');
+    $kvkkText = ($siteSettings ?? \App\Models\Setting::current())->legalText('kvkk_text', __('app.legal.kvkk_content'));
 
     $carouselItems = $testimonials->map(function ($item) {
         $date = $item->approved_at ?? $item->created_at;

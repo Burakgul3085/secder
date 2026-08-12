@@ -81,22 +81,22 @@ class SettingForm
                             Textarea::make('kvkk_text')
                                 ->label('KVKK Aydınlatma Metni')
                                 ->rows(8)
-                                ->helperText('KVKK butonuna tıklanınca açılan metin.')
+                                ->helperText('Footer’daki «KVKK» butonuna tıklanınca açılır.')
                                 ->columnSpanFull(),
                             Textarea::make('volunteer_clarification_text')
-                                ->label('Gönüllü Başvuru Aydınlatma Metni')
+                                ->label('Aydınlatma Metni')
                                 ->rows(8)
-                                ->helperText('Gönüllü başvuru formunda gösterilen metin.')
+                                ->helperText('Footer’daki «Aydınlatma Metni» ve gönüllü başvuru formunda gösterilir.')
                                 ->columnSpanFull(),
                             Textarea::make('privacy_policy_text')
                                 ->label('Gizlilik Politikası Metni')
                                 ->rows(8)
-                                ->helperText('Footer gizlilik politikası içeriği.')
+                                ->helperText('Footer’daki «Gizlilik Politikası» içeriği.')
                                 ->columnSpanFull(),
                             Textarea::make('cookie_policy_text')
                                 ->label('Çerez Politikası Metni')
                                 ->rows(8)
-                                ->helperText('Footer çerez politikası içeriği.')
+                                ->helperText('Footer’daki «Çerez Politikası» içeriği.')
                                 ->columnSpanFull(),
                         ]),
 

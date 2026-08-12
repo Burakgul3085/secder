@@ -137,6 +137,13 @@ class Setting extends Model
         return $items;
     }
 
+    public function legalText(string $field, string $fallback): string
+    {
+        $value = trim((string) ($this->{$field} ?? ''));
+
+        return $value !== '' ? $value : $fallback;
+    }
+
     /**
      * Sadece dolu sosyal medya linklerini döner.
      * Boş bırakılan platformlar sitede ikon olarak gösterilmez.

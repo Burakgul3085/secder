@@ -11,25 +11,25 @@
             'key'     => 'kvkk',
             'label'   => __('app.legal.kvkk_label'),
             'title'   => __('app.legal.kvkk_title'),
-            'content' => __('app.legal.kvkk_content'),
+            'content' => $siteSettings->legalText('kvkk_text', __('app.legal.kvkk_content')),
         ],
         [
             'key'     => 'clarification',
             'label'   => __('app.legal.clarification_label'),
             'title'   => __('app.legal.clarification_title'),
-            'content' => __('app.legal.clarification_content'),
+            'content' => $siteSettings->legalText('volunteer_clarification_text', __('app.legal.clarification_content')),
         ],
         [
             'key'     => 'privacy',
             'label'   => __('app.legal.privacy_label'),
             'title'   => __('app.legal.privacy_title'),
-            'content' => __('app.legal.privacy_content'),
+            'content' => $siteSettings->legalText('privacy_policy_text', __('app.legal.privacy_content')),
         ],
         [
             'key'     => 'cookie',
             'label'   => __('app.legal.cookie_label'),
             'title'   => __('app.legal.cookie_title'),
-            'content' => __('app.legal.cookie_content'),
+            'content' => $siteSettings->legalText('cookie_policy_text', __('app.legal.cookie_content')),
         ],
     ];
     $legalTextItems = array_values($legalTextItems);
