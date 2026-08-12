@@ -133,7 +133,7 @@
                 <button
                     type="button"
                     class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
-                    @click="prev()"
+                    @click="prev(); restartAuto()"
                     aria-label="{{ __('app.home.hero_prev') }}"
                 >
                     <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
@@ -143,7 +143,7 @@
                 <button
                     type="button"
                     class="pointer-events-auto flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.55)] transition hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 md:h-12 md:w-12"
-                    @click="next()"
+                    @click="next(); restartAuto()"
                     aria-label="{{ __('app.home.hero_next') }}"
                 >
                     <svg class="h-7 w-7 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
@@ -164,7 +164,7 @@
                         type="button"
                         class="h-2 rounded-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                         :class="idx === i ? 'w-6 bg-white shadow' : 'w-2 bg-white/60 hover:bg-white/85'"
-                        @click="go(i)"
+                        @click="go(i); restartAuto()"
                         :aria-label="'{{ __('app.home.hero_slide_n') }} ' + (i + 1)"
                         :aria-current="idx === i ? 'true' : 'false'"
                     ></button>

@@ -12,6 +12,8 @@ document.addEventListener('alpine:init', () => {
         logoUrl: typeof config.logoUrl === 'string' ? config.logoUrl : '',
         idx: 0,
         touchStartX: null,
+        autoTimer: null,
+        autoMs: 3000,
 
         get current() {
             return this.slides[this.idx] ?? {};
@@ -19,6 +21,49 @@ document.addEventListener('alpine:init', () => {
 
         get total() {
             return this.slides.length;
+        },
+
+        init() {
+            this._onVisibility = () => {
+                if (document.hidden) {
+                    this.stopAuto();
+                } else {
+                    this.startAuto();
+                }
+            };
+            this.startAuto();
+            document.addEventListener('visibilitychange', this._onVisibility);
+        },
+
+        destroy() {
+            this.stopAuto();
+            if (this._onVisibility) {
+                document.removeEventListener('visibilitychange', this._onVisibility);
+            }
+        },
+
+        startAuto() {
+            this.stopAuto();
+            if (this.total < 2) {
+                return;
+            }
+            this.autoTimer = window.setInterval(() => {
+                if (document.hidden) {
+                    return;
+                }
+                this.next();
+            }, this.autoMs);
+        },
+
+        stopAuto() {
+            if (this.autoTimer) {
+                window.clearInterval(this.autoTimer);
+                this.autoTimer = null;
+            }
+        },
+
+        restartAuto() {
+            this.startAuto();
         },
 
         next() {
@@ -43,10 +88,12 @@ document.addEventListener('alpine:init', () => {
 
         startTouch(e) {
             this.touchStartX = e.touches[0]?.clientX ?? null;
+            this.stopAuto();
         },
 
         endTouch(e) {
             if (this.touchStartX == null) {
+                this.restartAuto();
                 return;
             }
             const endX = e.changedTouches[0]?.clientX ?? this.touchStartX;
@@ -57,6 +104,7 @@ document.addEventListener('alpine:init', () => {
                 this.prev();
             }
             this.touchStartX = null;
+            this.restartAuto();
         },
     }));
 });
