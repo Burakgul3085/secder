@@ -49,16 +49,27 @@
             aspect-ratio: {{ HeroImageSpec::width('desktop') }} / {{ HeroImageSpec::height('desktop') }};
         }
     }
+    .home-hero:not(.is-ready) .home-hero-layer:first-child {
+        z-index: 2;
+        opacity: 1;
+    }
     .home-hero-layer {
         position: absolute;
         inset: 0;
         z-index: 0;
         opacity: 0;
-        transition: opacity 0.9s ease;
         pointer-events: none;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        will-change: opacity;
+        transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .home-hero-layer.is-outgoing {
+        z-index: 1;
+        opacity: 0;
     }
     .home-hero-layer.is-active {
-        z-index: 1;
+        z-index: 2;
         opacity: 1;
     }
     .home-hero-img {
@@ -69,6 +80,7 @@
         height: 100%;
         object-fit: cover;
         object-position: center center;
+        transform: translateZ(0);
     }
     @media (prefers-reduced-motion: reduce) {
         .home-hero-layer { transition: none; }
@@ -106,8 +118,11 @@
                     $slideDesktopSrcset = $slide['desktop_srcset'] ?? '';
                 @endphp
                 <picture
-                    class="home-hero-layer {{ $i === 0 ? 'is-active' : '' }}"
-                    :class="idx === {{ $i }} ? 'is-active' : ''"
+                    class="home-hero-layer"
+                    :class="{
+                        'is-active': idx === {{ $i }},
+                        'is-outgoing': outgoingIdx === {{ $i }},
+                    }"
                 >
                     @if(filled($slideMobile))
                         <source media="(max-width: 767px)" type="image/webp" srcset="{{ $slideMobile }}">
@@ -125,7 +140,7 @@
                         width="{{ $mobileW }}"
                         height="{{ $mobileH }}"
                         sizes="100vw"
-                        loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
+                        loading="eager"
                         decoding="async"
                         @if($i === 0) fetchpriority="high" @endif
                     >

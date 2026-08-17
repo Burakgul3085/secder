@@ -11,9 +11,12 @@ document.addEventListener('alpine:init', () => {
         slides: Array.isArray(config.slides) ? config.slides : [],
         logoUrl: typeof config.logoUrl === 'string' ? config.logoUrl : '',
         idx: 0,
+        outgoingIdx: null,
+        busy: false,
         touchStartX: null,
         autoTimer: null,
-        autoMs: 3000,
+        autoMs: 4000,
+        fadeMs: 900,
 
         get current() {
             return this.slides[this.idx] ?? {};
@@ -24,6 +27,8 @@ document.addEventListener('alpine:init', () => {
         },
 
         init() {
+            this.preload();
+            this.$el?.classList.add('is-ready');
             this._onVisibility = () => {
                 if (document.hidden) {
                     this.stopAuto();
@@ -37,9 +42,26 @@ document.addEventListener('alpine:init', () => {
 
         destroy() {
             this.stopAuto();
+            if (this._fadeTimer) {
+                window.clearTimeout(this._fadeTimer);
+            }
             if (this._onVisibility) {
                 document.removeEventListener('visibilitychange', this._onVisibility);
             }
+        },
+
+        preload() {
+            this.slides.forEach((slide) => {
+                ['image', 'image_mobile', 'image_tablet'].forEach((key) => {
+                    const src = typeof slide?.[key] === 'string' ? slide[key] : '';
+                    if (!src) {
+                        return;
+                    }
+                    const img = new Image();
+                    img.decoding = 'async';
+                    img.src = src;
+                });
+            });
         },
 
         startAuto() {
@@ -48,7 +70,7 @@ document.addEventListener('alpine:init', () => {
                 return;
             }
             this.autoTimer = window.setInterval(() => {
-                if (document.hidden) {
+                if (document.hidden || this.busy) {
                     return;
                 }
                 this.next();
@@ -66,24 +88,32 @@ document.addEventListener('alpine:init', () => {
             this.startAuto();
         },
 
-        next() {
-            if (this.total < 2) {
+        show(i) {
+            if (this.total < 2 || this.busy || i === this.idx || i < 0 || i >= this.total) {
                 return;
             }
-            this.idx = (this.idx + 1) % this.total;
+            this.busy = true;
+            this.outgoingIdx = this.idx;
+            this.idx = i;
+            if (this._fadeTimer) {
+                window.clearTimeout(this._fadeTimer);
+            }
+            this._fadeTimer = window.setTimeout(() => {
+                this.outgoingIdx = null;
+                this.busy = false;
+            }, this.fadeMs);
+        },
+
+        next() {
+            this.show((this.idx + 1) % this.total);
         },
 
         prev() {
-            if (this.total < 2) {
-                return;
-            }
-            this.idx = (this.idx - 1 + this.total) % this.total;
+            this.show((this.idx - 1 + this.total) % this.total);
         },
 
         go(i) {
-            if (i >= 0 && i < this.total) {
-                this.idx = i;
-            }
+            this.show(i);
         },
 
         startTouch(e) {
