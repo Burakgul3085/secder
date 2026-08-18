@@ -44,7 +44,6 @@
 
                 <form method="POST" action="{{ route('volunteer.submit') }}" class="mt-6 space-y-4">
                     @csrf
-                    <input type="text" name="company_website" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <input name="first_name" type="text" value="{{ old('first_name') }}" placeholder="{{ __('app.volunteer.placeholder_name') }}" required class="w-full rounded-full border border-slate-300 bg-white px-4 py-2.5 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">

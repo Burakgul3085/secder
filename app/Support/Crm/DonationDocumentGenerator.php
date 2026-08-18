@@ -10,6 +10,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DonationDocumentGenerator
@@ -35,7 +36,7 @@ class DonationDocumentGenerator
                 ->latest('generated_at')
                 ->first();
 
-            if ($existing && PrivateDocumentStorage::exists($existing->pdf_path)) {
+            if ($existing && Storage::disk('public')->exists($existing->pdf_path)) {
                 return $existing;
             }
         }
@@ -45,7 +46,7 @@ class DonationDocumentGenerator
         $pdfBinary = $this->renderReceiptPdf($donation, $verificationCode, $verifyUrl, $template);
 
         $relativePath = 'crm/documents/' . $donation->id . '/receipt-' . $verificationCode . '.pdf';
-        PrivateDocumentStorage::put($relativePath, $pdfBinary);
+        Storage::disk('public')->put($relativePath, $pdfBinary);
 
         return DonationDocument::query()->create([
             'donation_id' => $donation->id,

@@ -11,7 +11,7 @@
         <div class="w-full rounded-3xl border border-cyan-100 bg-white p-6 shadow-xl md:p-8">
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">Şifremi Unuttum</h1>
             <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                Admin hesabınızın e-posta adresini girin. Kayıtlıysa şifre yenileme bağlantısı gönderilir.
+                Admin hesabınızın e-posta adresini girin. Yeni şifre oluşturulup mailer ayarlarında tanımlı adrese gönderilecektir.
             </p>
 
             @if (session('status'))
@@ -26,7 +26,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.password.email') }}" method="post" class="mt-6 space-y-4">
+            <form action="{{ route('admin.password.reset') }}" method="post" class="mt-6 space-y-4">
                 @csrf
                 <label for="email" class="block text-sm font-semibold text-slate-700">Admin E-posta Adresi</label>
                 <input
@@ -43,7 +43,7 @@
                     type="submit"
                     class="inline-flex w-full items-center justify-center rounded-2xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-cyan-600"
                 >
-                    Yenileme Bağlantısı Gönder
+                    Yeni Şifre Oluştur ve Gönder
                 </button>
             </form>
 
@@ -57,3 +57,4 @@
     </div>
 </body>
 </html>
+

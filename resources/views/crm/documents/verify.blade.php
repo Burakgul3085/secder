@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="verify-info-row">
                                     <dt class="verify-info-label">{{ __('app.verify.donor') }}</dt>
-                                    <dd class="verify-info-value">{{ $maskedDonorName ?? '-' }}</dd>
+                                    <dd class="verify-info-value">{{ $donation->donor?->full_name ?? '-' }}</dd>
                                 </div>
                                 <div class="verify-info-row">
                                     <dt class="verify-info-label">{{ __('app.verify.donation_type') }}</dt>

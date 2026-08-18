@@ -25,10 +25,10 @@ class AdminOtpController extends Controller
     public function verify(Request $request): RedirectResponse
     {
         $request->validate([
-            'code' => ['required', 'digits:6'],
+            'code' => ['required', 'digits:4'],
         ], [
             'code.required' => 'Doğrulama kodu zorunludur.',
-            'code.digits' => 'Kod 6 haneli olmalıdır.',
+            'code.digits' => 'Kod 4 haneli olmalıdır.',
         ]);
 
         $pendingUserId = (int) $request->session()->get('admin_otp_user_id');
@@ -41,22 +41,6 @@ class AdminOtpController extends Controller
                 ->withErrors(['code' => 'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.']);
         }
 
-        $attempts = (int) $request->session()->get('admin_otp_attempts', 0);
-        if ($attempts >= 5) {
-            $request->session()->forget([
-                'admin_otp_code_hash',
-                'admin_otp_expires_at',
-                'admin_otp_user_id',
-                'admin_otp_pending_nonce',
-                'admin_otp_intended_url',
-                'admin_otp_email_hint',
-                'admin_otp_attempts',
-            ]);
-
-            return redirect()->route('filament.admin.auth.login')
-                ->withErrors(['code' => 'Çok fazla hatalı deneme. Lütfen tekrar giriş yapın.']);
-        }
-
         if (now()->greaterThan(Carbon::parse($expiresAt))) {
             $request->session()->forget([
                 'admin_otp_code_hash',
@@ -65,7 +49,6 @@ class AdminOtpController extends Controller
                 'admin_otp_pending_nonce',
                 'admin_otp_intended_url',
                 'admin_otp_email_hint',
-                'admin_otp_attempts',
             ]);
 
             return redirect()->route('filament.admin.auth.login')
@@ -73,8 +56,6 @@ class AdminOtpController extends Controller
         }
 
         if (! hash_equals($codeHash, hash('sha256', (string) $request->string('code')))) {
-            $request->session()->put('admin_otp_attempts', $attempts + 1);
-
             return back()->withErrors(['code' => 'Doğrulama kodu hatalı.'])->onlyInput('code');
         }
 
@@ -90,10 +71,6 @@ class AdminOtpController extends Controller
         $request->session()->put('admin_otp_verified_nonce', $pendingNonce);
 
         $intendedUrl = (string) $request->session()->pull('admin_otp_intended_url', route('filament.admin.pages.dashboard'));
-        $panelRoot = url('/secder-panel');
-        if (! str_starts_with($intendedUrl, $panelRoot)) {
-            $intendedUrl = route('filament.admin.pages.dashboard');
-        }
 
         $request->session()->forget([
             'admin_otp_code_hash',
@@ -101,7 +78,6 @@ class AdminOtpController extends Controller
             'admin_otp_user_id',
             'admin_otp_pending_nonce',
             'admin_otp_email_hint',
-            'admin_otp_attempts',
         ]);
 
         return redirect()->to($intendedUrl);

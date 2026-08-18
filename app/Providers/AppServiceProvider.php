@@ -19,7 +19,6 @@ use Filament\Actions\Exports\Models\Export;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,10 +32,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Export::polymorphicUserRelationship(true);
-
-        if ($this->app->environment('production')) {
-            URL::forceScheme('https');
-        }
 
         Project::observe(AuditableObserver::class);
         News::observe(AuditableObserver::class);

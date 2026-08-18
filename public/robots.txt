@@ -1,11 +1,4 @@
 User-agent: *
-Disallow: /secder-panel
-Disallow: /secder-crm
-Disallow: /bkd-panel
-Disallow: /crm
-Disallow: /makbuz-indir
-Disallow: /belge-dogrula
-Disallow: /afis-goster
-Disallow: /afis-indir
+Disallow:
 
 Sitemap: https://secder.org/sitemap.xml

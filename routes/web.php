@@ -20,18 +20,9 @@ Route::get('/locale/{lang}', function (string $lang) {
     if (! in_array($lang, $allowed, true)) {
         $lang = 'tr';
     }
-
-    $appHost = parse_url((string) config('app.url'), PHP_URL_HOST);
-    $previous = url()->previous(route('home'));
-    $previousHost = parse_url($previous, PHP_URL_HOST);
-    $redirect = ($previousHost === $appHost || $previousHost === request()->getHost())
-        ? $previous
-        : route('home');
-
-    $secure = request()->isSecure() || app()->environment('production');
-
+    $redirect = url()->previous() ?: '/';
     return redirect($redirect)
-        ->withCookie(cookie()->forever('bkd_locale', $lang, '/', null, $secure, true, false, 'lax'))
+        ->withCookie(cookie()->forever('bkd_locale', $lang, '/', null, false, false))
         ->with('bkd_locale', $lang);
 })->name('locale.switch');
 
@@ -43,18 +34,14 @@ Route::get('/api/zekat/fiyatlar', [ZakatController::class, 'prices'])
     ->middleware('throttle:60,1')
     ->name('zakat.prices');
 Route::get('/iletisim', [HomeController::class, 'contact'])->name('contact');
-Route::post('/iletisim', [HomeController::class, 'submitContact'])
-    ->middleware('throttle:5,1')
-    ->name('contact.submit');
+Route::post('/iletisim', [HomeController::class, 'submitContact'])->name('contact.submit');
 Route::get('/faaliyetler', [HomeController::class, 'activities'])->name('activities.index');
 Route::get('/faaliyetler/{slug}', [HomeController::class, 'activityShow'])->name('activities.show');
 Route::get('/galeri', [HomeController::class, 'gallery'])->name('gallery');
 Route::get('/haberler', [HomeController::class, 'news'])->name('news.index');
 Route::get('/haberler/{news}', [HomeController::class, 'newsShow'])->name('news.show');
 Route::get('/gonullu-ol', [HomeController::class, 'volunteer'])->name('volunteer');
-Route::post('/gonullu-ol', [HomeController::class, 'submitVolunteer'])
-    ->middleware('throttle:5,1')
-    ->name('volunteer.submit');
+Route::post('/gonullu-ol', [HomeController::class, 'submitVolunteer'])->name('volunteer.submit');
 Route::post('/ebulten/kayit', [NewsletterController::class, 'subscribe'])
     ->middleware('throttle:30,1')
     ->name('newsletter.subscribe');
@@ -64,12 +51,8 @@ Route::post('/destekci-deneyimi', [TestimonialController::class, 'store'])
 Route::get('/ebulten/iptal/{token}', [NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 Route::get('/sayfa/{slug}', [HomeController::class, 'page'])->name('pages.show');
 
-Route::get('/belge-dogrula/{code}', [CrmDocumentController::class, 'verify'])
-    ->middleware('throttle:30,1')
-    ->name('crm.document.verify');
-Route::get('/makbuz-indir/{code}', [CrmDocumentController::class, 'downloadByCode'])
-    ->middleware('throttle:20,1')
-    ->name('crm.document.download.public');
+Route::get('/belge-dogrula/{code}', [CrmDocumentController::class, 'verify'])->name('crm.document.verify');
+Route::get('/makbuz-indir/{code}', [CrmDocumentController::class, 'downloadByCode'])->name('crm.document.download.public');
 
 Route::get('/afis-goster/{poster}', [PosterController::class, 'publicShow'])
     ->middleware('signed')
@@ -97,13 +80,9 @@ Route::prefix('secder-panel')->name('admin.otp.')->group(function (): void {
 
 Route::prefix('secder-panel')->name('admin.password.')->group(function (): void {
     Route::get('/sifremi-unuttum', [AdminForgotPasswordController::class, 'show'])->name('forgot');
-    Route::post('/sifremi-unuttum', [AdminForgotPasswordController::class, 'sendLink'])
-        ->middleware('throttle:5,1')
-        ->name('email');
-    Route::get('/sifre-yenile/{token}', [AdminForgotPasswordController::class, 'showReset'])->name('confirm');
-    Route::post('/sifre-yenile', [AdminForgotPasswordController::class, 'update'])
+    Route::post('/sifremi-unuttum', [AdminForgotPasswordController::class, 'reset'])
         ->middleware('throttle:10,1')
-        ->name('update');
+        ->name('reset');
 });
 
 // Eski panel URL'lerinden yeni SECDER yollarına yönlendirme

@@ -16,10 +16,6 @@ class NewsletterController extends Controller
 {
     public function subscribe(NewsletterSubscribeRequest $request): RedirectResponse
     {
-        if ($request->filled('company_website')) {
-            return back()->with('newsletter_success', __('app.messages.newsletter_success'));
-        }
-
         $email = $request->validated('email');
 
         $existing = NewsletterSubscriber::query()->where('email', $email)->first();

@@ -28,7 +28,7 @@
     'mailEyebrow' => 'Güvenli Giriş',
     'mailPreheader' => 'Yönetim paneli giriş doğrulama kodunuz hazır.',
     'mailGreeting' => MailTemplate::greeting($user->name ?: 'Yönetici'),
-    'mailIntro' => 'Yönetim paneli girişinizi tamamlamak için aşağıdaki 6 haneli doğrulama kodunu kullanın.',
+    'mailIntro' => 'Yönetim paneli girişinizi tamamlamak için aşağıdaki 4 haneli doğrulama kodunu kullanın.',
     'mailContentHtml' => $mailContentHtml,
     'mailContentBoxed' => false,
     'mailShowSignature' => true,

@@ -253,10 +253,6 @@ class HomeController extends Controller
 
     public function submitContact(Request $request): RedirectResponse
     {
-        if ($request->filled('company_website')) {
-            return back()->with('success', __('app.messages.contact_success'));
-        }
-
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:120'],
             'last_name' => ['required', 'string', 'max:120'],
@@ -327,10 +323,6 @@ class HomeController extends Controller
 
     public function submitVolunteer(Request $request): RedirectResponse
     {
-        if ($request->filled('company_website')) {
-            return back()->with('success', __('app.messages.volunteer_success'));
-        }
-
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:120'],
             'last_name' => ['required', 'string', 'max:120'],
