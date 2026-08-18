@@ -6,6 +6,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rules\Password;
 
 class UserForm
 {
@@ -19,6 +20,9 @@ class UserForm
                     ->label('Sifre')
                     ->password()
                     ->revealable()
+                    ->nullable()
+                    ->minLength(8)
+                    ->rule(Password::min(8))
                     ->required(fn (string $operation): bool => $operation === 'create')
                     ->dehydrated(fn ($state): bool => filled($state)),
                 Select::make('role')

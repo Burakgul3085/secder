@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Setting;
 use App\Support\Mailer;
 use Closure;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -31,13 +30,22 @@ class EnforceAdminOtpVerification
             && filled($settings->mailer_password)
             && filled($settings->mailer_notification_email ?: $settings->mailer_from_address ?: $settings->email);
 
-        // SMTP henüz tanımlı değilse panele girişi kilitleme; Mailer Ayarları doldurulabilsin.
         if (! $smtpReady) {
-            Log::warning('Admin OTP atlandı: Mailer SMTP ayarları eksik.', [
-                'user_id' => $user->id,
-            ]);
+            if ($user->isSuperAdmin()) {
+                Log::warning('Admin OTP atlandı: Mailer SMTP ayarları eksik (yalnızca süper yönetici).', [
+                    'user_id' => $user->id,
+                ]);
 
-            return $next($request);
+                return $next($request);
+            }
+
+            Auth::logout();
+
+            return redirect()
+                ->route('filament.admin.auth.login')
+                ->withErrors([
+                    'email' => 'Mailer ayarları tamamlanmadan yönetim paneline giriş yapılamaz. Süper yöneticinin SMTP bilgilerini kaydetmesi gerekir.',
+                ]);
         }
 
         $loginNonce = (string) $request->session()->get('admin_otp_login_nonce', '');
@@ -52,8 +60,8 @@ class EnforceAdminOtpVerification
         }
 
         $pendingNonce = (string) $request->session()->get('admin_otp_pending_nonce', '');
-        if (! hash_equals($pendingNonce, $loginNonce)) {
-            $code = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+        if ($pendingNonce === '' || ! hash_equals($pendingNonce, $loginNonce)) {
+            $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             $codeHash = hash('sha256', $code);
             $expiresAt = now()->addMinutes(10)->toIso8601String();
 
@@ -64,13 +72,10 @@ class EnforceAdminOtpVerification
                 'admin_otp_pending_nonce' => $loginNonce,
                 'admin_otp_intended_url' => $request->fullUrl(),
                 'admin_otp_email_hint' => $user->email,
+                'admin_otp_attempts' => 0,
             ]);
 
-            $otpTargetEmail = (string) (
-                $settings->mailer_notification_email
-                ?: $settings->mailer_from_address
-                ?: $settings->email
-            );
+            $otpTargetEmail = (string) $user->email;
 
             try {
                 $html = view('emails.admin-login-otp', [
@@ -98,6 +103,7 @@ class EnforceAdminOtpVerification
                     'admin_otp_pending_nonce',
                     'admin_otp_intended_url',
                     'admin_otp_email_hint',
+                    'admin_otp_attempts',
                 ]);
 
                 Auth::logout();
@@ -115,4 +121,3 @@ class EnforceAdminOtpVerification
         return redirect()->route('admin.otp.form');
     }
 }
-

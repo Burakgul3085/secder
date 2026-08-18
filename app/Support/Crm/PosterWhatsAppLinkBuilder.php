@@ -31,8 +31,8 @@ class PosterWhatsAppLinkBuilder
         $date = $donation->donated_at?->format('d.m.Y') ?? '-';
         $faaliyet = $donation->project?->title ?? ($donation->donationType?->name ?? '');
 
-        $publicUrl = URL::signedRoute('crm.posters.public', ['poster' => $poster->id]);
-        $downloadUrl = URL::signedRoute('crm.posters.public.download', ['poster' => $poster->id]);
+        $publicUrl = URL::temporarySignedRoute('crm.posters.public', now()->addDays(7), ['poster' => $poster->id]);
+        $downloadUrl = URL::temporarySignedRoute('crm.posters.public.download', now()->addDays(7), ['poster' => $poster->id]);
 
         if ($poster->type === PosterTemplate::TYPE_THANKS) {
             $lines = [

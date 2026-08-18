@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
+use App\Support\Crm\PrivateDocumentStorage;
 
 class DonationDocument extends Model
 {
@@ -51,8 +51,8 @@ class DonationDocument extends Model
     protected static function booted(): void
     {
         static::deleting(function (DonationDocument $document): void {
-            if ($document->pdf_path && Storage::disk('public')->exists($document->pdf_path)) {
-                Storage::disk('public')->delete($document->pdf_path);
+            if ($document->pdf_path) {
+                PrivateDocumentStorage::delete($document->pdf_path);
             }
         });
     }

@@ -19,6 +19,7 @@ class Login extends BaseLogin
             'admin_otp_verified_nonce',
             'admin_otp_intended_url',
             'admin_otp_email_hint',
+            'admin_otp_attempts',
         ]);
         session()->put('admin_otp_login_nonce', Str::uuid()->toString());
 

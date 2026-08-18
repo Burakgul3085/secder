@@ -8,6 +8,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class CrmUserForm
 {
@@ -29,6 +30,9 @@ class CrmUserForm
                     ->label('Şifre')
                     ->password()
                     ->revealable()
+                    ->nullable()
+                    ->minLength(8)
+                    ->rule(Password::min(8))
                     ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn (string $operation): bool => $operation === 'create'),

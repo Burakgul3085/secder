@@ -101,6 +101,7 @@
                     </p>
                     <form action="{{ route('newsletter.subscribe') }}" method="post" class="mt-3 flex gap-2">
                         @csrf
+                        <input type="text" name="company_website" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
                         <label class="sr-only" for="footer-newsletter-email">{{ __('app.footer.email') }}</label>
                         <input
                             id="footer-newsletter-email"

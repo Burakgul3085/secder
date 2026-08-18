@@ -24,6 +24,7 @@
             {{-- E-posta formu --}}
             <form method="POST" action="{{ route('contact.submit') }}" class="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                 @csrf
+                <input type="text" name="company_website" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
 
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-slate-900">{{ __('app.contact.email_form_title') }}</h2>

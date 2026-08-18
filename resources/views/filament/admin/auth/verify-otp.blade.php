@@ -11,7 +11,7 @@
         <div class="w-full rounded-3xl border border-cyan-100 bg-white p-6 shadow-xl md:p-8">
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">Doğrulama Kodu</h1>
             <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                E-posta adresinize gönderilen 4 haneli doğrulama kodunu girin.
+                E-posta adresinize gönderilen 6 haneli doğrulama kodunu girin.
             </p>
 
             @if ($errors->any())
@@ -29,11 +29,11 @@
                     type="text"
                     inputmode="numeric"
                     autocomplete="one-time-code"
-                    maxlength="4"
+                    maxlength="6"
                     required
                     value="{{ old('code') }}"
                     class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-center text-2xl font-bold tracking-[0.35em] text-slate-900 outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100"
-                    placeholder="0000"
+                    placeholder="000000"
                 >
                 <button
                     type="submit"

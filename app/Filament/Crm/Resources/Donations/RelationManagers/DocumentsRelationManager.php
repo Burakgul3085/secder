@@ -11,7 +11,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Storage;
+use App\Support\Crm\PrivateDocumentStorage;
 
 class DocumentsRelationManager extends RelationManager
 {
@@ -53,14 +53,14 @@ class DocumentsRelationManager extends RelationManager
                     ->label('PDF İndir')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->action(function ($record) {
-                        if (! Storage::disk('public')->exists($record->pdf_path)) {
+                        if (! PrivateDocumentStorage::exists($record->pdf_path)) {
                             Notification::make()->title('PDF bulunamadı')->danger()->send();
 
                             return;
                         }
 
                         return response()->download(
-                            Storage::disk('public')->path($record->pdf_path),
+                            PrivateDocumentStorage::path($record->pdf_path),
                             'makbuz-' . $record->verification_code . '.pdf',
                         );
                     }),

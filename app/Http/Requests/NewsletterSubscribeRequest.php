@@ -26,6 +26,10 @@ class NewsletterSubscribeRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->filled('company_website')) {
+            return [];
+        }
+
         return [
             'email' => [
                 'required',

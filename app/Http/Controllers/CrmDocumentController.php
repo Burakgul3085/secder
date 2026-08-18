@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DonationDocument;
-use Illuminate\Support\Facades\Storage;
+use App\Support\Crm\PrivateDocumentStorage;
+use App\Support\PersonalNameMask;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -16,9 +17,13 @@ class CrmDocumentController extends Controller
             ->where('verification_code', $code)
             ->firstOrFail();
 
+        $donation = $document->donation;
+        $maskedDonorName = PersonalNameMask::display($donation?->donor?->full_name);
+
         return view('crm.documents.verify', [
             'document' => $document,
-            'donation' => $document->donation,
+            'donation' => $donation,
+            'maskedDonorName' => $maskedDonorName,
         ]);
     }
 
@@ -40,9 +45,9 @@ class CrmDocumentController extends Controller
 
     private function streamPdf(DonationDocument $document): StreamedResponse
     {
-        abort_unless(Storage::disk('public')->exists($document->pdf_path), 404);
+        abort_unless(PrivateDocumentStorage::exists($document->pdf_path), 404);
 
-        return Storage::disk('public')->download(
+        return PrivateDocumentStorage::download(
             $document->pdf_path,
             'makbuz-' . $document->verification_code . '.pdf',
         );
