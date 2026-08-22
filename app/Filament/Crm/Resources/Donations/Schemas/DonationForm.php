@@ -77,9 +77,33 @@ class DonationForm
                     ->helperText('Listede yoksa + ile ekleyin veya dişli ikondan türleri yönetin.'),
                 Select::make('payment_method_id')
                     ->label('Ödeme Türü')
-                    ->options(fn (): array => PaymentMethod::query()->where('is_active', true)->orderBy('sort_order')->pluck('name', 'id')->all())
+                    ->options(fn (): array => $guard->selectableOptions(PaymentMethod::class))
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->label('Ödeme Türü Adı')
+                            ->required()
+                            ->maxLength(120),
+                    ])
+                    ->createOptionUsing(function (array $data): int {
+                        $code = Str::slug($data['name'], '_');
+                        $baseCode = $code !== '' ? $code : 'payment';
+                        $suffix = 1;
+
+                        while (PaymentMethod::query()->where('code', $code)->exists()) {
+                            $code = $baseCode . '_' . $suffix;
+                            $suffix++;
+                        }
+
+                        return PaymentMethod::query()->create([
+                            'name' => $data['name'],
+                            'code' => $code,
+                            'is_active' => true,
+                            'sort_order' => ((int) PaymentMethod::query()->max('sort_order')) + 1,
+                        ])->id;
+                    })
+                    ->helperText('Listede yoksa + ile ekleyin.'),
                 Select::make('project_id')
                     ->label('Proje / Faaliyet')
                     ->options(fn (): array => $guard->selectableOptions(Project::class, 'title'))
